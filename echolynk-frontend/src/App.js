@@ -8,6 +8,7 @@ import Contactus from './pages/landing/contactus';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 import Nofound from './pages/error/404';
+import Admin from './components/sidebar/sidebar';
 
 
 const Layout = ({ children }) => {
@@ -38,6 +39,9 @@ function App() {
                 {/*404 error*/}
                 <Route path="*" element={<Layout><Nofound /></Layout>} />
 
+
+                {/*admin*/}
+                <Route path="/admin" element={<Admin />} />
 
             </Routes>
         </BrowserRouter>
