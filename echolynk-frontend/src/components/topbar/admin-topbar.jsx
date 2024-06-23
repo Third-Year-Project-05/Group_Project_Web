@@ -4,7 +4,7 @@ import { BellIcon, ChatIcon, ChevronDownIcon, SearchIcon } from '@heroicons/reac
 import logo from '../../assets/echolynk.png';
 import userPhoto from '../../assets/Wikum.png';
 
-const Topbar = ({ name }) => {
+const AdminTopbar = ({ name }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -47,7 +47,7 @@ const Topbar = ({ name }) => {
                 <Link to="/notifications" className="relative bg-blue-900 p-1.5 rounded-full">
                     <BellIcon className="h-5 w-5 text-white"/>
                 </Link>
-                <Link to="/messages" className="relative bg-blue-900 p-1.5 rounded-full">
+                <Link to="/admin-messages" className="relative bg-blue-900 p-1.5 rounded-full">
                     <ChatIcon className="h-5 w-5 text-white"/>
                 </Link>
 
@@ -76,4 +76,4 @@ const Topbar = ({ name }) => {
     );
 };
 
-export default Topbar;
+export default AdminTopbar;
