@@ -11,6 +11,8 @@ import Contactus from './pages/landing/contactus';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 
+import LogHeader from "./components/header/log-header";
+
 import Nofound from './pages/error/404';
 
 import AdminSidebar from './components/sidebar/admin-sidebar';
@@ -47,6 +49,17 @@ const AdminLayout = ({ children }) => {
     );
 }
 
+const LoginLayout = ({ children }) => {
+    return (
+        <div className="flex flex-col min-h-screen">
+            <LogHeader />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+        </div>
+    );
+
+}
+
 
 
 function App() {
@@ -63,6 +76,10 @@ function App() {
                 {/* Auth */}
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
+
+
+                Login User
+                <Route path="/user-home" element={<LoginLayout><Home/></LoginLayout>}/>
 
                 {/* 404 Error */}
                 <Route path="*" element={<Layout><Nofound/></Layout>}/>
