@@ -33,7 +33,9 @@ const LoginPage = () => {
                 {/* Right Section */}
                 <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8 md:p-12">
                     {/* Logo */}
-                    <img src={logo} alt="Logo" className="mb-4 h-12 md:h-20" />
+                    <Link to="/">
+                        <img src={logo} alt="Logo" className="mb-4 h-12 md:h-20" />
+                    </Link>
 
                     <h2 className="text-3xl font-semibold mb-4 text-blue-900">Welcome Back</h2>
 
