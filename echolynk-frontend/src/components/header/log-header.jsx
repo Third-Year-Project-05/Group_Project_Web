@@ -31,9 +31,9 @@ const Navbar = () => {
 
                 <div className={`flex-col md:flex md:flex-row md:-mx-4 w-full md:w-auto ${isOpen ? 'flex' : 'hidden'}`}>
                     <Link to="/" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Home</Link>
-                    <Link to="/about" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">About us</Link>
                     <Link to="/blog" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Blog</Link>
-                    <Link to="/contact" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Contact</Link>
+                    <Link to="/video" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Game</Link>
+                    <Link to="/video" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Video Chat</Link>
                 </div>
 
                 <div className="flex items-center space-x-4">
