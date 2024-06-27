@@ -25,6 +25,9 @@ import AdminReports from "./pages/admin/reports/reports";
 import AdminMessages from "./pages/admin/messages/messages";
 import AdminFinancialManagement from "./pages/admin/financial management/financial management";
 
+import UserSidebar from './components/sidebar/user-sidebar';
+// import userDashboard from './pages/user/dashboard/dashboard';
+import UserBlog from './pages/user/blog/blog';
 
 const Layout = ({ children }) => {
     return (
@@ -60,7 +63,18 @@ const LoginLayout = ({ children }) => {
 
 }
 
-
+const UserLayout = ({ children }) => {
+    return (
+        <div className="flex min-h-screen">
+            <UserSidebar />
+            <main className="flex-grow">
+                <div className="p-4"> {/* Adjust padding as needed */}
+                    {children}
+                </div>
+            </main>
+        </div>
+    );
+}
 
 function App() {
     return (
@@ -95,7 +109,9 @@ function App() {
                 <Route path="/admin-messages" element={<AdminLayout><AdminMessages /></AdminLayout>} />
                 <Route path="/admin-financial-management" element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />
 
-
+                {/*user*/}
+                {/* <Route path="/user-dashboard" element={<UserLayout><userDashboard /></UserLayout>} /> */}
+                <Route path='/user-blog' element={<UserLayout><UserBlog/></UserLayout>}/>
 
 
             </Routes>
