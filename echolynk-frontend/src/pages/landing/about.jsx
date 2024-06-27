@@ -1,30 +1,81 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import Helmet from 'react-helmet';
+import blogImage from "../../assets/blog.jpg";
+import appImage from "../../assets/app.png";
 
 const About = () => {
     return (
         <div className="container mx-auto py-8 px-6">
 
             <Helmet>
-                <title>Echolynk - Home </title>
+                <title>Echolynk - About Us</title>
             </Helmet>
 
-            <h1 className="text-3xl font-bold mb-4">Welcome to Our Website</h1>
-            <p className="mb-4">
-                This is a sample home page. Here you can introduce your company or website.
-                You can add more content, images, or other components as needed.
-            </p>
-            <p className="mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <p>
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
+            {/* Hero Section */}
+            <div className="w-full overflow-x-hidden">
+                <div className="relative">
+                    <img src={blogImage} alt="Background" className="w-full h-60 object-cover"/>
+                    <div className="absolute inset-0 bg-black opacity-40"></div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <div className="text-center mb-4">
+                            <h2 className="text-5xl font-bold text-gray-200">About Us</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {/* Image and Content Layout */}
+            <div className="flex flex-wrap md:flex-nowrap justify-between items-center">
+
+                <div className="w-full md:w-1/2 mb-4 md:mb-0 md:p-44">
+                    <h2 className="text-3xl font-semibold mb-4 text-black">Echolynk Mobile app</h2>
+                    <p className="text-lg mb-4 text-gray-600">
+                        Revolutionizing Communication for Deaf and Mute Individuals with Innovative and
+                        Accessible Solutions.Revolutionizing Communication for Deaf and Mute Individuals with
+                        Innovative and
+                        Accessible Solutions
+                    </p>
+                    <button
+                        className="bg-gradient-to-r from-blue-700 to-blue-900 text-white px-6 py-3.5 rounded-full hover:from-blue-600 hover:to-blue-800 transform transition-transform duration-300 hover:scale-105">
+                        Download Echolynk app
+                    </button>
+                </div>
+
+
+                <div className="w-full md:w-1/2 mb-6 md:mb-0 flex items-center justify-center">
+                    <div className="flex items-center justify-between h-auto w-full md:h-120 md:w-120">
+                        <img src={appImage} alt="App"
+                             className="w-full h-auto max-h-88 md:max-w-96 rounded-md"/>
+                    </div>
+                </div>
+
+
+            </div>
+
+            {/* Blue-900 Layer with Statistics */}
+            <div className="bg-blue-900 text-white p-6 rounded-md mb-6">
+                <div className="flex flex-wrap justify-around text-center">
+                    <div className="w-1/2 md:w-1/4 mb-4">
+                        <h2 className="text-3xl font-bold">8000+</h2>
+                        <p className="text-lg">Facebook Likes</p>
+                    </div>
+                    <div className="w-1/2 md:w-1/4 mb-4">
+                        <h2 className="text-3xl font-bold">43+</h2>
+                        <p className="text-lg">Events Covered</p>
+                    </div>
+                    <div className="w-1/2 md:w-1/4 mb-4">
+                        <h2 className="text-3xl font-bold">65+</h2>
+                        <p className="text-lg">Articles Published</p>
+                    </div>
+                    <div className="w-1/2 md:w-1/4 mb-4">
+                        <h2 className="text-3xl font-bold">21+</h2>
+                        <p className="text-lg">Active Crew</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-
     );
 };
 
