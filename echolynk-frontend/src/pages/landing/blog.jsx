@@ -1,27 +1,68 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import blogImage from "../../assets/blog.jpg";
+import image from "../../assets/home.jpg";
 
 const Blog = () => {
     return (
         <div className="container mx-auto py-8 px-6">
 
             <Helmet>
-                <title>Echolynk - Home </title>
+                <title>Echolynk - Blog </title>
             </Helmet>
 
-            <h1 className="text-3xl font-bold mb-4">Welcome to Our Website</h1>
-            <p className="mb-4">
-                This is a sample home page. Here you can introduce your company or website.
-                You can add more content, images, or other components as needed.
-            </p>
-            <p className="mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <p>
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
+            {/* Hero Section */}
+            <div className="w-full overflow-x-hidden">
+                <div className="max-w-8xl mx-auto relative">
+                    <img src={blogImage} alt="Background" className="w-full h-60 object-cover"/>
+                    <div className="absolute inset-0 bg-black opacity-50"></div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <div className="text-center mb-4">
+                            <h2 className="text-5xl font-bold text-gray-200 mb-4">Our Blog</h2>
+                            <p className="text-xl font-medium text-gray-200">Our Blog</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 py-8">
+                <div
+                    className="bg-white shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
+                    <img src={image} alt="img"
+                         className="self-center rounded-lg h-48 md:h-auto md:max-h-80 object-cover"/>
+                    <div className="flex flex-row justify-between font-light text-xs mt-2">
+                        <p className="text-gray-500">Date</p>
+                        <p className="text-gray-500">Author</p>
+                    </div>
+                    <p className="text-lg font-semibold mt-2">Title</p>
+                    <p className="text-sm text-gray-600">Description</p>
+                </div>
+                <div
+                    className="bg-white shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
+                    <img src={image} alt="img"
+                         className="self-center rounded-lg h-48 md:h-auto md:max-h-80 object-cover"/>
+                    <div className="flex flex-row justify-between font-light text-xs mt-2">
+                        <p className="text-gray-500">Date</p>
+                        <p className="text-gray-500">Author</p>
+                    </div>
+                    <p className="text-lg font-semibold mt-2">Title</p>
+                    <p className="text-sm text-gray-600">Description</p>
+                </div>
+                <div
+                    className="bg-white shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
+                    <img src={image} alt="img"
+                         className="self-center rounded-lg h-48 md:h-auto md:max-h-80 object-cover"/>
+                    <div className="flex flex-row justify-between font-light text-xs mt-2">
+                        <p className="text-gray-500">Date</p>
+                        <p className="text-gray-500">Author</p>
+                    </div>
+                    <p className="text-lg font-semibold mt-2">Title</p>
+                    <p className="text-sm text-gray-600">Description</p>
+                </div>
+            </div>
+
+
+
         </div>
 
 

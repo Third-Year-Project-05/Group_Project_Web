@@ -94,6 +94,7 @@ function App() {
 
                 Login User
                 <Route path="/user-home" element={<LoginLayout><Home/></LoginLayout>}/>
+                <Route path='/user-blog' element={<LoginLayout><UserBlog/></LoginLayout>}/>
 
                 {/* 404 Error */}
                 <Route path="*" element={<Layout><Nofound/></Layout>}/>
@@ -111,7 +112,7 @@ function App() {
 
                 {/*user*/}
                 {/* <Route path="/user-dashboard" element={<UserLayout><userDashboard /></UserLayout>} /> */}
-                <Route path='/user-blog' element={<UserLayout><UserBlog/></UserLayout>}/>
+                {/*<Route path='/user-blog' element={<UserLayout><UserBlog/></UserLayout>}/>*/}
 
 
             </Routes>
