@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FaUsers, FaUser, FaCrown, FaFilter } from 'react-icons/fa'; // Example icons
-import userPhoto from '../../../assets/Wikum.png'; // Import the image
+import { FaUsers, FaUser, FaCrown, FaFilter } from 'react-icons/fa';
+import userPhoto from '../../../assets/Wikum.png';
 
 const AdminUsers = () => {
     const initialUsers = [
@@ -56,7 +56,9 @@ const AdminUsers = () => {
 
             {/* Users Table */}
             <div className="relative w-full overflow-x-auto bg-white shadow-md rounded-lg">
+
                 <div className="flex justify-end p-4">
+
                     <button onClick={() => setFilterDropdown(!filterDropdown)} className="flex items-center p-2 border border-gray-300 rounded-md">
                         <FaFilter className="text-gray-600" />
                     </button>
