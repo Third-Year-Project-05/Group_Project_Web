@@ -9,7 +9,7 @@ const AdminSidebar = () => {
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex  bg-gray-100">
             <div className={`relative flex flex-col bg-white text-gray-800 shadow-lg transition-width duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
                 <AdminTopbar name="Wikum Preethika" />
 
