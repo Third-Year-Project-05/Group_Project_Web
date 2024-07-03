@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HomeIcon, UserIcon, CogIcon, LogoutIcon, ChevronLeftIcon,NewspaperIcon,
-    ChevronRightIcon, ChartBarIcon, PuzzleIcon, DocumentReportIcon, MailIcon, CurrencyDollarIcon }
+    ChevronRightIcon, ChartBarIcon, PuzzleIcon, DocumentReportIcon, MailIcon, CurrencyDollarIcon, VideoCameraIcon }
     from '@heroicons/react/outline';
 import AdminTopbar from '../topbar/admin-topbar';
 
@@ -20,6 +20,11 @@ const UserSidebar = () => {
                         {isOpen && <span className="ml-4">Dashboard</span>}
                     </Link>
 
+
+                    <Link to="/user-videocall" className="flex items-center p-2 hover:bg-blue-900 hover:text-white rounded-md">
+                        <VideoCameraIcon className="h-6 w-6"/>
+                        {isOpen && <span className="ml-4">Video Call</span>}
+                    </Link>
                     
                     <Link to="/user-blog" className="flex items-center p-2 hover:bg-blue-900 hover:text-white rounded-md">
                         <NewspaperIcon className="h-6 w-6"/>
