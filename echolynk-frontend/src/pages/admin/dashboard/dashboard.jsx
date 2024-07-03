@@ -9,6 +9,9 @@ const AdminDashboard = () => {
             </Helmet>
 
             <h1 className="text-3xl font-semibold mb-4">Admin Dashboard</h1>
+
+
+
         </div>
     );
 }

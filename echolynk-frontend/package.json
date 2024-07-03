@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "antd": "^5.18.3",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@headlessui/react": "^2.0.4",
     "@heroicons/react": "^1.0.6",
+    "@mui/material": "^5.15.21",
+    "@mui/x-data-grid-generator": "^7.8.0",
+    "@mui/x-data-grid-pro": "^7.8.0",
+    "antd": "^5.18.3",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
     "react": "^18.3.1",
