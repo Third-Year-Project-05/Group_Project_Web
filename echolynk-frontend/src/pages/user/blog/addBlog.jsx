@@ -8,11 +8,11 @@ const AddBlog = () => {
 
     return (
         <div>
-            <button onClick={toggleForm} className="text-white border-2 rounded-lg p-1 flex flex-row items-center px-3 py-1 bg-blue-600">
-                <PlusIcon className="h-5 w-5"/><span>Post</span>
+            <button onClick={toggleForm} className="text-white font-bold bg-blue-500 hover:bg-blue-600 border border-transparent rounded-lg p-2 flex items-center justify-center transition duration-150 ease-in-out">
+                <PlusIcon className="h-5 w-5 mr-2"/><span>Post</span>
             </button>
             {showForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
                     <div className="bg-white rounded-lg h-auto w-3/6 p-12 overflow-y-scroll">
                         <form>
                             <h1 className="text-2xl font-semibold mb-4 text-center">Add Blog</h1>
