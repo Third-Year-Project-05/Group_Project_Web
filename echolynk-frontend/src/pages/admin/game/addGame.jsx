@@ -205,7 +205,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                 </button>
                             </div>
                         </form>
-                        
+
                     </div>
                 )}
             </div>
