@@ -13,7 +13,6 @@ const AddBlog = () => {
             document.body.style.overflow = 'auto';
         }
 
-        // Cleanup function to reset overflow when component unmounts
         return () => {
             document.body.style.overflow = 'auto';
         };
