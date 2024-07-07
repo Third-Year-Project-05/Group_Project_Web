@@ -2,10 +2,15 @@ import { MenuIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
 import logo from '../../assets/echolynk.png';
 import 'typeface-poppins';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const getNavLinkClass = ({ isActive }) =>
+        isActive
+          ? "my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 active"
+          : "my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0";
 
     return (
         <nav className="bg-echolynk px-9 py-0">
@@ -26,10 +31,10 @@ const Navbar = () => {
                 </div>
 
                 <div className={`flex-col md:flex md:flex-row md:-mx-4 w-full md:w-auto ${isOpen ? 'flex' : 'hidden'}`}>
-                    <Link to="/" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Home</Link>
-                    <Link to="/about" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">About us</Link>
-                    <Link to="/blog" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Blog</Link>
-                    <Link to="/contact" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Contact</Link>
+                    <NavLink to="/" className={getNavLinkClass}>Home</NavLink>
+                    <NavLink to="/about" className={getNavLinkClass}>About us</NavLink>
+                    <NavLink to="/blog" className={getNavLinkClass}>Blog</NavLink>
+                    <NavLink to="/contact" className={getNavLinkClass}>Contact</NavLink>
                     <Link to="/login" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 md:hidden">Login</Link>
                 </div>
 
