@@ -18,7 +18,7 @@ const AdminBlog = () => {
     const [filterDropdown, setFilterDropdown] = useState(false);
     const [blogs, setBlogs] = useState(initialBlogs);
     const [showBlog, setShowBlog] = useState(false);
-    const [isPopupOpen, setIsPopupOpen] = useState(true);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     const handleOpenPopup = () => {
       setIsPopupOpen(true);
