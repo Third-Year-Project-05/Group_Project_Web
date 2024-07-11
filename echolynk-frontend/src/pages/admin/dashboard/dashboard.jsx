@@ -1,29 +1,8 @@
 import React from 'react';
 import {Helmet} from "react-helmet";
-import { BarChart } from '@mui/x-charts/BarChart';
+import { Chart1 } from '../../../components/admin/dashboard-chart';
 
 const AdminDashboard = () => {
-
-    const chartData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [
-            {
-                label: 'Users',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-            },
-        ],
-    };
-
-    const chartOptions = {
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
-        },
-    };
 
 
 
@@ -64,7 +43,7 @@ const AdminDashboard = () => {
 
             <div className="w-full bg-white shadow-md rounded-lg p-6">
                 <h2 className="text-xl font-semibold mb-4">Users Growth</h2>
-                <BarChart data={chartData} options={chartOptions} />
+                <Chart1 />
             </div>
 
         </div>
