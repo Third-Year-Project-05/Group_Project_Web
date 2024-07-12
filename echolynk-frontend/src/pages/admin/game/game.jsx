@@ -18,6 +18,7 @@ const AdminGame = () => {
         <div className="flex flex-col justify-start items-start h-full mt-20 ml-4">
             <h1 className="text-3xl font-semibold mb-4">Game</h1>
 
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full mb-6">
                 {/* Box 1: Total Games */}
                 <div className="flex flex-col bg-white shadow-md rounded-lg p-6">
@@ -83,6 +84,7 @@ const AdminGame = () => {
             </div>
 
             <AddGame isOpen={isAddGameOpen} onClose={() => setIsAddGameOpen(false)} onAddGame={handleAddGame} />
+
         </div>
     );
 }
