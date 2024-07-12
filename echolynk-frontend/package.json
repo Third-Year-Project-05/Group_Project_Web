@@ -18,6 +18,7 @@
     "@mui/x-data-grid-generator": "^7.8.0",
     "@mui/x-data-grid-pro": "^7.8.0",
     "antd": "^5.18.3",
+    "chart.js": "^4.4.3",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
     "react": "^18.3.1",
