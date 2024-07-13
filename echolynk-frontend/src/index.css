@@ -67,3 +67,15 @@
       @apply bg-background text-foreground;
     }
   }
+
+  .sidebar-dark {
+    --background: 222.2 84% 4.9%; 
+    --foreground: 210 40% 98%;
+    color: #E2E8F0; /* Light text */
+  }
+  
+  .sidebar-light {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    color: #2D3748; /* Dark text */
+  }
