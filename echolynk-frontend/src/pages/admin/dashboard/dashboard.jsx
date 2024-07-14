@@ -20,6 +20,7 @@ import {
     // Add more data as needed
   ];
 
+
 const AdminDashboard = () => {
 
 
@@ -75,6 +76,6 @@ const AdminDashboard = () => {
 
         </div>
     );
-}
+};
 
 export default AdminDashboard;
