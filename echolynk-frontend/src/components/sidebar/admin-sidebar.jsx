@@ -5,17 +5,19 @@ import { HomeIcon, UserIcon, CogIcon, LogoutIcon, ChevronLeftIcon,NewspaperIcon,
     from '@heroicons/react/outline';
 import AdminTopbar from '../topbar/admin-topbar';
 
+
 const isCurrentPage = (href) => {
     return window.location.pathname === href;
 };
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ theme }) => {
     const [isOpen, setIsOpen] = useState(true);
+    // const theme = 'dark'; 
 
     return (
-        <div className="flex bg-gray-100">
-            <div className={`relative flex flex-col bg-white text-gray-800 shadow-lg transition-width duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
-                <AdminTopbar name="Wikum Preethika" />
+        <div className={`${theme === 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex `}>
+            <div className={`relative flex flex-col  shadow-lg transition-width duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
+                <AdminTopbar name="Wikum Preethika" theme={theme} />
 
                 <nav className="flex-1 mt-3 p-4 space-y-4">
                     <Link to="/admin-dashboard" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-dashboard') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
@@ -71,13 +73,16 @@ const AdminSidebar = () => {
                 </div>
 
                 <button
-                    className="absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white p-1 rounded-full shadow-md"
+                    className="absolute -right-3 top-[6rem] transform -translate-y-1/2 bg-blue-900 p-1 rounded-full shadow-lg "
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    {isOpen ? <ChevronLeftIcon className="h-6 w-6 text-gray-800" /> : <ChevronRightIcon className="h-6 w-6 text-gray-800" />}
+                    {isOpen ? <ChevronLeftIcon className="h-6 w-6 text-white"/> :
+                        <ChevronRightIcon className="h-6 w-6 text-white"/>}
+
                 </button>
             </div>
         </div>
+    
     );
 };
 
