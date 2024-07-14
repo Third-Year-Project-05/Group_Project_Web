@@ -79,3 +79,17 @@
     --foreground: 222.2 84% 4.9%;
     color: #2D3748; /* Dark text */
   }
+
+  .overflow-y-scroll::-webkit-scrollbar {
+    width: 6px; /* Width of the scrollbar */
+}
+
+.overflow-y-scroll::-webkit-scrollbar-track {
+    background: #c8c8d5; /* Color of the scrollbar track */
+}
+
+.overflow-y-scroll::-webkit-scrollbar-thumb {
+    background-color: #4450b7; /* Color of the scroll thumb */
+    border-radius: 6px; /* Rounded corners of the scroll thumb */
+    border: 3px solid #4659b2; /* Creates padding around the scroll thumb */
+}

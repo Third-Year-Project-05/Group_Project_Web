@@ -30,7 +30,7 @@ const AdminDashboard = () => {
                 <title>Admin Dashboard</title>
             </Helmet>
 
-            <h1 className="text-lg font-semibold mb-4">DASHBOARD</h1>
+            <h1 className="text-xl font-semibold mb-4">DASHBOARD</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-6">
                 <Card>
