@@ -9,8 +9,8 @@ import {
     CardHeader,
     CardTitle,
   } from "../../../components/ui/card"
-  import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-  
+  import { AccessibilityIcon, UserCheck } from 'lucide-react';
+import { FaAccessibleIcon, FaMoneyCheck, FaRev, FaUserClock, FaUserPlus } from 'react-icons/fa';
 
   const data = [
     {name: 'Jan', orders: 240},
@@ -35,33 +35,50 @@ const AdminDashboard = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-6">
                 <Card>
-                    <CardHeader>
-                        <CardTitle>1000</CardTitle>
-                        <CardDescription>NO. OF VISITORS</CardDescription>
-                    </CardHeader>
+                    <div className='flex flex-row justify-between items-start w-full'>
+                        <CardHeader>
+                            <CardDescription style={{fontSize: '18px'}}>NO. OF VISITORS</CardDescription>
+                            <CardTitle>1000</CardTitle>
+                        </CardHeader>
+
+                        <FaUserClock className="text-4xl text-blue-500 mt-7 mr-4" />
+
+                    </div>
+
+
+                </Card>
+
+                <Card>
+                    <div className='flex flex-row justify-between items-start w-full'>
+
+                        <CardHeader>
+                            <CardDescription style={{fontSize: '18px'}}>REVENUE</CardDescription>
+                            <CardTitle>$5000</CardTitle>
+                        </CardHeader>
+
+                        <FaMoneyCheck className="text-4xl text-green-500 mt-7 mr-4" />
+                    </div>
+
+                </Card>
+
+                <Card>
+                    <div className='flex flex-row justify-between items-start w-full'>
+
+                            
+                        <CardHeader>
+                            <CardDescription style={{fontSize: '18px'}}>NEW USERS</CardDescription>
+                            <CardTitle>100</CardTitle>
+                        </CardHeader>
+
+                        <FaUserPlus className="text-4xl text-yellow-500 mt-7 mr-4" />
+                    </div>
 
                 </Card>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>$5000</CardTitle>
-                        <CardDescription>REVENUE</CardDescription>
-                    </CardHeader>
-
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                    <CardTitle>100</CardTitle>
-                    <CardDescription>NEW USERS</CardDescription>
-                    </CardHeader>
-
-                </Card>
-
-                <Card>
-                    <CardHeader>
+                        <CardDescription style={{fontSize: '18px'}}></CardDescription>
                         <CardTitle>200</CardTitle>
-                        <CardDescription></CardDescription>
                     </CardHeader>
                 </Card>
 
