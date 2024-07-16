@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './components/theme-provider';
 
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
@@ -32,8 +33,13 @@ import UserBlog from './pages/user/blog/blog';
 const Layout = ({ children }) => {
     return (
         <div className="flex flex-col min-h-screen">
+            
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow">
+            <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+                {children}
+            </ThemeProvider>
+            </main>
             <Footer />
         </div>
     );
@@ -42,10 +48,14 @@ const Layout = ({ children }) => {
 const AdminLayout = ({ children }) => {
     return (
         <div className="flex min-h-screen">
-            <AdminSidebar />
+            
+                <AdminSidebar theme="light" />
+            
             <main className="flex-grow">
-                <div className="p-4"> {/* Adjust padding as needed */}
+                <div className="p-4 overflow-x-hidden h-full"> 
+                <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                     {children}
+                </ThemeProvider>
                 </div>
             </main>
         </div>
@@ -69,7 +79,9 @@ const UserLayout = ({ children }) => {
             <UserSidebar />
             <main className="flex-grow">
                 <div className="p-4"> {/* Adjust padding as needed */}
+                <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                     {children}
+                </ThemeProvider>
                 </div>
             </main>
         </div>
