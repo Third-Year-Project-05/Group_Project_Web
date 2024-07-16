@@ -73,7 +73,7 @@ const AdminSidebar = ({ theme }) => {
                 </div>
 
                 <button
-                    className="absolute -right-3 top-[6rem] transform -translate-y-1/2 bg-blue-900 p-1 rounded-full shadow-lg "
+                    className="absolute -right-3 top-[5rem] transform -translate-y-1/2 bg-blue-900 p-1 rounded-full shadow-lg "
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {isOpen ? <ChevronLeftIcon className="h-6 w-6 text-white"/> :

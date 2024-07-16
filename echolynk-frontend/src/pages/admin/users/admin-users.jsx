@@ -25,7 +25,7 @@ const AdminUsers = () => {
     return (
         <div className="flex flex-col justify-start items-start h-full mt-20 ml-4 pr-4 w-full">
             <div className="flex items-center justify-between w-full mb-4">
-                <h1 className="text-3xl font-semibold">Users</h1>
+                <h1 className="text-xl font-semibold">USERS</h1>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full mb-6">

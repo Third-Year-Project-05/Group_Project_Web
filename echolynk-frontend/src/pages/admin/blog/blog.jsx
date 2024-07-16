@@ -116,7 +116,7 @@ const AdminBlog = () => {
                             <div className="overflow-x-auto">
                                 <table className="min-w-full dark:border-white rounded-lg">
                                     <thead className=''>
-                                    <tr className="w-full bg-gray-100 dark:bg-inherit border  dark:border-white ">
+                                    <tr className="w-full bg-gray-100 dark:bg-inherit border-b  dark:border-white ">
                                         <th className="py-2 px-4 text-left font-medium w-20"></th>
                                         <th className="py-2 px-4 text-left font-medium w-20">ID</th>
                                         <th className="py-2 px-4 text-left font-medium">Title</th>
