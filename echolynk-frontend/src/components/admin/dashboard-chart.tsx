@@ -1,5 +1,5 @@
 import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, Line, XAxis, LineChart, BarChart, YAxis, Bar, LabelList } from "recharts"
 
 import {
   Card,
@@ -15,16 +15,36 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart"
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+const chartData1 = [
+  { month: "January", revenue: 266 },
+  { month: "February", revenue: 505 },
+  { month: "March", revenue: 357 },
+  { month: "April", revenue: 263 },
+  { month: "May", revenue: 339 },
+  { month: "June", revenue: 354 },
+]
+const chartData2 = [
+  { month: "January", users: 20 },
+  { month: "February", users: 32 },
+  { month: "March", users: 25 },
+  { month: "April", users: 27 },
+  { month: "May", users: 30 },
+  { month: "June", users: 20 },
 ]
 
-const chartConfig = {
+const chartConfig1 = {
+  desktop: {
+    label: "Desktop",
+    color: "hsl(var(--chart-1))",
+  },
+  mobile: {
+    label: "Mobile",
+    color: "hsl(var(--chart-2))",
+  },
+} satisfies ChartConfig
+
+
+const chartConfig2 = {
   desktop: {
     label: "Desktop",
     color: "hsl(var(--chart-1))",
@@ -37,19 +57,19 @@ const chartConfig = {
 
 export function Chart1() {
   return (
-    <Card>
+    <Card className='shadow-lg'>
       <CardHeader>
-        <CardTitle>Users Growth</CardTitle>
+        <CardTitle>Revenue Growth</CardTitle>
 
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Showing total revenue for the last 6 months
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig1}>
           <AreaChart
             accessibilityLayer
-            data={chartData}
+            data={chartData1}
             margin={{
               left: 12,
               right: 12,
@@ -67,16 +87,9 @@ export function Chart1() {
               cursor={false}
               content={<ChartTooltipContent indicator="dot" />}
             />
+
             <Area
-              dataKey="mobile"
-              type="natural"
-              fill="var(--color-mobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
+              dataKey="revenue"
               type="natural"
               fill="var(--color-desktop)"
               fillOpacity={0.4}
@@ -99,5 +112,73 @@ export function Chart1() {
         </div>
       </CardFooter>
     </Card>
+  )
+}
+
+export function Chart2(){
+  return(
+    <Card className="shadow-lg">
+    <CardHeader>
+      <CardTitle>User Growth</CardTitle>
+      <CardDescription>Showing new users registered for the last 6 months</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <ChartContainer config={chartConfig2}>
+        <BarChart
+          accessibilityLayer
+          data={chartData2}
+          layout="vertical"
+          margin={{
+            right: 16,
+          }}
+        >
+          <CartesianGrid horizontal={false} />
+          <YAxis
+            dataKey="month"
+            type="category"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 3)}
+            hide
+          />
+          <XAxis dataKey="users" type="number" hide />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent indicator="line" />}
+          />
+          <Bar
+            dataKey="users"
+            layout="vertical"
+            fill="#2852DE"
+            radius={4}
+          >
+            <LabelList
+              dataKey="month"
+              position="insideLeft"
+              offset={8}
+              className="fill-primary-foreground"
+              fontSize={12}
+            />
+            <LabelList
+              dataKey="users"
+              position="right"
+              offset={8}
+              className="fill-foreground"
+              fontSize={12}
+            />
+          </Bar>
+        </BarChart>
+      </ChartContainer>
+    </CardContent>
+    <CardFooter className="flex-col items-start gap-2 text-sm">
+      <div className="flex gap-2 font-medium leading-none">
+        Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+      </div>
+      <div className="leading-none text-muted-foreground">
+      January - June 2024
+      </div>
+    </CardFooter>
+  </Card>
   )
 }

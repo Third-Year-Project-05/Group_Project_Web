@@ -1,6 +1,6 @@
 import React from 'react';
 import {Helmet} from "react-helmet";
-import { Chart1 } from '../../../components/admin/dashboard-chart';
+import { Chart1, Chart2 } from '../../../components/admin/dashboard-chart';
 import {
     Card,
     CardContent,
@@ -33,11 +33,11 @@ const AdminDashboard = () => {
 
             <h1 className="text-xl font-semibold mb-4">DASHBOARD</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-6">
-                <Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full mb-6">
+                <Card className='shadow-lg'>
                     <div className='flex flex-row justify-between items-start w-full'>
                         <CardHeader>
-                            <CardDescription style={{fontSize: '18px'}}>NO. OF VISITORS</CardDescription>
+                            <CardDescription style={{fontSize: '18px'}}>NO. OF USERS</CardDescription>
                             <CardTitle>1000</CardTitle>
                         </CardHeader>
 
@@ -47,21 +47,8 @@ const AdminDashboard = () => {
 
 
                 </Card>
-
-                <Card>
-                    <div className='flex flex-row justify-between items-start w-full'>
-
-                        <CardHeader>
-                            <CardDescription style={{fontSize: '18px'}}>REVENUE</CardDescription>
-                            <CardTitle>$5000</CardTitle>
-                        </CardHeader>
-
-                        <FaMoneyCheck className="text-4xl text-green-500 mt-7 mr-4" />
-                    </div>
-
-                </Card>
-
-                <Card>
+                
+                <Card className='shadow-lg'>
                     <div className='flex flex-row justify-between items-start w-full'>
 
                             
@@ -75,19 +62,36 @@ const AdminDashboard = () => {
 
                 </Card>
 
-                <Card>
+                <Card className='shadow-lg'>
+                    <div className='flex flex-row justify-between items-start w-full'>
+
+                        <CardHeader>
+                            <CardDescription style={{fontSize: '18px'}}>REVENUE</CardDescription>
+                            <CardTitle>$5000</CardTitle>
+                        </CardHeader>
+
+                        <FaMoneyCheck className="text-4xl text-green-500 mt-7 mr-4" />
+                    </div>
+
+                </Card>
+
+
+                {/* <Card>
                     <CardHeader>
                         <CardDescription style={{fontSize: '18px'}}></CardDescription>
                         <CardTitle>200</CardTitle>
                     </CardHeader>
-                </Card>
+                </Card> */}
 
             </div>
 
 
-            <div className="w-full rounded-lg p-6">
-                <div style={{ width: '30rem', height: '8rem'}}>
-                    <Chart1 />
+            <div className="w-full rounded-lg p-6 grid grid-cols-3 md:grid-cols-3 gap-4" >
+               <div style={{ display: 'grid', gridTemplateColumns: '1fr'}}>
+                    <Chart1  />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+                    <Chart2 />
                 </div>
             </div>
 
