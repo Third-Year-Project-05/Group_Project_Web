@@ -73,7 +73,7 @@ const AdminBlog = () => {
         <div>
             {showBlog && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10 overflow-y-scroll">
-                    <div className=" rounded-lg h-auto w-3/6 p-12">
+                    <div className="bg-white rounded-lg h-auto w-3/6 p-12">
 
                             <button onClick={toggleBlog} className="float-end relative left-5 bottom-5 text-gray-500 hover:text-gray-700">
                                 <XIcon className="h-6 w-6"/>

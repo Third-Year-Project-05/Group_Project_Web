@@ -75,13 +75,13 @@ const AdminTopbar = ({ name, theme }) => {
                         </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setTheme("light")}>
+                        <DropdownMenuItem onClick={{}}>
                             Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("dark")}>
+                        <DropdownMenuItem onClick={{}}>
                             Change password
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("system")}>
+                        <DropdownMenuItem onClick={{}}>
                             Log Out
                         </DropdownMenuItem>
                         </DropdownMenuContent>

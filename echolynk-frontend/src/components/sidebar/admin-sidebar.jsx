@@ -30,10 +30,10 @@ const AdminSidebar = ({ theme }) => {
                         {isOpen && <span className="ml-4">Users</span>}
                     </Link>
 
-                    <Link to="/admin-statistics" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-statistics') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
+                    {/* <Link to="/admin-statistics" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-statistics') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
                         <ChartBarIcon className="h-6 w-6" />
                         {isOpen && <span className="ml-4">Statistics</span>}
-                    </Link>
+                    </Link> */}
 
                     <Link to="/admin-game" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-game') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
                         <PuzzleIcon className="h-6 w-6" />

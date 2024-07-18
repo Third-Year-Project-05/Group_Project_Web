@@ -93,3 +93,7 @@
     border-radius: 6px; /* Rounded corners of the scroll thumb */
     border: 3px solid #4659b2; /* Creates padding around the scroll thumb */
 }
+
+.active-msg{
+  background-color: #93c5fd !important;
+}
