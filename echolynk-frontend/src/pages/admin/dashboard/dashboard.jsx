@@ -1,6 +1,8 @@
 import React from 'react';
 import {Helmet} from "react-helmet";
-import { Chart1, Chart2 } from '../../../components/admin/dashboard-chart';
+import { PremiumMain } from '../../../components/admin/dashboard/premium-charts';
+import { RevenueMain } from '../../../components/admin/dashboard/revenue-charts';
+import { UsersMain } from '../../../components/admin/dashboard/users-charts';
 import {
     Card,
     CardContent,
@@ -86,13 +88,17 @@ const AdminDashboard = () => {
             </div>
 
 
-            <div className="w-full rounded-lg p-6 grid grid-cols-3 md:grid-cols-3 gap-4" >
+            <div className="w-full rounded-lg p-0 grid grid-cols-3 md:grid-cols-3 gap-4" >
                <div style={{ display: 'grid', gridTemplateColumns: '1fr'}}>
-                    <Chart1  />
+                    <RevenueMain  />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
-                    <Chart2 />
+                    <UsersMain />
                 </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+                    <PremiumMain />
+                </div>
+
             </div>
 
         </div>
