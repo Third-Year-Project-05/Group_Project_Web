@@ -95,7 +95,7 @@ import { PieSectorDataItem } from "recharts/types/polar/Pie"
 
     return(
       <Card className="shadow-lg">
-        <Button style={{padding: '0px 9px', borderRadius: '50%', alignSelf: 'center', backgroundColor: 'white', color: 'black', float: 'right'}}
+        <Button className="bg-inherit text-inherit hover:bg-inherit" style={{padding: '0px 9px', borderRadius: '50%', alignSelf: 'center',  float: 'right'}}
             onClick={() => setIsPopupOpen(true)}>
           <ArrowUpRightFromSquare size={20} />
         </Button>

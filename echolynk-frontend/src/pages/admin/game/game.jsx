@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { FaGamepad, FaUsers, FaChartBar, FaPlus } from 'react-icons/fa';
 import AddGame from './addGame.jsx';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from "../../../components/ui/card"
 
 const AdminGame = () => {
     const [isAddGameOpen, setIsAddGameOpen] = useState(false);
@@ -20,32 +28,39 @@ const AdminGame = () => {
 
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full mb-6">
-                {/* Box 1: Total Games */}
-                <div className="flex flex-col bg-white shadow-md rounded-lg p-6">
-                    <div className="flex justify-between items-start w-full mb-4">
-                        <h2 className="text-xl font-semibold">Total Games</h2>
-                        <FaGamepad className="text-4xl text-blue-500"/>
-                    </div>
-                    <p className="text-2xl font-bold mt-auto">{games.length}</p>
-                </div>
+                <Card className='shadow-lg'>
+                    <div className='flex flex-row justify-between items-start w-full'>
 
-                {/* Box 2: Active Players */}
-                <div className="flex flex-col bg-white shadow-md rounded-lg p-6">
-                    <div className="flex justify-between items-start w-full mb-4">
-                        <h2 className="text-xl font-semibold">Active Players</h2>
-                        <FaUsers className="text-4xl text-green-500"/>
-                    </div>
-                    <p className="text-2xl font-bold mt-auto">500</p> {/* Replace with dynamic count */}
-                </div>
+                        <CardHeader className='gap-5'>
+                            <CardDescription style={{fontSize: '18px'}}>Total Games</CardDescription>
+                            <CardTitle>{games.length}</CardTitle>
+                        </CardHeader>
 
-                {/* Box 3: Game Statistics */}
-                <div className="flex flex-col bg-white shadow-md rounded-lg p-6">
-                    <div className="flex justify-between items-start w-full mb-4">
-                        <h2 className="text-xl font-semibold">Game Statistics</h2>
-                        <FaChartBar className="text-4xl text-yellow-500"/>
+                        <FaGamepad className="text-4xl text-blue-500 mt-7 mr-4"/>
                     </div>
-                    <p className="text-2xl font-bold mt-auto">Stats here</p> {/* Replace with relevant stats */}
-                </div>
+
+                </Card>
+
+
+                <Card className="shadow-lg">
+                    <div className="flex flex-row justify-between items-start w-full">
+                        <CardHeader className="gap-5">
+                            <CardDescription style={{fontSize: '18px'}}>Active Players</CardDescription>
+                            <CardTitle>500</CardTitle> {/* Replace 500 with dynamic count */}
+                        </CardHeader>
+                        <FaUsers className="text-4xl text-green-500 mt-7 mr-4" />
+                    </div>
+                </Card>
+                
+                <Card className="shadow-lg">
+                    <div className="flex flex-row justify-between items-start w-full">
+                        <CardHeader className="gap-5">
+                            <CardDescription style={{fontSize: '18px'}}>Game Statistics</CardDescription>
+                            <CardTitle>Stats here</CardTitle> {/* Replace "Stats here" with relevant stats */}
+                        </CardHeader>
+                        <FaChartBar className="text-4xl text-yellow-500 mt-7 mr-4" />
+                    </div>
+                </Card>
             </div>
 
             {/* Add Game Button */}
@@ -59,10 +74,10 @@ const AdminGame = () => {
             </div>
 
             {/* Games Table */}
-            <div className="relative w-full overflow-x-auto bg-white shadow-md rounded-lg space-x-1">
-                <table className="min-w-full bg-white">
+            <div className="relative w-full overflow-x-auto bg-white dark:bg-inherit shadow-md rounded-lg space-x-1">
+                <table className="min-w-full bg-white dark:bg-inherit">
                     <thead>
-                    <tr className="w-full bg-gray-100 border-b">
+                    <tr className="w-full bg-gray-100 dark:bg-inherit border-b">
                         <th className="py-2 px-4 text-left font-medium">Game Name</th>
                         <th className="py-2 px-4 text-left font-medium">Description</th>
                         <th className="py-2 px-4 text-left font-medium">Level</th>
@@ -72,7 +87,7 @@ const AdminGame = () => {
 
                     <tbody>
                     {games.map(game => (
-                        <tr key={game.id} className="hover:bg-gray-50">
+                        <tr key={game.id} className="hover:bg-gray-50 dark:hover:bg-inherit">
                             <td className="py-2 px-4 border-b">{game.name}</td>
                             <td className="py-2 px-4 border-b">{game.description}</td>
                             <td className="py-2 px-4 border-b">{game.level}</td>
