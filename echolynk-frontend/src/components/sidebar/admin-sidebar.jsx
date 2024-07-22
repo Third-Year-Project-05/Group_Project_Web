@@ -13,9 +13,10 @@ const isCurrentPage = (href) => {
 const AdminSidebar = ({ theme }) => {
     const [isOpen, setIsOpen] = useState(true);
     // const theme = 'dark'; 
+    console.log("sidebar theme ds", theme);
 
     return (
-        <div className={`${theme === 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex `}>
+        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex `}>
             <div className={`relative flex flex-col  shadow-lg transition-width duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
                 <AdminTopbar name="Wikum Preethika" theme={theme} />
 

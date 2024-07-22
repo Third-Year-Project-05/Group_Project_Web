@@ -9,6 +9,7 @@ import { DropdownMenu,   DropdownMenuContent,
     DropdownMenuTrigger, } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
     
 
 const AdminTopbar = ({ name, theme }) => {
@@ -22,7 +23,7 @@ const AdminTopbar = ({ name, theme }) => {
 
     return (
         
-        <div className={`${theme === 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex justify-between items-center px-5 py-4 w-screen z-10`}>
+        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex justify-between items-center px-5 py-4 w-screen z-10`}>
             <div className="flex items-center space-x-2">
                 <img src={logo} alt="Echolynk Logo" className="h-8 w-8"/>
                 <span className="text-xl  font-semibold hidden lg:block">Echolynk</span>
@@ -48,14 +49,21 @@ const AdminTopbar = ({ name, theme }) => {
                 </div>
                 <Input type='text' style={{borderRadius: '30px', height: '30px', width: '10rem', position:'relative', top: '2px'}} placeholder='Search...' />
 
-                <Link to="/notifications" className="relative text-center bg-blue-900 p-2 rounded-full h-[2.2rem] w-[2.2rem]">
-                    <BellIcon className="h-5 w-5 self-center text-white"/>
-                </Link>
+                {/* <Link to="/notifications" className="relative text-center bg-blue-900 p-2 rounded-full h-[2.2rem] w-[2.2rem]"> */}
+                    <Popover>
+                        <PopoverTrigger>
+                            <BellIcon className="relative text-center bg-blue-900 p-2 rounded-full h-[2.2rem] w-[2.2rem] self-center text-white"/>
+                            
+                        </PopoverTrigger>
+                        <PopoverContent>Here are the notifications</PopoverContent>
+                    </Popover>
+
+                {/* </Link> */}
                 <Link to="/admin-messages" className="relative bg-blue-900 p-2 rounded-full h-[2.2rem] w-[2.2rem]">
                     <ChatIcon className="h-5 w-5 text-white"/>
                 </Link>
 
-                <ModeToggle theme={theme} />
+                <ModeToggle />
                 
 
                     {/* <button onClick={() => setIsProfileOpen(!isProfileOpen)}

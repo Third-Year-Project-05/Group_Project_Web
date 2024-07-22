@@ -188,13 +188,13 @@ const AdminBlog = () => {
                                         </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => setTheme("all")}>
+                                        <DropdownMenuItem onClick={() => setFilter("all")}>
                                             All
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setTheme("approved")}>
+                                        <DropdownMenuItem onClick={() => setFilter("approved")}>
                                             Approved
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setTheme("dismissed")}>
+                                        <DropdownMenuItem onClick={() => setFilter("dismissed")}>
                                             Dissmissed
                                         </DropdownMenuItem>
                                         </DropdownMenuContent>
