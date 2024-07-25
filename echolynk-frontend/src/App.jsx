@@ -59,7 +59,7 @@ const AdminLayout = ({ children }) => {
                 
                     <AdminSidebar theme={theme} />
                 
-                <main className="flex-grow">
+                <main className="flex-grow relative ">
                     <div className="p-4 overflow-x-hidden h-full"> 
                         {children}
                     </div>

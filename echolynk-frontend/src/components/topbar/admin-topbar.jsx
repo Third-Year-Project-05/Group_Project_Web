@@ -23,7 +23,7 @@ const AdminTopbar = ({ name, theme }) => {
 
     return (
         
-        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex justify-between items-center px-5 py-4 w-screen z-10`}>
+        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex justify-between items-center px-5 py-4 w-screen z-10 bg-white bg-opacity-60 dark:bg-inherit dark:bg-opacity-60`}>
             <div className="flex items-center space-x-2">
                 <img src={logo} alt="Echolynk Logo" className="h-8 w-8"/>
                 <span className="text-xl  font-semibold hidden lg:block">Echolynk</span>
