@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { PlusIcon, ChevronDownIcon, XIcon } from '@heroicons/react/outline';
 import image from '../../../assets/home.jpg';
 import { FaArrowRight, FaBlogger, FaCross, FaFilter, FaTimes } from 'react-icons/fa';
-import AddBlog from '../../admin/blog/addBlog';
+import AddBlog from './addBlog';
 import ConfirmationPopup from '../../../components/confirmationPopup';
 import { DropdownMenu,   DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger, } from '../../../components/ui/dropdown-menu';
 import { Button } from '../../../components/ui/button';
+
+import {TableNew, TableAll }from './tables';
 
 const initialBlogs = [
     {id: 1, title: 'Blog 1', author: 'Author 1', date: '2023-01-15', image: image, content: 'Content 1', status: 'new'},	
@@ -22,23 +24,9 @@ const AdminBlog = () => {
     const [filterDropdown, setFilterDropdown] = useState(false);
     const [blogs, setBlogs] = useState(initialBlogs);
     const [showBlog, setShowBlog] = useState(false);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-    const handleOpenPopup = () => {
-      setIsPopupOpen(true);
-      document.body.style.overflow = 'hidden'; 
-    };
   
-    const handleClosePopup = () => {
-      setIsPopupOpen(false);
-      document.body.style.overflow = 'auto'; 
-    };
-  
-    const handleConfirm = () => {
-      console.log('Action confirmed!');
-      handleClosePopup();
-      // confirmation logic
-    };
+
 
 
 
@@ -70,113 +58,39 @@ const AdminBlog = () => {
 
     return (
 
-        <div>
-            {showBlog && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10 overflow-y-scroll">
-                    <div className=" rounded-lg h-auto w-3/6 p-12">
 
-                            <button onClick={toggleBlog} className="float-end relative left-5 bottom-5 text-gray-500 hover:text-gray-700">
-                                <XIcon className="h-6 w-6"/>
-                            </button>
-                       
-                        <div className="flex flex-col gap-4">
-                            <img src={image} alt="Blog" className="rounded-lg h-96 object-cover"/>
-                            {/* <p className="text-sm text-gray-600">Description</p> */}
-                            <div className="flex flex-row justify-between font-light text-xs mt-2">
-                                <p className="text-gray-500">Date</p>
-                                <p className="text-gray-500">Author</p>
-                            </div>
-                            <p className="text-lg font-semibold mt-2">Title</p>
-                            <p className="text-sm text-gray-600">Description</p>
-                        </div>
-                    </div>
-                </div>
-              
-            )}
 
-            <div className="flex flex-col justify-start items-start h-full mt-20 ml-4">
+            <div className="flex flex-col justify-start items-start mt-20 ml-4 relative">
                 <div className="flex flex-col justify-between w-full gap-4">
                     <div className="flex flex-col">
 
                         {/* Users Table */}
-                        <div className="relative w-full overflow-x-auto  shadow-md rounded-lg">
+                        <div className="relative w-full overflow-x-auto rounded-lg">
 
-                                <h1 className="text-xl font-semibold mb-4 self-start">BLOG POSTS</h1>
+                            <h1 className="text-xl font-semibold mb-4 self-start">BLOG POSTS</h1>
                             <div className="flex justify-between p-4 gap-3">
 
 
 
-                                <h1 className="text-xl font-semibold mb-4 self-start">New Blog Posts</h1>
+                                <h1 className="text-xl font-semibold mb-4 ml-10">New Blog Posts</h1>
 
                                     <AddBlog />
 
                         
                             </div>
 
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full dark:border-white rounded-lg">
-                                    <thead className=''>
-                                    <tr className="w-full bg-gray-100 dark:bg-inherit border-b  dark:border-white ">
-                                        <th className="py-2 px-4 text-left font-medium w-20"></th>
-                                        <th className="py-2 px-4 text-left font-medium w-20">ID</th>
-                                        <th className="py-2 px-4 text-left font-medium">Title</th>
-                                        <th className="py-2 px-4 text-left font-medium hidden md:table-cell">Description</th>
-                                        <th className="py-2 px-4 text-left font-medium hidden md:table-cell">Created On</th>
-                                        <th className="py-2 px-4 text-left font-medium">Author</th>
-                                        <th className="py-2 px-4 text-left font-medium w-1/4"></th>
-                                    </tr>
-                                    </thead>
+                            <TableNew />
 
-                                    <tbody>
-                                    {newBlogs.map(blog => (
-                                        <tr key={blog.id} className="hover:bg-gray-50 dark:hover:bg-inherit">
-
-                                            <td className="py-2 px-4 border-b flex items-center">
-                                                <img src={image} alt="Blog" className="h-10 w-10 rounded-full mr-2" />
-                                               
-                                            </td>
-
-                                            <td className="py-2 px-4 border-b">
-                                                {blog.id}
-                                            </td>
-
-                                            <td className="py-2 px-4 border-b hidden md:table-cell">{blog.title}</td>
-
-                                            <td className="py-2 px-4 border-b hidden md:table-cell">{blog.content}</td>
-
-                                            <td className="py-2 px-4 border-b">
-                                                    {blog.date}
-                                            </td>
-
-                                            <td className="py-2 px-4 border-b">
-                                                {blog.author}
-                                            </td>
-
-                                            <td className="py-2 px-4 border-b">
-                                                <button onClick={() => approveBlog(blog.id)} className="px-4 py-1 mx-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-150 ease-in-out">Approve</button>
-                                                <button onClick={handleOpenPopup} className="px-4 py-1 mx-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-150 ease-in-out">Dismiss</button>
-                                                <ConfirmationPopup
-                                                    isOpen={isPopupOpen}
-                                                    onClose={handleClosePopup}
-                                                    onConfirm={handleConfirm}
-                                                />
-                                            </td>
-
-                                        </tr>
-                                    ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                            
 
                         </div>
-
-                        <div className="flex flex-col top-5 relative">
+                        <div className="flex flex-col relative">
                         {/* Users Table */}
                             <div className="relative w-full shadow-md rounded-lg">
 
                                 <div className="flex justify-between p-4 gap-3">
 
-                                    <h1 className="text-xl font-semibold mb-4 self-start">All Blog Posts</h1>
+                                    <h1 className="text-xl font-semibold mb-4 ml-10">All Blog Posts</h1>
                                     <div className='flex self-end gap-3'>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -188,13 +102,13 @@ const AdminBlog = () => {
                                         </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => setTheme("all")}>
+                                        <DropdownMenuItem onClick={() => setFilter("all")}>
                                             All
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setTheme("approved")}>
+                                        <DropdownMenuItem onClick={() => setFilter("approved")}>
                                             Approved
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setTheme("dismissed")}>
+                                        <DropdownMenuItem onClick={() => setFilter("dismissed")}>
                                             Dissmissed
                                         </DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -202,7 +116,7 @@ const AdminBlog = () => {
                                     </div>
                                 </div>
 
-                                <div className="overflow-x-auto">
+                                {/* <div className="overflow-x-auto">
                                     <table className="min-w-full ">
                                         <thead>
                                         <tr className="w-full bg-gray-100 dark:bg-inherit border-b">
@@ -253,15 +167,18 @@ const AdminBlog = () => {
                                         ))}
                                         </tbody>
                                     </table>
-                                </div>
+                                </div> */}
+
+                                <TableAll />
 
                             </div>
 
                         </div>
+
                     </div>
                 </div>
             </div>
-        </div>
+   
 
     );
 }

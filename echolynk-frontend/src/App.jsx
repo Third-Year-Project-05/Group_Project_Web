@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './components/theme-provider';
+import { ThemeProvider, useTheme } from './components/theme-provider';
 
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
@@ -29,36 +29,43 @@ import AdminFinancialManagement from "./pages/admin/financial management/financi
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 import UserBlog from './pages/user/blog/blog';
+import { useEffect } from 'react';
 
 const Layout = ({ children }) => {
     return (
-        <div className="flex flex-col min-h-screen">
-            
-            <Header />
-            <main className="flex-grow">
-            <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-                {children}
-            </ThemeProvider>
-            </main>
-            <Footer />
-        </div>
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+            <div className="flex flex-col min-h-screen">
+                
+                <Header />
+                <main className="flex-grow">
+                    {children}
+                </main>
+                <Footer />
+            </div>
+        </ThemeProvider>
     );
 }
 
 const AdminLayout = ({ children }) => {
+    const {theme} = useTheme();
+
+    useEffect(() => {
+        console.log("sidebar theme", theme);
+    }, [theme]);
+    
     return (
-        <div className="flex min-h-screen">
-            
-                <AdminSidebar theme="light" />
-            
-            <main className="flex-grow">
-                <div className="p-4 overflow-x-hidden h-full"> 
-                <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-                    {children}
-                </ThemeProvider>
-                </div>
-            </main>
-        </div>
+        // <ThemeProvider defaultTheme={theme} storageKey="vite-ui-theme">
+            <div className="flex min-h-screen">
+                
+                    <AdminSidebar theme={theme} />
+                
+                <main className="flex-grow relative ">
+                    <div className="p-4 overflow-x-hidden h-full"> 
+                        {children}
+                    </div>
+                </main>
+            </div>
+        // </ThemeProvider>
     );
 }
 
@@ -74,22 +81,31 @@ const LoginLayout = ({ children }) => {
 }
 
 const UserLayout = ({ children }) => {
+    const {theme} = useTheme();
+
+    useEffect(() => {
+        console.log("sidebar theme", theme);
+    }, [theme]);
+    
     return (
-        <div className="flex min-h-screen">
-            <UserSidebar />
-            <main className="flex-grow">
-                <div className="p-4"> {/* Adjust padding as needed */}
-                <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-                    {children}
-                </ThemeProvider>
-                </div>
-            </main>
-        </div>
+
+        // <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+            <div className="flex min-h-screen">
+                <UserSidebar />
+                <main className="flex-grow">
+                    <div className="p-4">
+                        {children}
+                    </div>
+                </main>
+            </div>
+        // </ThemeProvider>
     );
 }
 
 function App() {
     return (
+        <ThemeProvider storageKey="vite-ui-theme">
+     
         <BrowserRouter>
             <Routes>
 
@@ -129,6 +145,7 @@ function App() {
 
             </Routes>
         </BrowserRouter>
+        </ThemeProvider>
     );
 }
 

@@ -55,15 +55,15 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl overflow-y-auto max-h-screen">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-4xl overflow-y-auto max-h-screen">
                 {step === 1 && (
                     <div>
                         <h2 className="text-2xl font-semibold mb-4">Add Game</h2>
 
                         <form onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
                             <div className="mb-4">
-                                <label className="block text-gray-700">Game Name</label>
+                                <label className="block text-gray-700 dark:text-white">Game Name</label>
                                 <input
                                     type="text"
                                     value={name}
@@ -73,7 +73,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-gray-700">Description</label>
+                                <label className="block text-gray-700 dark:text-white">Description</label>
                                 <input
                                     type="text"
                                     value={description}
@@ -83,7 +83,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-gray-700">Level</label>
+                                <label className="block text-gray-700 dark:text-white">Level</label>
                                 <input
                                     type="text"
                                     value={level}
@@ -93,7 +93,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-gray-700">Number of Rounds</label>
+                                <label className="block text-gray-700 dark:text-white">Number of Rounds</label>
                                 <input
                                     type="number"
                                     value={rounds}
@@ -103,7 +103,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-gray-700">Profile Image</label>
+                                <label className="block text-gray-700 dark:text-white">Profile Image</label>
                                 <input
                                     type="file"
                                     onChange={handleProfileImageChange}
@@ -141,7 +141,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                 <div key={index} className="mb-4">
                                     <h3 className="text-lg font-semibold mb-2">Question {index + 1}</h3>
                                     <div className="mb-2">
-                                        <label className="block text-gray-700">Image/Video/GIF</label>
+                                        <label className="block text-gray-700 dark:text-white">Image/Video/GIF</label>
                                         <input
                                             type="file"
                                             onChange={(e) => handleQuestionMediaChange(index, e)}
@@ -158,7 +158,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                         )}
                                     </div>
                                     <div className="mb-2">
-                                        <label className="block text-gray-700">Answers</label>
+                                        <label className="block text-gray-700 dark:text-white">Answers</label>
                                         {Array.from({ length: 4 }).map((_, answerIndex) => (
                                             <div key={answerIndex} className="flex items-center mb-1">
                                                 <input
@@ -178,7 +178,7 @@ const AddGame = ({ isOpen, onClose, onAddGame }) => {
                                         ))}
                                     </div>
                                     <div className="mb-2">
-                                        <label className="block text-gray-700">Mark</label>
+                                        <label className="block text-gray-700 dark:text-white">Mark</label>
                                         <input
                                             type="number"
                                             value={questions[index]?.mark || ''}
