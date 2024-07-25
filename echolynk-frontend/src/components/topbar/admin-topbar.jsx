@@ -46,6 +46,7 @@ const AdminTopbar = ({ name, theme }) => {
                             />
                         </div>
                     )}
+
                 </div>
                 <Input type='text' style={{borderRadius: '30px', height: '30px', width: '10rem', position:'relative', top: '2px'}} placeholder='Search...' />
 
