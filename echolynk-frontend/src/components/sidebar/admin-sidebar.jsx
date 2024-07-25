@@ -16,8 +16,8 @@ const AdminSidebar = ({ theme }) => {
     console.log("sidebar theme ds", theme);
 
     return (
-        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex `}>
-            <div className={`relative flex flex-col  shadow-lg transition-width duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
+        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex  h-screen  `}>
+            <div className={`relative flex flex-col  shadow-lg transition-width duration-300  ${isOpen ? 'w-64' : 'w-20'}`}>
                 <AdminTopbar name="Wikum Preethika" theme={theme} />
 
                 <nav className="flex-1 mt-3 p-4 space-y-4">
@@ -74,7 +74,7 @@ const AdminSidebar = ({ theme }) => {
                 </div>
 
                 <button
-                    className="absolute -right-3 top-[5rem] transform -translate-y-1/2 bg-blue-900 p-1 rounded-full shadow-lg "
+                    className="absolute -right-3 top-[5.5rem] transform -translate-y-1/2 bg-blue-900 p-1 rounded-full shadow-lg "
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {isOpen ? <ChevronLeftIcon className="h-6 w-6 text-white"/> :

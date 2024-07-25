@@ -38,7 +38,7 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full mb-6">
                 <Card className='shadow-lg'>
                     <div className='flex flex-row justify-between items-start w-full'>
-                        <CardHeader>
+                        <CardHeader className='gap-5'>
                             <CardDescription style={{fontSize: '18px'}}>NO. OF USERS</CardDescription>
                             <CardTitle>1000</CardTitle>
                         </CardHeader>
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
                     <div className='flex flex-row justify-between items-start w-full'>
 
                             
-                        <CardHeader>
+                        <CardHeader className='gap-5'>
                             <CardDescription style={{fontSize: '18px'}}>NEW USERS</CardDescription>
                             <CardTitle>100</CardTitle>
                         </CardHeader>
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
                 <Card className='shadow-lg'>
                     <div className='flex flex-row justify-between items-start w-full'>
 
-                        <CardHeader>
+                        <CardHeader className='gap-5'>
                             <CardDescription style={{fontSize: '18px'}}>REVENUE</CardDescription>
                             <CardTitle>$5000</CardTitle>
                         </CardHeader>
