@@ -25,6 +25,8 @@ import AdminBlog from "./pages/admin/blog/blog";
 import AdminReports from "./pages/admin/reports/reports";
 import AdminMessages from "./pages/admin/messages/messages";
 import AdminFinancialManagement from "./pages/admin/financial management/financial management";
+import ChangePassword from './components/change-pw';
+import AdminProfile from './pages/admin/admin-profile';
 
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
@@ -59,9 +61,9 @@ const AdminLayout = ({ children }) => {
     }, [theme]);
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex -z-30">
             <AdminSidebar theme={theme} isOpen={isOpen} toggleSidebar={toggleSidebar} />
-            <main className={`flex-grow relative transition-all duration-300  -z-10 ${isOpen ? 'ml-64' : 'ml-20'}`}>
+            <main className={`flex-grow relative transition-all duration-300 -z-0 mt-20 ${isOpen ? 'ml-64' : 'ml-20'}`}>
                 <div className="p-4 overflow-x-hidden h-full">
                     {children}
                 </div>
@@ -139,6 +141,9 @@ function App() {
                 <Route path="/admin-reports" element={<AdminLayout><AdminReports /></AdminLayout>} />
                 <Route path="/admin-messages" element={<AdminLayout><AdminMessages /></AdminLayout>} />
                 <Route path="/admin-financial-management" element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />
+                <Route path="/change-pw" element={<AdminLayout><ChangePassword /></AdminLayout>} />
+                <Route path="/admin-profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
+
 
                 {/*user*/}
                 {/* <Route path="/user-dashboard" element={<UserLayout><userDashboard /></UserLayout>} /> */}

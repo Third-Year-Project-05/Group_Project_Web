@@ -150,18 +150,9 @@ export const columnsNew: ColumnDef<Blog>[] = [
         >
           Approve
         </Button>
-        <Button
-          variant="outline"
-          onClick={handleOpenPopup}
-          className="text-error"
-          size="sm"
-        >
-          Dismiss
-        </Button>
 
         <ConfirmationPopup
-          isOpen={isPopupOpen}
-          onClose={handleClosePopup}
+
           onConfirm={handleConfirm}
       />
      

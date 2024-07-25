@@ -3,7 +3,7 @@ import userPhoto from '../../../assets/Wikum.png';
 
 const AdminMessages = () => {
     return (
-        <div className="flex flex-col justify-start items-start h-full mt-20 ml-4">
+        <div className="flex flex-col justify-start items-start h-full mt-0 ml-4">
             <h1 className="text-xl font-semibold mb-4">MESSAGES</h1>
             <div className='flex gap-5'>
                 <div className='cursor-pointer hover:underline hover:underline-offset-8 transition-all rounded-lg p-2 '>
@@ -35,7 +35,7 @@ const AdminMessages = () => {
                     </div>
                 </div>
                 
-                <div className=' w-3/4 rounded-lg flex flex-col gap-4 border border-blue-200 p-3'>
+                <div className=' w-3/4 rounded-lg flex flex-col gap-4 border border-blue-200 p-3 h-[30rem]'>
                     <div className='overflow-y-scroll h-full p-2'>
                         <div className='flex flex-col gap-2 cursor-pointer group'>
                             <p className='ml-8 italic text-sm opacity-0 group-hover:opacity-100 transition-opacity'>2 days ago</p>

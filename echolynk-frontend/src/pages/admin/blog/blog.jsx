@@ -60,7 +60,7 @@ const AdminBlog = () => {
 
 
 
-            <div className="flex flex-col justify-start items-start mt-20 ml-4 relative">
+            <div className="flex flex-col justify-start items-start mt-0 ml-4 relative">
                 <div className="flex flex-col justify-between w-full gap-4">
                     <div className="flex flex-col">
 
