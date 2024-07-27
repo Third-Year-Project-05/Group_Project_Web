@@ -1,6 +1,7 @@
 package com.echolynk.echolynkbackend.controller;
 
 import com.echolynk.echolynkbackend.dto.AuthRequest;
+import com.echolynk.echolynkbackend.dto.AuthResponse;
 import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.service.AuthService;
 import com.echolynk.echolynkbackend.service.UserService;
@@ -30,13 +31,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody AuthRequest authRequest) {
-        // Assuming traditional login might still be needed
+    public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest authRequest) {
         try {
-            String token = userService.loginUser(authRequest.getEmail(), authRequest.getPassword());
-            return ResponseEntity.ok(token);
+            AuthResponse authResponse = userService.loginUser(authRequest.getEmail(), authRequest.getPassword());
+            return ResponseEntity.ok(authResponse);
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Error logging in: " + e.getMessage());
+            return ResponseEntity.status(401).body(null);
         }
     }
 
@@ -53,5 +53,4 @@ public class AuthController {
             return ResponseEntity.status(401).body("Error verifying token: " + e.getMessage());
         }
     }
-
 }

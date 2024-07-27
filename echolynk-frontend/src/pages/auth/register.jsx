@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MailIcon, LockClosedIcon } from '@heroicons/react/solid';
 import axios from 'axios';
 import googleIcon from '../../assets/google.png';
@@ -17,6 +17,7 @@ const RegisterPage = () => {
     });
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +37,7 @@ const RegisterPage = () => {
             userName: formData.name,
             email: formData.email,
             password: formData.password,
-            role: 'Deaf',
+            role: 'Deaf',  // assuming default role
             phoneNumber: '',
             timestamp: Date.now()
         };
@@ -45,6 +46,9 @@ const RegisterPage = () => {
             const response = await axios.post('http://localhost:8080/auth/register', userDto);
             setSuccessMessage('User registered successfully!');
             console.log('User registered:', response);
+
+            // Redirect to user home page after successful registration
+            navigate('/user-home');
         } catch (error) {
             setErrorMessage('Error registering user. Please try again.');
             console.error('Error registering user:', error);
@@ -58,7 +62,6 @@ const RegisterPage = () => {
             </Helmet>
 
             <div className="flex w-full max-w-6xl bg-white rounded-lg shadow-lg overflow-hidden">
-
                 {/* Left Section */}
                 <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8 md:p-12">
                     {/* Logo */}
@@ -147,7 +150,6 @@ const RegisterPage = () => {
                         <img src={loginImage} alt="Illustration" className="mt-10 max-h-100" />
                     </div>
                 </div>
-
             </div>
         </div>
     );

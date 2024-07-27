@@ -15,16 +15,26 @@ public class UserRepository {
     private Firestore firestore;
 
     public void saveUser(User user) {
-        firestore.collection("users").document(user.getId()).set(user);
+        try {
+            firestore.collection("users").document(user.getId()).set(user).get(); // Ensure write is completed
+        } catch (InterruptedException | ExecutionException e) {
+            // Handle the exception
+            throw new RuntimeException("Error saving user to Firestore", e);
+        }
     }
 
-    public User getUserByEmail(String email) throws ExecutionException, InterruptedException {
-        var query = firestore.collection("users").whereEqualTo("email", email).get();
-        var querySnapshot = query.get();
-        if (querySnapshot.isEmpty()) {
-            return null;
+    public User getUserByEmail(String email) {
+        try {
+            var query = firestore.collection("users").whereEqualTo("email", email).get();
+            var querySnapshot = query.get();
+            if (querySnapshot.isEmpty()) {
+                return null;
+            }
+            QueryDocumentSnapshot document = querySnapshot.getDocuments().get(0);
+            return document.toObject(User.class);
+        } catch (InterruptedException | ExecutionException e) {
+            // Handle the exception
+            throw new RuntimeException("Error retrieving user from Firestore", e);
         }
-        QueryDocumentSnapshot document = querySnapshot.getDocuments().get(0);
-        return document.toObject(User.class);
     }
 }
