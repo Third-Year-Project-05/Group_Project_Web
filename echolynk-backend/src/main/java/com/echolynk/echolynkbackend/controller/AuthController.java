@@ -2,7 +2,9 @@ package com.echolynk.echolynkbackend.controller;
 
 import com.echolynk.echolynkbackend.dto.AuthRequest;
 import com.echolynk.echolynkbackend.dto.UserDto;
+import com.echolynk.echolynkbackend.service.AuthService;
 import com.echolynk.echolynkbackend.service.UserService;
+import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
@@ -26,6 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody AuthRequest authRequest) {
+        // Assuming traditional login might still be needed
         try {
             String token = userService.loginUser(authRequest.getEmail(), authRequest.getPassword());
             return ResponseEntity.ok(token);
@@ -33,4 +39,19 @@ public class AuthController {
             return ResponseEntity.status(401).body("Error logging in: " + e.getMessage());
         }
     }
+
+    @PostMapping("/verifyToken")
+    public ResponseEntity<?> verifyToken(@RequestBody String idToken) {
+        try {
+            FirebaseToken decodedToken = authService.verifyIdToken(idToken);
+            if (decodedToken != null) {
+                return ResponseEntity.ok("Token verified successfully");
+            } else {
+                return ResponseEntity.status(401).body("Invalid token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Error verifying token: " + e.getMessage());
+        }
+    }
+
 }
