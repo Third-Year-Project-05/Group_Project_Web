@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './components/theme-provider';
+import { ThemeProvider, useTheme } from './components/theme-provider';
 
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
@@ -25,42 +25,52 @@ import AdminBlog from "./pages/admin/blog/blog";
 import AdminReports from "./pages/admin/reports/reports";
 import AdminMessages from "./pages/admin/messages/messages";
 import AdminFinancialManagement from "./pages/admin/financial management/financial management";
+import ChangePassword from './components/change-pw';
+import AdminProfile from './pages/admin/admin-profile';
 
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 import UserBlog from './pages/user/blog/blog';
+import { useEffect, useState } from 'react';
 
 const Layout = ({ children }) => {
     return (
-        <div className="flex flex-col min-h-screen">
-            
-            <Header />
-            <main className="flex-grow">
-            <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-                {children}
-            </ThemeProvider>
-            </main>
-            <Footer />
-        </div>
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+            <div className="flex flex-col min-h-screen">
+                
+                <Header />
+                <main className="flex-grow">
+                    {children}
+                </main>
+                <Footer />
+            </div>
+        </ThemeProvider>
     );
 }
 
 const AdminLayout = ({ children }) => {
+    const { theme } = useTheme();
+    const [isOpen, setIsOpen] = useState(true);
+
+    const toggleSidebar = () => {
+        setIsOpen(!isOpen);
+    };
+
+    useEffect(() => {
+        console.log("sidebar theme", theme);
+    }, [theme]);
+
     return (
-        <div className="flex min-h-screen">
-            
-                <AdminSidebar theme="light" />
-            
-            <main className="flex-grow">
-                <div className="p-4 overflow-x-hidden h-full"> 
-                <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <div className="flex -z-30">
+            <AdminSidebar theme={theme} isOpen={isOpen} toggleSidebar={toggleSidebar} />
+            <main className={`flex-grow relative transition-all duration-300 -z-0 mt-20 ${isOpen ? 'ml-64' : 'ml-20'}`}>
+                <div className="p-4 overflow-x-hidden h-full">
                     {children}
-                </ThemeProvider>
                 </div>
             </main>
         </div>
     );
-}
+};
 
 const LoginLayout = ({ children }) => {
     return (
@@ -74,22 +84,31 @@ const LoginLayout = ({ children }) => {
 }
 
 const UserLayout = ({ children }) => {
+    const {theme} = useTheme();
+
+    useEffect(() => {
+        console.log("sidebar theme", theme);
+    }, [theme]);
+    
     return (
-        <div className="flex min-h-screen">
-            <UserSidebar />
-            <main className="flex-grow">
-                <div className="p-4"> {/* Adjust padding as needed */}
-                <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-                    {children}
-                </ThemeProvider>
-                </div>
-            </main>
-        </div>
+
+        // <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+            <div className="flex min-h-screen">
+                <UserSidebar />
+                <main className="flex-grow">
+                    <div className="p-4">
+                        {children}
+                    </div>
+                </main>
+            </div>
+        // </ThemeProvider>
     );
 }
 
 function App() {
     return (
+        <ThemeProvider storageKey="vite-ui-theme">
+     
         <BrowserRouter>
             <Routes>
 
@@ -107,6 +126,7 @@ function App() {
                 Login User
                 <Route path="/user-home" element={<LoginLayout><Home/></LoginLayout>}/>
                 <Route path='/user-blog' element={<LoginLayout><UserBlog/></LoginLayout>}/>
+                
 
                 {/* 404 Error */}
                 <Route path="*" element={<Layout><Nofound/></Layout>}/>
@@ -121,6 +141,9 @@ function App() {
                 <Route path="/admin-reports" element={<AdminLayout><AdminReports /></AdminLayout>} />
                 <Route path="/admin-messages" element={<AdminLayout><AdminMessages /></AdminLayout>} />
                 <Route path="/admin-financial-management" element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />
+                <Route path="/change-pw" element={<AdminLayout><ChangePassword /></AdminLayout>} />
+                <Route path="/admin-profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
+
 
                 {/*user*/}
                 {/* <Route path="/user-dashboard" element={<UserLayout><userDashboard /></UserLayout>} /> */}
@@ -129,6 +152,7 @@ function App() {
 
             </Routes>
         </BrowserRouter>
+        </ThemeProvider>
     );
 }
 

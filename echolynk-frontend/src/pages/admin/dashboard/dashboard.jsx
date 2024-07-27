@@ -1,6 +1,8 @@
 import React from 'react';
 import {Helmet} from "react-helmet";
-import { Chart1 } from '../../../components/admin/dashboard-chart';
+import { PremiumMain } from '../../../components/admin/dashboard/premium-charts';
+import { RevenueMain } from '../../../components/admin/dashboard/revenue-charts';
+import { UsersMain } from '../../../components/admin/dashboard/users-charts';
 import {
     Card,
     CardContent,
@@ -26,18 +28,18 @@ const AdminDashboard = () => {
 
 
     return (
-        <div className="flex flex-col justify-start items-start h-full mt-20 ml-4">
+        <div className="flex flex-col justify-start items-start h-full mt-0 ml-4">
             <Helmet>
                 <title>Admin Dashboard</title>
             </Helmet>
 
             <h1 className="text-xl font-semibold mb-4">DASHBOARD</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-6">
-                <Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full mb-6">
+                <Card className='shadow-lg'>
                     <div className='flex flex-row justify-between items-start w-full'>
-                        <CardHeader>
-                            <CardDescription style={{fontSize: '18px'}}>NO. OF VISITORS</CardDescription>
+                        <CardHeader className='gap-5'>
+                            <CardDescription style={{fontSize: '18px'}}>NO. OF USERS</CardDescription>
                             <CardTitle>1000</CardTitle>
                         </CardHeader>
 
@@ -47,25 +49,12 @@ const AdminDashboard = () => {
 
 
                 </Card>
-
-                <Card>
-                    <div className='flex flex-row justify-between items-start w-full'>
-
-                        <CardHeader>
-                            <CardDescription style={{fontSize: '18px'}}>REVENUE</CardDescription>
-                            <CardTitle>$5000</CardTitle>
-                        </CardHeader>
-
-                        <FaMoneyCheck className="text-4xl text-green-500 mt-7 mr-4" />
-                    </div>
-
-                </Card>
-
-                <Card>
+                
+                <Card className='shadow-lg'>
                     <div className='flex flex-row justify-between items-start w-full'>
 
                             
-                        <CardHeader>
+                        <CardHeader className='gap-5'>
                             <CardDescription style={{fontSize: '18px'}}>NEW USERS</CardDescription>
                             <CardTitle>100</CardTitle>
                         </CardHeader>
@@ -75,20 +64,41 @@ const AdminDashboard = () => {
 
                 </Card>
 
-                <Card>
+                <Card className='shadow-lg'>
+                    <div className='flex flex-row justify-between items-start w-full'>
+
+                        <CardHeader className='gap-5'>
+                            <CardDescription style={{fontSize: '18px'}}>REVENUE</CardDescription>
+                            <CardTitle>$5000</CardTitle>
+                        </CardHeader>
+
+                        <FaMoneyCheck className="text-4xl text-green-500 mt-7 mr-4" />
+                    </div>
+
+                </Card>
+
+
+                {/* <Card>
                     <CardHeader>
                         <CardDescription style={{fontSize: '18px'}}></CardDescription>
                         <CardTitle>200</CardTitle>
                     </CardHeader>
-                </Card>
+                </Card> */}
 
             </div>
 
 
-            <div className="w-full rounded-lg p-6">
-                <div style={{ width: '30rem', height: '8rem'}}>
-                    <Chart1 />
+            <div className="w-full rounded-lg p-0 grid grid-cols-3 md:grid-cols-3 gap-4" >
+               <div style={{ display: 'grid', gridTemplateColumns: '1fr'}}>
+                    <RevenueMain  />
                 </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+                    <UsersMain />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+                    <PremiumMain />
+                </div>
+
             </div>
 
         </div>

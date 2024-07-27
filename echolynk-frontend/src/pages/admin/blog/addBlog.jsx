@@ -21,13 +21,13 @@ const AddBlog = () => {
 
     return (
         <div>
-            <Button onClick={toggleForm} style={{backgroundColor: 'rgb(30 58 138)', padding: '0.7rem'}} >
+            <Button onClick={toggleForm} style={{backgroundColor: 'rgb(30 58 138)', padding: '0.7rem', color: 'white'}} >
         
                 Add Blog
             </Button>
             {showForm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-90 flex justify-center items-center z-10">
-                    <div className="bg-white dark:bg-inherit rounded-lg h-auto w-3/6 p-12 overflow-y-scroll">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg h-auto w-3/6 p-12">
                         <form>
                             <h1 className="text-2xl font-semibold mb-4 text-center">Add Blog</h1>
                             <div className="mb-4">
