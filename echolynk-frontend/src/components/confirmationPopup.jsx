@@ -1,30 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../components/ui/dialog';
+import { Button } from '../components/ui/button';
 
-function ConfirmationPopup({ isOpen, onClose, onConfirm }) {
-  if (!isOpen) return null;
+const ConfirmationPopup = ({ onConfirm }) => {
+    const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-4 rounded-lg shadow-lg">
-        <h2 className="text-lg font-semibold">Are you sure?</h2>
-        <p className="my-2">Do you really want to perform this action?</p>
-        <div className="flex justify-end space-x-2">
-          <button
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-            onClick={onClose}
-          >
-            No
-          </button>
-          <button
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={onConfirm}
-          >
-            Yes
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+    const handleOpenChange = (open) => {
+        setIsOpen(open);
+    };
+
+    const handleConfirm = () => {
+        onConfirm();
+        setIsOpen(false);
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+            <DialogTrigger asChild>
+                <Button variant="outline"           
+                className="text-success"
+                size="sm">
+                    Dismiss
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Are you sure?</DialogTitle>
+                    <DialogDescription>
+                        This action cannot be undone. Please confirm if you wish to proceed.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <Button variant="secondary" onClick={() => setIsOpen(false)}>Cancel</Button>
+                    <Button variant="danger" onClick={handleConfirm}>Confirm</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
 
 export default ConfirmationPopup;

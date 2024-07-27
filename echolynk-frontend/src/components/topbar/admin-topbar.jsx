@@ -10,11 +10,15 @@ import { DropdownMenu,   DropdownMenuContent,
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+
+import { useNavigate } from 'react-router-dom';
     
 
 const AdminTopbar = ({ name, theme }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+    const navigate = useNavigate();
     // const [theme, setTheme] = useState('dark');
 
     const handleSearchToggle = () => {
@@ -23,7 +27,7 @@ const AdminTopbar = ({ name, theme }) => {
 
     return (
         
-        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex justify-between items-center px-5 py-4 w-screen z-10 bg-white bg-opacity-60 dark:bg-inherit dark:bg-opacity-60`}>
+        <div className={`${theme == 'dark' ? 'sidebar-dark' : 'sidebar-light'} flex justify-between items-center px-5 py-4 w-screen z-50 bg-white bg-opacity-60 dark:bg-inherit dark:bg-opacity-60`}>
             <div className="flex items-center space-x-2">
                 <img src={logo} alt="Echolynk Logo" className="h-8 w-8"/>
                 <span className="text-xl  font-semibold hidden lg:block">Echolynk</span>
@@ -84,10 +88,10 @@ const AdminTopbar = ({ name, theme }) => {
                         </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={{}}>
+                        <DropdownMenuItem onClick={() => navigate('/admin-profile')}>
                             Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={{}}>
+                        <DropdownMenuItem onClick={() => navigate('/change-pw')}>
                             Change password
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={{}}>

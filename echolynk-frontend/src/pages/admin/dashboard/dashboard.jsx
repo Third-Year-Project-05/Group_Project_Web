@@ -28,7 +28,7 @@ const AdminDashboard = () => {
 
 
     return (
-        <div className="flex flex-col justify-start items-start h-full mt-20 ml-4">
+        <div className="flex flex-col justify-start items-start h-full mt-0 ml-4">
             <Helmet>
                 <title>Admin Dashboard</title>
             </Helmet>

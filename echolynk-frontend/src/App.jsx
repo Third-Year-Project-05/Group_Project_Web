@@ -25,11 +25,13 @@ import AdminBlog from "./pages/admin/blog/blog";
 import AdminReports from "./pages/admin/reports/reports";
 import AdminMessages from "./pages/admin/messages/messages";
 import AdminFinancialManagement from "./pages/admin/financial management/financial management";
+import ChangePassword from './components/change-pw';
+import AdminProfile from './pages/admin/admin-profile';
 
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 import UserBlog from './pages/user/blog/blog';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const Layout = ({ children }) => {
     return (
@@ -47,27 +49,28 @@ const Layout = ({ children }) => {
 }
 
 const AdminLayout = ({ children }) => {
-    const {theme} = useTheme();
+    const { theme } = useTheme();
+    const [isOpen, setIsOpen] = useState(true);
+
+    const toggleSidebar = () => {
+        setIsOpen(!isOpen);
+    };
 
     useEffect(() => {
         console.log("sidebar theme", theme);
     }, [theme]);
-    
+
     return (
-        // <ThemeProvider defaultTheme={theme} storageKey="vite-ui-theme">
-            <div className="flex min-h-screen">
-                
-                    <AdminSidebar theme={theme} />
-                
-                <main className="flex-grow relative ">
-                    <div className="p-4 overflow-x-hidden h-full"> 
-                        {children}
-                    </div>
-                </main>
-            </div>
-        // </ThemeProvider>
+        <div className="flex -z-30">
+            <AdminSidebar theme={theme} isOpen={isOpen} toggleSidebar={toggleSidebar} />
+            <main className={`flex-grow relative transition-all duration-300 -z-0 mt-20 ${isOpen ? 'ml-64' : 'ml-20'}`}>
+                <div className="p-4 overflow-x-hidden h-full">
+                    {children}
+                </div>
+            </main>
+        </div>
     );
-}
+};
 
 const LoginLayout = ({ children }) => {
     return (
@@ -123,6 +126,7 @@ function App() {
                 Login User
                 <Route path="/user-home" element={<LoginLayout><Home/></LoginLayout>}/>
                 <Route path='/user-blog' element={<LoginLayout><UserBlog/></LoginLayout>}/>
+                
 
                 {/* 404 Error */}
                 <Route path="*" element={<Layout><Nofound/></Layout>}/>
@@ -137,6 +141,9 @@ function App() {
                 <Route path="/admin-reports" element={<AdminLayout><AdminReports /></AdminLayout>} />
                 <Route path="/admin-messages" element={<AdminLayout><AdminMessages /></AdminLayout>} />
                 <Route path="/admin-financial-management" element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />
+                <Route path="/change-pw" element={<AdminLayout><ChangePassword /></AdminLayout>} />
+                <Route path="/admin-profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
+
 
                 {/*user*/}
                 {/* <Route path="/user-dashboard" element={<UserLayout><userDashboard /></UserLayout>} /> */}
