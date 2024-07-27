@@ -27,6 +27,7 @@ import AdminMessages from "./pages/admin/messages/messages";
 import AdminFinancialManagement from "./pages/admin/financial management/financial management";
 import ChangePassword from './components/change-pw';
 import AdminProfile from './pages/admin/admin-profile';
+import AdminSettings from './pages/admin/settings/settings';
 
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
@@ -143,6 +144,7 @@ function App() {
                 <Route path="/admin-financial-management" element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />
                 <Route path="/change-pw" element={<AdminLayout><ChangePassword /></AdminLayout>} />
                 <Route path="/admin-profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
+                <Route path="/admin-settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
 
 
                 {/*user*/}
