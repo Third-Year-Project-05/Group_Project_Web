@@ -2,13 +2,28 @@ import { MenuIcon } from '@heroicons/react/solid';
 import React, { useState } from 'react';
 import logo from '../../assets/echolynk.png';
 import 'typeface-poppins';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BellIcon, ChatIcon, ChevronDownIcon } from '@heroicons/react/outline';
 import userPhoto from '../../assets/Wikum.png';
+import { ModeToggle } from '../mode-toggle';
+import { DropdownMenu,   DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger, } from '../ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [activeLink, setActiveLink] = useState('');
+
+    const handleLinkClick = (link) => {
+        setActiveLink(link);
+    };
+
+    const navigate = useNavigate();
+
 
     return (
         <nav className="bg-echolynk px-9 py-0">
@@ -29,40 +44,81 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                <div className={`flex-col md:flex md:flex-row md:-mx-4 w-full md:w-auto ${isOpen ? 'flex' : 'hidden'}`}>
-                    <Link to="/user-home" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Home</Link>
-                    <Link to="/user-blog" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Blog</Link>
-                    <Link to="/user-game" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Game</Link>
-                    <Link to="/user-videocall" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Video Chat</Link>
+                <div className={`flex-col pl-40 md:flex md:flex-row md:-mx-4 w-full md:w-auto ${isOpen ? 'flex' : 'hidden'}`}>
+                    <Link
+                        to="/user-home"
+                        className={`my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 ${activeLink === '/user-home' ? 'selected-link' : ''}`}
+                        onClick={() => handleLinkClick('/user-home')}
+                    >
+                        Home
+                    </Link>
+                    <Link
+                        to="/user-blog"
+                        className={`my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 ${activeLink === '/user-blog' ? 'selected-link' : ''}`}
+                        onClick={() => handleLinkClick('/user-blog')}
+                    >
+                        Blog
+                    </Link>
+                    <Link
+                        to="/user-game"
+                        className={`my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 ${activeLink === '/user-game' ? 'selected-link' : ''}`}
+                        onClick={() => handleLinkClick('/user-game')}
+                    >
+                        Game
+                    </Link>
+                    <Link
+                        to="/user-videocall"
+                        className={`my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 ${activeLink === '/user-videocall' ? 'selected-link' : ''}`}
+                        onClick={() => handleLinkClick('/user-videocall')}
+                    >
+                        Video Chat
+                    </Link>
                 </div>
 
                 <div className="flex items-center space-x-4">
 
-                    <Link to="/user-notifications" className="relative bg-blue-900 p-1.5 rounded-full">
-                        <BellIcon className="h-5 w-5 text-white" />
-                    </Link>
+                <Popover>
+                        <PopoverTrigger>
+                            <BellIcon className="relative text-center bg-blue-900 p-2 rounded-full h-[2.2rem] w-[2.2rem] self-center text-white"/>
+                            
+                        </PopoverTrigger>
+                        <PopoverContent>Here are the notifications</PopoverContent>
+                    </Popover>
 
-                    <Link to="/user-messages" className="relative bg-blue-900 p-1.5 rounded-full">
-                        <ChatIcon className="h-5 w-5 text-white" />
-                    </Link>
 
-                    <div className="relative">
-                        <button onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                className="relative flex items-center space-x-2 focus:outline-none">
-                            <img src={userPhoto} alt="User" className="h-10 w-10 rounded-full" />
-                            <ChevronDownIcon className="h-4 w-4 text-black" />
-                        </button>
+                <ModeToggle />
+                
 
-                        {isProfileOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                                <Link to="/edit-profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Edit
-                                    Profile</Link>
-                                <Link to="/change-password" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Change
-                                    Password</Link>
-                                <Link to="/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</Link>
-                            </div>
-                        )}
-                    </div>
+                    {/* <button onClick={() => setIsProfileOpen(!isProfileOpen)}
+                            className="relative flex items-center space-x-2 focus:outline-none">
+                        <img src={userPhoto} alt="User" className="h-10 w-10 rounded-full"/>
+                        <ChevronDownIcon className="h-4 w-4 text-black"/>
+                    </button> */}
+
+                  
+                        <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="icon" style={{ borderRadius: '50%', width: '2.2rem', height: '2.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <img src={userPhoto} alt="User" className="h-[2.2rem] w-[2.2rem] rounded-full transition-all" />
+                            {/* Uncommenting the Moon component as it seems to be part of the toggle functionality */}
+                            {/* <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" /> */}
+                            <span className="sr-only">Toggle theme</span>
+                        </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => navigate('/user-profile')}>
+                            Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/change-pw')}>
+                            Change password
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={{}}>
+                            Log Out
+                        </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+   
+
 
                 </div>
 

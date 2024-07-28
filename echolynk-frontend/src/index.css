@@ -108,3 +108,9 @@
 .active-msg{
   background-color: #93c5fd ;
 }
+
+.selected-link{
+  text-decoration: underline;
+  text-decoration-thickness: 2px; /* Adjust thickness as needed */
+  text-underline-offset: 5px; /* Adjust offset as needed */
+}

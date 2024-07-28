@@ -5,6 +5,10 @@ import AddBlog from "./addBlog";
 import blogImage from "../../../assets/blog.jpg";
 import { Helmet } from "react-helmet";
 import { FaFilter, FaUser, FaUsers, FaCross, FaTimes, FaBlogger, FaArrowRight, FaAccusoft, FaReact } from "react-icons/fa";
+import { DropdownMenu,   DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger, } from '../../../components/ui/dropdown-menu';
+import { Button } from "../../../components/ui/button";
 
 const UserBlog = () => {
     const initialBlogs = [
@@ -46,7 +50,7 @@ const UserBlog = () => {
 
             {showBlog && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10 overflow-y-scroll">
-                    <div className="bg-white rounded-lg h-auto w-3/6 p-12">
+                    <div className="bg-inherit rounded-lg h-auto w-3/6 p-12">
     
                             <button onClick={toggleBlog} className="float-end relative left-5 bottom-5 text-gray-500 hover:text-gray-700">
                                 <XIcon className="h-6 w-6"/>
@@ -91,27 +95,30 @@ const UserBlog = () => {
                         <AddBlog/>
     
                         
-                        <div className="relative">
-                            <button onClick={() => setFilterDropdown(!filterDropdown)} className="flex justify-center items-center p-2 border border-gray-300 rounded-md w-full hover:bg-gray-300 hover:text-white shadow-md transition duration-150 ease-in-out">
-                                <FaFilter className="text-gray-600" />
-                            </button>
-                            
-                            {filterDropdown && (
-                                <div className="absolute top-12  bg-white border border-gray-300 rounded-md shadow-md w-max">
-                                    <button onClick={() => handleFilterChange('All')} className="flex items-center px-4 py-2 hover:bg-gray-100">
-                                        <FaBlogger className="mr-2" /> All Posts
-                                    </button>
-                                    <button onClick={() => handleFilterChange('Approved')} className="flex items-center px-4 py-2 hover:bg-gray-100">
-                                        <FaReact className="mr-2" /> Your Posts
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="icon" style={{ width: 'full', height: '2.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <FaFilter className="h-4 w-4 text-black dark:text-white" />
+                                {/* Uncommenting the Moon component as it seems to be part of the toggle functionality */}
+                                {/* <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" /> */}
+                                <span className="sr-only">Filter</span>
+                            </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleFilterChange("All")}>
+                                All Posts
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleFilterChange("Approved")}>
+                                Your Posts
+                            </DropdownMenuItem>
+    
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         
                     </div>
                     <div className=" grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 py-8">
                         <div onClick={toggleBlog}
-                            className="bg-white shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
+                            className=" shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
                             <img src={image} alt="img"
                                 className="self-center rounded-lg h-48 md:h-auto md:max-h-80 object-cover"/>
                             <div className="flex flex-row justify-between font-light text-xs mt-2">
@@ -122,7 +129,7 @@ const UserBlog = () => {
                             <p className="text-sm text-gray-600">Description</p>
                         </div>
                         <div onClick={toggleBlog}
-                            className="bg-white shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
+                            className="shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
                             <img src={image} alt="img"
                                 className="self-center rounded-lg h-48 md:h-auto md:max-h-80 object-cover"/>
                             <div className="flex flex-row justify-between font-light text-xs mt-2">
@@ -133,7 +140,7 @@ const UserBlog = () => {
                             <p className="text-sm text-gray-600">Description</p>
                         </div>
                         <div onClick={toggleBlog}
-                            className="bg-white shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
+                            className=" shadow-xl flex flex-col p-3 hover:translate-y-1 transition-all rounded-lg cursor-pointer">
                             <img src={image} alt="img"
                                 className="self-center rounded-lg h-48 md:h-auto md:max-h-80 object-cover"/>
                             <div className="flex flex-row justify-between font-light text-xs mt-2">
