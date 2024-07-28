@@ -29,7 +29,7 @@ import AdminSettings from './pages/admin/settings/settings';
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 import UserBlog from './pages/user/blog/blog';
-import { useEffect, useState } from 'react';
+import {useContext, useEffect, useState} from 'react';
 
 const Layout = ({ children }) => {
     return (

@@ -18,10 +18,10 @@ import javax.crypto.SecretKey;
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String SECRET_KEY;  // Read from environment or configuration file
+    private String SECRET_KEY;
 
     @Value("${jwt.expiration}")
-    private long EXPIRATION_TIME;  // Read from environment or configuration file
+    private long EXPIRATION_TIME;
 
     private SecretKey getSigningKey() {
         return new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());

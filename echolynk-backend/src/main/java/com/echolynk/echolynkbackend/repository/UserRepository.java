@@ -16,7 +16,7 @@ public class UserRepository {
 
     public void saveUser(User user) {
         try {
-            firestore.collection("users").document(user.getId()).set(user).get(); // Ensure write is completed
+            firestore.collection("users").document(user.getId()).set(user).get();
         } catch (InterruptedException | ExecutionException e) {
             // Handle the exception
             throw new RuntimeException("Error saving user to Firestore", e);
