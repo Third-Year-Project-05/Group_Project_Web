@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaUsers, FaUser, FaCrown, FaFilter } from 'react-icons/fa';
 import userPhoto from '../../../assets/Wikum.png';
 import {
@@ -15,6 +15,8 @@ import {
 import { Button } from '../../../components/ui/button';
 import UserPopup from './viewUsers';
 
+import { getAllUsers } from '../../../api';
+
 const AdminUsers = () => {
     const initialUsers = [
         { id: 1, name: 'John Doe', email: 'johndoe@gmail.com', createdAt: '2023-01-15', type: 'Premium', status: 'active', photo: userPhoto },
@@ -24,7 +26,7 @@ const AdminUsers = () => {
 
     const [filter, setFilter] = useState('All');
     const [filterDropdown, setFilterDropdown] = useState(false);
-    const [users, setUsers] = useState(initialUsers);
+    const [users, setUsers] = useState([]);
 
     const [selectedUser, setSelectedUser] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -48,7 +50,13 @@ const AdminUsers = () => {
         filter === 'All' || user.type === filter
     );
 
-
+    useEffect(() => {
+        getAllUsers().then(response => {
+            setUsers(response.data);
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }, []);
 
     return (
         <div className="flex flex-col justify-start items-start h-full mt-0 ml-4 pr-4 w-full">

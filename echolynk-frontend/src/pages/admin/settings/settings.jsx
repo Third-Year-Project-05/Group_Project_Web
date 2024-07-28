@@ -1,83 +1,121 @@
 import React, { useState } from 'react';
 import {
-
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
- 
 } from '../../../components/ui/select';
 import { Card, CardHeader, CardContent, CardFooter } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { Switch } from '../../../components/ui/switch';
-
+import { X } from 'lucide-react'; // Assuming you use lucide-react for icons
 
 const AdminSettings = () => {
-  const [notificationEmail, setNotificationEmail] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [notificationEmails, setNotificationEmails] = useState([]);
   const [theme, setTheme] = useState('light');
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
-  const [language, setLanguage] = useState('en');
+  const [adminNotifications, setAdminNotifications] = useState('all');
+
+  const handleAddEmail = () => {
+    if (newEmail && !notificationEmails.includes(newEmail)) {
+      setNotificationEmails([...notificationEmails, newEmail]);
+      setNewEmail('');
+    }
+  };
+
+  const handleRemoveEmail = (emailToRemove) => {
+    setNotificationEmails(notificationEmails.filter(email => email !== emailToRemove));
+  };
 
   const handleSaveSettings = () => {
     // Handle saving settings logic here
-    console.log('Settings saved', { notificationEmail, theme, isTwoFactorEnabled, language });
+    console.log('Settings saved', { notificationEmails, theme, isTwoFactorEnabled, adminNotifications });
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <Card className="shadow-lg">
-        <CardHeader className="bg-blue-500 text-white p-4 rounded-t-md">
+      <Card className="shadow-lg transition-all duration-300">
+        <CardHeader className="bg-blue-500 text-white p-4 rounded-t-md transition-colors duration-300">
           <h2 className="text-2xl font-bold">Admin Settings</h2>
         </CardHeader>
-        <CardContent className="p-4 bg-white space-y-6">
+        <CardContent className="p-4 space-y-6 transition-all duration-300">
           <div>
-            <p className="block text-sm font-medium text-gray-700 mb-2">Notification Email</p>
-            <Input
-              type="email"
-              value={notificationEmail}
-              onChange={(e) => setNotificationEmail(e.target.value)}
-              className="mt-1 block w-full border border-blue-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
-              placeholder="Enter your notification email"
-            />
+            <p className="block text-sm font-medium text-gray-700 dark:text-white mb-2">Notification Emails</p>
+            <div className="flex space-x-2">
+              <Input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="mt-1 block w-full  rounded-md shadow-sm  transition-all duration-300"
+                placeholder="Enter a notification email"
+              />
+              <Button
+                type="button"
+                onClick={handleAddEmail}
+                className="bg-blue-500 hover:bg-blue-700 dark:text-white text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-300"
+              >
+                Add Email
+              </Button>
+            </div>
+            {notificationEmails.length > 0 && (
+              <ul className="mt-2 space-y-1">
+                {notificationEmails.map((email, index) => (
+                  <li key={index} className="flex items-center justify-between border border-gray-300 rounded p-2 transition-all duration-300">
+                    <span>{email}</span>
+                    <Button
+                      type="button"
+                      onClick={() => handleRemoveEmail(email)}
+                      className="text-red-500 hover:text-red-700 dark:text-white bg-inherit hover:bg-inherit focus:outline-none transition-all duration-300"
+                    >
+                      <X size={16} />
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div>
-            <p className="block text-sm font-medium text-gray-700 mb-2">Theme</p>
+            <p className="block text-sm font-medium text-gray-700 dark:text-white mb-2">Theme</p>
             <Select value={theme} onValueChange={setTheme} required>
-              <SelectTrigger className="mt-1 block w-full border border-blue-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
-                {theme || 'Select a theme'}
+              <SelectTrigger className="relative mt-1 block w-full  rounded-md shadow-sm  transition-all duration-300">
+                <span>{theme || 'Select a theme'}</span>
+
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="transition-all duration-300">
                 <SelectItem value="light">Light</SelectItem>
                 <SelectItem value="dark">Dark</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <p className="block text-sm font-medium text-gray-700 mb-2">Two-Factor Authentication</p>
+            <p className="block text-sm font-medium text-gray-700 dark:text-white mb-2">Two-Factor Authentication</p>
             <div className="flex items-center">
-              <Switch checked={isTwoFactorEnabled} onCheckedChange={setIsTwoFactorEnabled} />
+              <Switch checked={isTwoFactorEnabled} onCheckedChange={setIsTwoFactorEnabled} className="transition-all duration-300" />
               <span className="ml-2 text-sm">{isTwoFactorEnabled ? 'Enabled' : 'Disabled'}</span>
             </div>
           </div>
           <div>
-            <p className="block text-sm font-medium text-gray-700 mb-2">Language</p>
-            <Select value={language} onValueChange={setLanguage} required>
-              <SelectTrigger className="mt-1 block w-full border border-blue-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
-                {language || 'Select a language'}
+            <p className="block text-sm font-medium text-gray-700 dark:text-white mb-2">Admin Notifications</p>
+            <Select value={adminNotifications} onValueChange={setAdminNotifications} required>
+              <SelectTrigger className="relative mt-1 block w-full  rounded-md shadow-sm  transition-all duration-300">
+                <span>{adminNotifications || 'Select notification setting'}</span>
+
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="si">Sinhala</SelectItem>
+              <SelectContent className="transition-all duration-300">
+                <SelectItem value="all">All Activities</SelectItem>
+                <SelectItem value="important">Important Activities Only</SelectItem>
+                <SelectItem value="none">None</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </CardContent>
-        <CardFooter className="bg-gray-50 p-4 rounded-b-md flex justify-end space-x-4">
+        <CardFooter className=" p-4 rounded-b-md flex justify-end space-x-4 transition-all duration-300">
           <Button
             type="button"
             variant="primary"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+            className="bg-blue-500 hover:bg-blue-700 dark:text-white text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-300"
             onClick={handleSaveSettings}
           >
             Save Settings
@@ -85,7 +123,7 @@ const AdminSettings = () => {
           <Button
             type="button"
             variant="secondary"
-            className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+            className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-300"
           >
             Cancel
           </Button>
