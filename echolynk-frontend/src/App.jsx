@@ -32,6 +32,8 @@ import AdminSettings from './pages/admin/settings/settings';
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 import UserBlog from './pages/user/blog/blog';
+import UserProfile from './pages/user/user-profile';
+
 import { useEffect, useState } from 'react';
 
 const Layout = ({ children }) => {
@@ -127,6 +129,8 @@ function App() {
                 {/*Login User*/}
                 <Route path="/user-home" element={<LoginLayout><Home/></LoginLayout>}/>
                 <Route path='/user-blog' element={<LoginLayout><UserBlog/></LoginLayout>}/>
+                <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
+                <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
 
 
                 {/* 404 Error */}
@@ -142,7 +146,7 @@ function App() {
                 <Route path="/admin-reports" element={<AdminLayout><AdminReports /></AdminLayout>} />
                 <Route path="/admin-messages" element={<AdminLayout><AdminMessages /></AdminLayout>} />
                 <Route path="/admin-financial-management" element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />
-                <Route path="/change-pw" element={<AdminLayout><ChangePassword /></AdminLayout>} />
+                <Route path="/admin-change-pw" element={<AdminLayout><ChangePassword /></AdminLayout>} />
                 <Route path="/admin-profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
                 <Route path="/admin-settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
 

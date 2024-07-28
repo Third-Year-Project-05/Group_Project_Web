@@ -109,7 +109,7 @@ const Navbar = () => {
                         <DropdownMenuItem onClick={() => navigate('/user-profile')}>
                             Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate('/change-pw')}>
+                        <DropdownMenuItem onClick={() => navigate('/user-change-pw')}>
                             Change password
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={{}}>

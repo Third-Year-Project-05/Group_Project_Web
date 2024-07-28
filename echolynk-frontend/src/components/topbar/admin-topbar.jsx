@@ -91,7 +91,7 @@ const AdminTopbar = ({ name, theme }) => {
                         <DropdownMenuItem onClick={() => navigate('/admin-profile')}>
                             Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate('/change-pw')}>
+                        <DropdownMenuItem onClick={() => navigate('/admin-change-pw')}>
                             Change password
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={{}}>
