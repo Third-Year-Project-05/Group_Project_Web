@@ -1,14 +1,16 @@
 import { MenuIcon } from '@heroicons/react/solid';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import logo from '../../assets/echolynk.png';
 import 'typeface-poppins';
 import { Link } from 'react-router-dom';
 import { BellIcon, ChatIcon, ChevronDownIcon } from '@heroicons/react/outline';
 import userPhoto from '../../assets/Wikum.png';
+import AuthContext from '../../context/AuthContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const { logout } = useContext(AuthContext);
 
     return (
         <nav className="bg-echolynk px-9 py-0">
@@ -59,7 +61,7 @@ const Navbar = () => {
                                     Profile</Link>
                                 <Link to="/change-password" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Change
                                     Password</Link>
-                                <Link to="/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</Link>
+                                <button onClick={logout} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</button>
                             </div>
                         )}
                     </div>
