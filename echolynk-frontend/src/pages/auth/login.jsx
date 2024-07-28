@@ -1,12 +1,8 @@
-// src/pages/LoginPage.jsx
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MailIcon, LockClosedIcon } from '@heroicons/react/solid';
 import axios from 'axios';
-import { auth } from '../../config/firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import googleIcon from '../../assets/google.png';
 import facebookIcon from '../../assets/facebook.png';
 import logo from '../../assets/echolynk.png';
@@ -20,6 +16,8 @@ const LoginPage = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -30,13 +28,27 @@ const LoginPage = () => {
         setSuccessMessage('');
 
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
-            const user = userCredential.user;
-            const idToken = await user.getIdToken();
+            const response = await axios.post('http://localhost:8080/auth/login', {
+                email: formData.email,
+                password: formData.password
+            });
 
-            const response = await axios.post('http://localhost:8080/auth/verifyToken', { idToken });
             setSuccessMessage('Login successful!');
             console.log('Login successful:', response.data);
+
+            // Extract user role from response data
+            const userRole = response.data.role;
+
+            // Redirect based on user role
+            if (userRole === 'Deaf') {
+                navigate('/user-home');
+            } else if (userRole === 'Verbal') {
+                navigate('/verbal-home');
+            } else if (userRole === 'Admin') {
+                navigate('/admin-dashboard');
+            } else {
+                setErrorMessage('Invalid user role.');
+            }
         } catch (error) {
             setErrorMessage('Error logging in. Please check your credentials.');
             console.error('Error logging in:', error);
@@ -50,7 +62,6 @@ const LoginPage = () => {
             </Helmet>
 
             <div className="flex w-full max-w-6xl bg-white rounded-lg shadow-lg overflow-hidden">
-
                 {/* Left Section */}
                 <div className="hidden md:flex md:flex-col justify-center items-center w-1/2 p-8 relative">
                     <div className="absolute top-0 left-0 w-full h-full bg-white"></div>
@@ -122,7 +133,6 @@ const LoginPage = () => {
                         Don't have an account? <Link to="/register" className="text-blue-900 hover:underline">Signup</Link>
                     </p>
                 </div>
-
             </div>
         </div>
     );

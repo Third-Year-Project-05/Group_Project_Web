@@ -20,6 +20,9 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY;  // Read from environment or configuration file
 
+    @Value("${jwt.expiration}")
+    private long EXPIRATION_TIME;  // Read from environment or configuration file
+
     private SecretKey getSigningKey() {
         return new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
@@ -58,7 +61,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))  // Token valid for 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))  // Token valid for configured time
                 .signWith(getSigningKey())  // Use SecretKey object
                 .compact();
     }

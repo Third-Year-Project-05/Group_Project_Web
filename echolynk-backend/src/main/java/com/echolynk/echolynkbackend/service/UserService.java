@@ -1,5 +1,6 @@
 package com.echolynk.echolynkbackend.service;
 
+import com.echolynk.echolynkbackend.dto.AuthResponse;
 import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.repository.UserRepository;
 import com.google.api.core.ApiFuture;
@@ -36,21 +37,26 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Override
     public UserDetails loadUserByUsername(String email) {
-        // Implement this method if needed to load user details
-        return null;
+        try {
+            UserRecord userRecord = firebaseAuth.getUserByEmail(email);
+            return new CustomUserDetails(userRecord);
+        } catch (FirebaseAuthException e) {
+            throw new RuntimeException("User not found", e);
+        }
     }
 
     public String registerUser(UserDto userDto) throws FirebaseAuthException, ExecutionException, InterruptedException {
-        // Check if all required fields are present
         if (userDto.getEmail() == null || userDto.getEmail().isEmpty() ||
                 userDto.getPassword() == null || userDto.getPassword().isEmpty() ||
                 userDto.getUserName() == null || userDto.getUserName().isEmpty()) {
             throw new IllegalArgumentException("Email, password, and userName are required.");
         }
 
-        // Register user with Firebase Authentication
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
                 .setEmail(userDto.getEmail())
                 .setPassword(passwordEncoder.encode(userDto.getPassword()))
@@ -58,10 +64,10 @@ public class UserService implements UserDetailsService {
 
         UserRecord userRecord = firebaseAuth.createUser(request);
 
-        // Save user to Firestore
         Map<String, Object> user = new HashMap<>();
         user.put("userId", userRecord.getUid());
         user.put("email", userDto.getEmail());
+        user.put("password", passwordEncoder.encode(userDto.getPassword()));
         user.put("userName", userDto.getUserName());
         user.put("role", userDto.getRole());
         user.put("phoneNumber", userDto.getPhoneNumber());
@@ -73,17 +79,47 @@ public class UserService implements UserDetailsService {
         return userRecord.getUid();
     }
 
-    public String loginUser(String email, String password) {
+    public AuthResponse loginUser(String email, String password) {
         try {
-            // Retrieve user by email
+            // Fetch the user record from Firebase Authentication
             UserRecord userRecord = firebaseAuth.getUserByEmail(email);
 
-            // Return a sample ID token or response
-            return "Sample ID Token";
+            // Fetch the user details from Firestore
+            Map<String, Object> userMap = firestore.collection("users").document(userRecord.getUid()).get().get().getData();
 
+            if (userMap == null) {
+                throw new RuntimeException("User not found");
+            }
+
+            // Retrieve the stored hashed password
+            String encodedPassword = (String) userMap.get("password");
+
+            if (encodedPassword == null) {
+                throw new RuntimeException("Password not found for user");
+            }
+
+            // Compare the provided password with the stored hashed password
+            if (passwordEncoder.matches(password, encodedPassword)) {
+                // Retrieve user role
+                String role = (String) userMap.get("role");
+                if (role == null) {
+                    throw new RuntimeException("User role not found");
+                }
+
+                // Generate and return a JWT token if the credentials are valid
+                UserDetails userDetails = new CustomUserDetails(userRecord);
+                String token = jwtUtil.generateToken(userDetails);
+
+                return new AuthResponse(token, role);
+            } else {
+                throw new RuntimeException("Invalid password");
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error during login", e);
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException("Firebase Authentication error", e);
         }
     }
 

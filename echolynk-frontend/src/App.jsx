@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
     return (
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
             <div className="flex flex-col min-h-screen">
-                
+
                 <Header />
                 <main className="flex-grow">
                     {children}
@@ -90,7 +90,7 @@ const UserLayout = ({ children }) => {
     useEffect(() => {
         console.log("sidebar theme", theme);
     }, [theme]);
-    
+
     return (
 
         // <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -109,7 +109,7 @@ const UserLayout = ({ children }) => {
 function App() {
     return (
         <ThemeProvider storageKey="vite-ui-theme">
-     
+
         <BrowserRouter>
             <Routes>
 
@@ -124,13 +124,13 @@ function App() {
                 <Route path="/register" element={<Register/>}/>
 
 
-                Login User
+                {/*Login User*/}
                 <Route path="/user-home" element={<LoginLayout><Home/></LoginLayout>}/>
                 <Route path='/user-blog' element={<LoginLayout><UserBlog/></LoginLayout>}/>
-                
+
 
                 {/* 404 Error */}
-                <Route path="*" element={<Layout><Nofound/></Layout>}/>
+                <Route path="*" element={<Nofound/>}/>
 
 
                 {/*admin*/}
