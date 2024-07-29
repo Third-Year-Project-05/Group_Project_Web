@@ -1,12 +1,14 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false); // New loading state
     const navigate = useNavigate();
 
     // Check for a stored user and token on initial load
@@ -21,6 +23,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (userData) => {
         setError(null);
+        setLoading(true); // Show loading indicator
         try {
             const response = await axios.post('http://localhost:8080/auth/login', userData);
             const { token, role } = response.data;
@@ -45,21 +48,42 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             setError('Login failed. Please check your credentials.');
             console.error('Login failed:', error);
+        } finally {
+            setLoading(false); // Hide loading indicator
         }
     };
 
     const logout = () => {
-        setUser(null);
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to log out?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3D4E8B',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, log out!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with logout
+                setUser(null);
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                delete axios.defaults.headers.common['Authorization'];
 
-        // Redirect to login page and replace history
-        navigate('/login', { replace: true });
+                // Redirect to login page and replace history
+                navigate('/login', { replace: true });
+                Swal.fire(
+                    'Logged Out!',
+                    'You have been logged out successfully.',
+                    'success'
+                );
+            }
+        });
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, error }}>
+        <AuthContext.Provider value={{ user, login, logout, error, loading }}>
             {children}
         </AuthContext.Provider>
     );

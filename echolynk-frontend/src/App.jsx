@@ -13,7 +13,10 @@ import Blog from './pages/landing/blog';
 import Contactus from './pages/landing/contactus';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
+
 import LogHeader from "./components/header/log-header";
+import VerbalHeader from "./components/header/verbal-header.jsx";
+
 import Nofound from './pages/error/404';
 
 import AdminSidebar from './components/sidebar/admin-sidebar';
@@ -33,6 +36,8 @@ import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 import UserBlog from './pages/user/blog/blog';
 import {useContext, useEffect, useState} from 'react';
+
+import Game from './pages/user/game/game';
 
 const Layout = ({ children }) => {
     return (
@@ -82,6 +87,16 @@ const LoginLayout = ({ children }) => {
     );
 }
 
+const VerbalLayout = ({ children }) => {
+    return (
+        <div className="flex flex-col min-h-screen">
+            <VerbalHeader />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+        </div>
+    );
+}
+
 const UserLayout = ({ children }) => {
     const { theme } = useTheme();
 
@@ -122,9 +137,12 @@ function App() {
                         {/* Login User */}
                         <Route path="/user-home" element={<PrivateUser element={<LoginLayout><Home /></LoginLayout>} />} />
                         <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
+                        <Route path="/user-game" element={<PrivateUser element={<LoginLayout><Game /></LoginLayout>} />} />
 
                         {/* Verbal User */}
-                        <Route path="/verbal-home" element={<PrivateVerbal element={<LoginLayout><Home /></LoginLayout>} />} />
+                        <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><Home /></VerbalLayout>} />} />
+                        <Route path="/verbal-blog" element={<PrivateVerbal element={<VerbalLayout><UserBlog /></VerbalLayout>} />} />
+                        <Route path="/verbal-game" element={<PrivateVerbal element={<VerbalLayout><Game /></VerbalLayout>} />} />
 
                         {/* 404 Error */}
                         <Route path="*" element={<Nofound />} />
