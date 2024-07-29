@@ -30,7 +30,7 @@ const ChangePasswordPage = () => {
     };
 
     return (
-        <div className="flex items-start justify-center ">
+        <div className="flex items-start justify-center mb-5">
             <Card className="w-full max-w-md p-8 space-y-6">
                 <CardHeader>
                     <CardTitle className="text-2xl font-semibold text-center">Change Password</CardTitle>

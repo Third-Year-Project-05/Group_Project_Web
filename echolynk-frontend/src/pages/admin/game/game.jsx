@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardTitle,
   } from "../../../components/ui/card"
+import { TableAll } from './tables';
 
 const AdminGame = () => {
     const [isAddGameOpen, setIsAddGameOpen] = useState(false);
@@ -74,29 +75,7 @@ const AdminGame = () => {
             </div>
 
             {/* Games Table */}
-            <div className="relative w-full overflow-x-auto bg-white dark:bg-inherit shadow-md rounded-lg space-x-1">
-                <table className="min-w-full bg-white dark:bg-inherit">
-                    <thead>
-                    <tr className="w-full bg-gray-100 dark:bg-inherit border-b">
-                        <th className="py-2 px-4 text-left font-medium">Game Name</th>
-                        <th className="py-2 px-4 text-left font-medium">Description</th>
-                        <th className="py-2 px-4 text-left font-medium">Level</th>
-                        <th className="py-2 px-4 text-left font-medium">Number of rounds</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {games.map(game => (
-                        <tr key={game.id} className="hover:bg-gray-50 dark:hover:bg-inherit">
-                            <td className="py-2 px-4 border-b">{game.name}</td>
-                            <td className="py-2 px-4 border-b">{game.description}</td>
-                            <td className="py-2 px-4 border-b">{game.level}</td>
-                            <td className="py-2 px-4 border-b">{game.rounds}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
+            <TableAll />
 
             <AddGame isOpen={isAddGameOpen} onClose={() => setIsAddGameOpen(false)} onAddGame={handleAddGame} />
 

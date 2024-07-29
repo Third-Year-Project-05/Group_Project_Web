@@ -77,7 +77,7 @@ const AdminLayout = ({ children }) => {
 
 const LoginLayout = ({ children }) => {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-gray-200 dark:bg-inherit">
             <LogHeader />
             <main className="flex-grow">{children}</main>
             <Footer />

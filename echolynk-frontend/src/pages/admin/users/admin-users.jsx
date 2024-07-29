@@ -16,6 +16,7 @@ import { Button } from '../../../components/ui/button';
 import UserPopup from './viewUsers';
 
 import { getAllUsers } from '../../../api';
+import { TableAll } from './tables';
 
 const AdminUsers = () => {
     const initialUsers = [
@@ -102,7 +103,7 @@ const AdminUsers = () => {
             </div>
 
             {/* Users Table */}
-            <div className="relative w-full overflow-x-auto bg-white dark:bg-inherit shadow-md rounded-lg">
+            <div className="relative w-full overflow-x-auto bg-white dark:bg-inherit rounded-lg">
 
                 <div className="flex justify-end p-4">
 
@@ -129,41 +130,8 @@ const AdminUsers = () => {
                 </DropdownMenu>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white dark:bg-inherit">
-                        <thead>
-                            <tr className="w-full bg-gray-100 dark:bg-inherit border-b">
-                                <th className="py-2 px-4 text-left font-medium">Name</th>
-                                <th className="py-2 px-4 text-left font-medium hidden md:table-cell">Email</th>
-                                <th className="py-2 px-4 text-left font-medium hidden md:table-cell">Created On</th>
-                                <th className="py-2 px-4 font-medium text-center">Type</th>
-                                <th className="py-2 px-4 font-medium text-center">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredUsers.map(user => (
-                                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-transparent cursor-pointer" onClick={() => handleRowClick(user)}>
-                                    <td className="py-2 px-4 border-b flex items-center">
-                                        <img src={user.photo} alt="User" className="h-10 w-10 rounded-full mr-2" />
-                                        {user.name}
-                                    </td>
-                                    <td className="py-2 px-4 border-b hidden md:table-cell">{user.email}</td>
-                                    <td className="py-2 px-4 border-b hidden md:table-cell">{user.createdAt}</td>
-                                    <td className="py-2 px-4 border-b text-center">
-                                        <span className={`inline-block px-2 py-1 rounded-full border-2 ${
-                                            user.type === 'Free' ? 'border-blue-900 bg-blue-100 dark:bg-blue-400 text-blue-900 dark:text-white' : 'border-yellow-500 bg-yellow-100 text-yellow-900'
-                                        }`}>{user.type}</span>
-                                    </td>
-                                    <td className="py-2 px-4 border-b text-center">
-                                        <span className={`inline-block w-3 h-3 rounded-full ${user.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                                        <span className="ml-2">{user.status}</span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <TableAll />
                     {isPopupOpen && <UserPopup user={selectedUser} onClose={closePopup} />}
-                </div>
             </div>
         </div>
     );

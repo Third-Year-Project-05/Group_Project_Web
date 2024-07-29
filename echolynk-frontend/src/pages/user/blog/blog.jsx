@@ -97,7 +97,7 @@ const UserBlog = () => {
                         
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="icon" style={{ width: 'full', height: '2.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Button variant="outline" size="icon" style={{ width: 'auto', height: '2.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <FaFilter className="h-4 w-4 text-black dark:text-white" />
                                 {/* Uncommenting the Moon component as it seems to be part of the toggle functionality */}
                                 {/* <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" /> */}

@@ -35,7 +35,7 @@ const Home = () => {
                     </div>
 
                     <div className="md:w-1/2 relative">
-                        <img src={gridImage} alt="Grid" className="absolute top-0 left-0 w-full h-full object-cover dark:opacity-0"/>
+                        <img src={gridImage} alt="Grid" className="absolute top-0 left-0 w-full h-full object-cover opacity-20 dark:opacity-0"/>
                         <img src={homeImage} alt="Home" className="relative w-full h-full rounded-lg p-4 md:p-1"/>
                     </div>
 
