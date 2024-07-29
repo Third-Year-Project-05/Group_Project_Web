@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import logo from '../../assets/echolynk.png';
 import 'typeface-poppins';
 import { Link } from 'react-router-dom';
-import { BellIcon, ChatIcon, ChevronDownIcon } from '@heroicons/react/outline';
+import { BellIcon, ChatIcon, ChevronDownIcon ,StarIcon} from '@heroicons/react/outline';
 import userPhoto from '../../assets/Wikum.png';
 import AuthContext from '../../context/AuthContext';
 
@@ -57,6 +57,10 @@ const Navbar = () => {
 
                         {isProfileOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                                <Link to="/upgrade" className="block px-4 py-2 text-yellow-800 hover:bg-yellow-100 flex items-center space-x-2">
+                                    <span>Upgrade to Premium</span>
+                                    <StarIcon className="h-5 w-5 text-yellow-500" /> {/* Star icon for premium */}
+                                </Link>
                                 <Link to="/edit-profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Edit
                                     Profile</Link>
                                 <Link to="/change-password" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Change
