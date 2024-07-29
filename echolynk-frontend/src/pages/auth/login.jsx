@@ -14,7 +14,7 @@ const LoginPage = () => {
         password: ''
     });
 
-    const { login, error } = useContext(AuthContext);
+    const { login, error, loading } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -41,6 +41,16 @@ const LoginPage = () => {
                     handleSubmit={handleSubmit}
                 />
             </div>
+            {loading && (
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                    <div className="relative">
+                        <div className="w-16 h-16 border-4 border-dotted border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-4 h-4 border-4 border-dotted border-white border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
