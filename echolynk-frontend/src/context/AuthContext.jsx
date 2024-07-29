@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         delete axios.defaults.headers.common['Authorization'];
 
         // Redirect to login page and replace history
-        navigate('/', { replace: true });
+        navigate('/login', { replace: true });
     };
 
     return (
