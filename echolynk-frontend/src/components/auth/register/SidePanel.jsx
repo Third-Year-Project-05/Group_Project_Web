@@ -1,5 +1,5 @@
 import React from 'react';
-import qrCode from "../../../assets/qrcode.png"; // Ensure to replace with the actual path
+import qrCode from "../../../assets/qrcode.png";
 
 const SidePanel = ({ userType, setUserType }) => (
     <div className="hidden md:flex md:flex-col justify-center items-center w-1/2 p-8 relative">

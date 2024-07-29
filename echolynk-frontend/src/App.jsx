@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './components/theme-provider';
 import { AuthProvider } from './context/AuthContext';
+import Private from './context/PrivateRoute';
+import PrivateUser from './context/PrivateUser';
+import PrivateVerbal from './context/PrivateVerbal';
 
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
@@ -117,24 +120,27 @@ function App() {
                         <Route path="/register" element={<Register />} />
 
                         {/* Login User */}
-                        <Route path="/user-home" element={<LoginLayout><Home /></LoginLayout>} />
-                        <Route path="/user-blog" element={<LoginLayout><UserBlog /></LoginLayout>} />
+                        <Route path="/user-home" element={<PrivateUser element={<LoginLayout><Home /></LoginLayout>} />} />
+                        <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
+
+                        {/* Verbal User */}
+                        <Route path="/verbal-home" element={<PrivateVerbal element={<LoginLayout><Home /></LoginLayout>} />} />
 
                         {/* 404 Error */}
                         <Route path="*" element={<Nofound />} />
 
                         {/* Admin */}
-                        <Route path="/admin-dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-                        <Route path="/admin-users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
-                        <Route path="/admin-statistics" element={<AdminLayout><AdminStatistics /></AdminLayout>} />
-                        <Route path="/admin-game" element={<AdminLayout><AdminGame /></AdminLayout>} />
-                        <Route path="/admin-blog" element={<AdminLayout><AdminBlog /></AdminLayout>} />
-                        <Route path="/admin-reports" element={<AdminLayout><AdminReports /></AdminLayout>} />
-                        <Route path="/admin-messages" element={<AdminLayout><AdminMessages /></AdminLayout>} />
-                        <Route path="/admin-financial-management" element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />
-                        <Route path="/change-pw" element={<AdminLayout><ChangePassword /></AdminLayout>} />
-                        <Route path="/admin-profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
-                        <Route path="/admin-settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
+                        <Route path="/admin-dashboard" element={<Private element={<AdminLayout><AdminDashboard /></AdminLayout>} />} />
+                        <Route path="/admin-users" element={<Private element={<AdminLayout><AdminUsers /></AdminLayout>} />} />
+                        <Route path="/admin-statistics" element={<Private element={<AdminLayout><AdminStatistics /></AdminLayout>} />} />
+                        <Route path="/admin-game" element={<Private element={<AdminLayout><AdminGame /></AdminLayout>} />} />
+                        <Route path="/admin-blog" element={<Private element={<AdminLayout><AdminBlog /></AdminLayout>} />} />
+                        <Route path="/admin-reports" element={<Private element={<AdminLayout><AdminReports /></AdminLayout>} />} />
+                        <Route path="/admin-messages" element={<Private element={<AdminLayout><AdminMessages /></AdminLayout>} />} />
+                        <Route path="/admin-financial-management" element={<Private element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />} />
+                        <Route path="/change-pw" element={<Private element={<AdminLayout><ChangePassword /></AdminLayout>} />} />
+                        <Route path="/admin-profile" element={<Private element={<AdminLayout><AdminProfile /></AdminLayout>} />} />
+                        <Route path="/admin-settings" element={<Private element={<AdminLayout><AdminSettings /></AdminLayout>} />} />
 
 
                     </Routes>
