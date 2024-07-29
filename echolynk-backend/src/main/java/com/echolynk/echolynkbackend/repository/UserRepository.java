@@ -1,5 +1,6 @@
 package com.echolynk.echolynkbackend.repository;
 
+import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.entity.User;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -34,6 +35,20 @@ public class UserRepository {
             return document.toObject(User.class);
         } catch (InterruptedException | ExecutionException e) {
             // Handle the exception
+            throw new RuntimeException("Error retrieving user from Firestore", e);
+        }
+    }
+
+    public UserDto getOneUser(){
+        try{
+            var query = firestore.collection("users").get();
+            var querySnapshot = query.get();
+            if (querySnapshot.isEmpty()) {
+                return null;
+            }
+            QueryDocumentSnapshot document = querySnapshot.getDocuments().get(0);
+            return document.toObject(UserDto.class);
+        }catch( InterruptedException | ExecutionException e ){
             throw new RuntimeException("Error retrieving user from Firestore", e);
         }
     }
