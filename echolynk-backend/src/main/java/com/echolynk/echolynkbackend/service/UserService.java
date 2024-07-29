@@ -121,7 +121,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserDto getOneUser() {
+    public UserDto getOneUser() throws FirebaseAuthException {
         return userRepository.getOneUser();
     }
 }
