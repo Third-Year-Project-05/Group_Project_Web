@@ -47,13 +47,15 @@ const AdminUsers = () => {
         setFilterDropdown(false);
     };
 
-    const filteredUsers = users.filter(user =>
-        filter === 'All' || user.type === filter
-    );
+    // const filteredUsers = users ? users.filter(user =>
+    //     filter === 'All' || user.type === filter
+    // ) : [];
 
     useEffect(() => {
         getAllUsers().then(response => {
-            setUsers(response.data);
+            response = [response]
+            setUsers(response);
+            console.log('Users:', response);
         }).catch(error => {
             console.error('Error fetching data:', error);
         });

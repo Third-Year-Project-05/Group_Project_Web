@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -18,8 +20,8 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping("/users")
-	public ResponseEntity<UserDto> getFirstUser() throws FirebaseAuthException {
-		 UserDto user = userService.getOneUser();
-		 return ResponseEntity.ok(user);
+	public ResponseEntity<List<UserDto>> getAllUsers() throws FirebaseAuthException {
+		 List<UserDto> users = userService.getAllUsers();
+		 return ResponseEntity.ok(users);
 	}
 }

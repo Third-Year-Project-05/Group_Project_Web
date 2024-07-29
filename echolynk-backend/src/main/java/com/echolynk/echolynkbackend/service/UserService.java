@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -121,7 +122,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserDto getOneUser() throws FirebaseAuthException {
-        return userRepository.getOneUser();
+    public List<UserDto> getAllUsers() throws FirebaseAuthException {
+        return userRepository.getAllUsers();
     }
 }

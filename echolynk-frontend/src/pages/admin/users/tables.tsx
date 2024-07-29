@@ -8,31 +8,31 @@ import { Button } from '../../../components/ui/button';
 
 import React, { useState, useEffect } from 'react';
 import { FaFilter } from "react-icons/fa";
+import { getAllUsers } from '../../../api';
 
 
 
-async function getData(): Promise<User[]> {
-  // Fetch data from your API here.
-  return [
-    {id: 1, name: 'User 1', email: ' Email 1', created_on: '2023-01-15', type: 'Free', status: 'Active'},
-    {id: 2, name: 'User 2', email: ' Email 2', created_on: '2023-01-15', type: 'Premium', status: 'Inactive'},
-    {id: 3, name: 'User 3', email: ' Email 3', created_on: '2023-01-15', type: 'Free', status: 'Active'},
-  ];
-}
 
 
 export function TableAll(){
     const [dataAll, setDataAll] = useState<User[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
-        async function fetchData() {
-          const result = await getData();
-          setDataAll(result);
-          setLoading(false);
+      const fetchData = async () => {
+        try {
+          var response = await getAllUsers();
+          response = [response];
+          setUsers(response);
+          console.log('Users:', response);
+        } catch (error) {
+          console.error('Error fetching data:', error);
         }
-        fetchData();
-      }, []);
+      };
+  
+      fetchData();
+    }, []);
     
       if (loading) {
         return <div>Loading...</div>;
@@ -40,7 +40,7 @@ export function TableAll(){
 
     return (
         <div className="container mx-auto py-5">
-        <DataTable columns={columnsAll} data={dataAll} />
+        <DataTable columns={columnsAll} data={users} />
         </div>
     );
 }
