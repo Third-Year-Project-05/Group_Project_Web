@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MailIcon, LockClosedIcon } from '@heroicons/react/solid';
+import { MailIcon, LockClosedIcon, EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 import SocialLoginButtons from './SocialLoginButtons.jsx';
 
 const RightSection = ({ logo, formData, errorMessage, successMessage, handleChange, handleSubmit }) => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8 md:p-12">
             <Link to="/">
@@ -37,7 +43,7 @@ const RightSection = ({ logo, formData, errorMessage, successMessage, handleChan
                     <div className="relative">
                         <LockClosedIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             id="password"
                             name="password"
                             className="mt-1 pl-10 px-4 py-3 w-full border rounded-md"
@@ -45,6 +51,17 @@ const RightSection = ({ logo, formData, errorMessage, successMessage, handleChan
                             value={formData.password}
                             onChange={handleChange}
                         />
+                        <button
+                            type="button"
+                            onClick={handleTogglePassword}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                        >
+                            {showPassword ? (
+                                <EyeOffIcon className="w-5 h-5 text-gray-400" />
+                            ) : (
+                                <EyeIcon className="w-5 h-5 text-gray-400" />
+                            )}
+                        </button>
                     </div>
                 </div>
 

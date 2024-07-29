@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import logo from '../../assets/echolynk.png';
 import 'typeface-poppins';
 import { Link } from 'react-router-dom';
-import { BellIcon, ChatIcon, ChevronDownIcon } from '@heroicons/react/outline';
+import { BellIcon, ChatIcon, ChevronDownIcon,AcademicCapIcon  } from '@heroicons/react/outline';
 import userPhoto from '../../assets/Wikum.png';
 import AuthContext from '../../context/AuthContext';
 
@@ -35,6 +35,7 @@ const Navbar = () => {
                     <Link to="/verbal-home" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Home</Link>
                     <Link to="/verbal-blog" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Blog</Link>
                     <Link to="/verbal-game" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Game</Link>
+                    <Link to="/verbal-room" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Education</Link>
                     <Link to="/verbal-videocall" className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0">Video Chat</Link>
                 </div>
 
@@ -57,6 +58,10 @@ const Navbar = () => {
 
                         {isProfileOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                                <Link to="/education-plan" className="block px-4 py-2 text-blue-800 hover:bg-blue-100 flex items-center space-x-2">
+                                    <span>Education Plan</span>
+                                    <AcademicCapIcon className="h-5 w-5 text-blue-500" /> {/* Degree cap icon after text */}
+                                </Link>
                                 <Link to="/edit-profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Edit
                                     Profile</Link>
                                 <Link to="/change-password" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Change
