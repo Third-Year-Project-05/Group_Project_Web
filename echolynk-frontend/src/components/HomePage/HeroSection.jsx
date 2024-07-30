@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import { Link } from 'react-router-dom';
 import gridImage from '../../assets/grid.jpg';
 import homeImage from '../../assets/home.png';
 
@@ -12,9 +13,11 @@ const HeroSection = () => {
                     <p className="text-lg mb-4 text-gray-600">
                         Revolutionizing Communication for Deaf and Mute Individuals with Innovative and Accessible Solutions
                     </p>
+                    <Link to="/login">
                     <button className="bg-gradient-to-r from-blue-700 to-blue-900 text-white px-6 py-3 rounded-full hover:from-blue-600 hover:to-blue-800 transform transition-transform duration-300 hover:scale-105">
                         Get Started
                     </button>
+                    </Link>
                 </div>
                 <div className="md:w-1/2 relative">
                     <img src={gridImage} alt="Grid" className="absolute top-0 left-0 w-full h-full object-cover"/>

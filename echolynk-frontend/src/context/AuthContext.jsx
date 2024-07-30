@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -88,13 +88,11 @@ export const AuthProvider = ({ children }) => {
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Proceed with logout
                 setUser(null);
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
                 delete axios.defaults.headers.common['Authorization'];
 
-                // Redirect to login page and replace history
                 navigate('/login', { replace: true });
                 Swal.fire(
                     'Logged Out!',
@@ -111,5 +109,7 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
+export const useAuthContext = () => useContext(AuthContext);
 
 export default AuthContext;
