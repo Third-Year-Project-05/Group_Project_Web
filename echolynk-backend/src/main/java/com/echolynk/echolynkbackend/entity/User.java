@@ -1,8 +1,9 @@
 package com.echolynk.echolynkbackend.entity;
 
-import com.google.cloud.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.sql.Timestamp;
 
 
 @Setter
