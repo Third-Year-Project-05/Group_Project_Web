@@ -4,6 +4,7 @@ import com.echolynk.echolynkbackend.dto.AuthResponse;
 import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.repository.UserRepository;
 import com.google.api.core.ApiFuture;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +59,7 @@ public class UserService implements UserDetailsService {
 
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
                 .setEmail(userDto.getEmail())
-                .setPassword(passwordEncoder.encode(userDto.getPassword()))
+                .setPassword(userDto.getPassword())
                 .setDisplayName(userDto.getUserName());
 
         UserRecord userRecord = firebaseAuth.createUser(request);
@@ -77,6 +78,8 @@ public class UserService implements UserDetailsService {
 
         return userRecord.getUid();
     }
+
+
 
     public AuthResponse loginUser(String email, String password) {
         try {

@@ -3,13 +3,17 @@ import { Navigate } from 'react-router-dom';
 import AuthContext from './AuthContext.jsx';
 
 const Private = ({ element }) => {
-    const { user } = useContext(AuthContext);
+    const { user, loading } = useContext(AuthContext);
+
+    if (loading) {
+        return;
+    }
 
     if (user && user.role === 'Admin') {
         return element;
     }
-    console.log(user.role);
 
+    return <Navigate to="/login" replace />;
 };
 
 export default Private;

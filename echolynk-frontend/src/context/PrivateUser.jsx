@@ -8,6 +8,8 @@ const PrivateUser = ({ element }) => {
     if (user  && user.role === 'Deaf') {
         return element;
     }
+
+
 };
 
 export default PrivateUser;
