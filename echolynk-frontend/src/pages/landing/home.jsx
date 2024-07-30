@@ -8,7 +8,7 @@ import AppSection from '../../components/HomePage/AppSection';
 
 const Home = () => {
     return (
-        <div className="min-h-screen bg-white pt-12">
+        <div className="min-h-screen pt-12">
             <Helmet>
                 <title>Echolynk - Home</title>
             </Helmet>

@@ -36,6 +36,9 @@ import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 
 import UserBlog from './pages/user/blog/blog';
+
+import UserProfile from './pages/user/user-profile';
+
 import UserHome from './pages/user/home/home';
 
 import VerbalHome from './pages/verbalUser/home/home';
@@ -84,7 +87,7 @@ const AdminLayout = ({ children }) => {
 
 const LoginLayout = ({ children }) => {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-gray-200 dark:bg-inherit">
             <LogHeader />
             <main className="flex-grow">{children}</main>
             <Footer />
@@ -123,7 +126,6 @@ const UserLayout = ({ children }) => {
 
 function App() {
     return (
-
             <ThemeProvider storageKey="vite-ui-theme">
                 <BrowserRouter>
                     <AuthProvider>
@@ -143,6 +145,8 @@ function App() {
                         <Route path="/user-home" element={<PrivateUser element={<LoginLayout><UserHome /></LoginLayout>} />} />
                         <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
                         <Route path="/user-game" element={<PrivateUser element={<LoginLayout><Game /></LoginLayout>} />} />
+                        <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
+                        <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
 
                         {/* Verbal User */}
                         <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><VerbalHome /></VerbalLayout>} />} />
@@ -161,7 +165,7 @@ function App() {
                         <Route path="/admin-reports" element={<Private element={<AdminLayout><AdminReports /></AdminLayout>} />} />
                         <Route path="/admin-messages" element={<Private element={<AdminLayout><AdminMessages /></AdminLayout>} />} />
                         <Route path="/admin-financial-management" element={<Private element={<AdminLayout><AdminFinancialManagement /></AdminLayout>} />} />
-                        <Route path="/change-pw" element={<Private element={<AdminLayout><ChangePassword /></AdminLayout>} />} />
+                        <Route path="/admin-change-pw" element={<Private element={<AdminLayout><ChangePassword /></AdminLayout>} />} />
                         <Route path="/admin-profile" element={<Private element={<AdminLayout><AdminProfile /></AdminLayout>} />} />
                         <Route path="/admin-settings" element={<Private element={<AdminLayout><AdminSettings /></AdminLayout>} />} />
 

@@ -8,7 +8,6 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.ListUsersPage;
 import com.google.firebase.auth.UserRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -123,18 +122,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public ArrayList<UserDto> getAllUsers() throws FirebaseAuthException {
-        ListUsersPage page = firebaseAuth.listUsers(null);
-        ArrayList<UserDto> users = new ArrayList<>();
-        for (UserRecord user : page.getValues()) {
-            UserDto userDto = new UserDto();
-            userDto.setUserId(user.getUid());
-            userDto.setEmail(user.getEmail());  
-            userDto.setUserName(user.getDisplayName());
-            userDto.setRole(user.getCustomClaims().get("role").toString());
-            userDto.setPhoneNumber(user.getPhoneNumber());
-            users.add(userDto);
-        }
-        return users;
+    public List<UserDto> getAllUsers() throws FirebaseAuthException {
+        return userRepository.getAllUsers();
     }
 }
