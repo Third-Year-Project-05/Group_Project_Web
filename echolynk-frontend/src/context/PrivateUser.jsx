@@ -8,8 +8,6 @@ const PrivateUser = ({ element }) => {
     if (user  && user.role === 'Deaf') {
         return element;
     }
-
-    return <Navigate to="/login" replace />;
 };
 
 export default PrivateUser;
