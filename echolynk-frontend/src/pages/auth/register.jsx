@@ -41,11 +41,10 @@ const RegisterPage = () => {
 
         try {
             await register(userDto);
-            toast.success('Registration successful! Please login.');
+            console.log('Registration successful! Please login.');
             navigate('/login');
         } catch (error) {
-            toast.error('Registration failed. Please try again.');
-            console.error('Registration failed:', error);
+            console.error('Registration failed. Please try again.', error);
         }
     };
 

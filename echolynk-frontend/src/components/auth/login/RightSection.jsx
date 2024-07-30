@@ -57,9 +57,9 @@ const RightSection = ({ logo, formData, errorMessage, successMessage, handleChan
                             className="absolute right-3 top-1/2 transform -translate-y-1/2"
                         >
                             {showPassword ? (
-                                <EyeOffIcon className="w-5 h-5 text-gray-400" />
-                            ) : (
                                 <EyeIcon className="w-5 h-5 text-gray-400" />
+                            ) : (
+                                <EyeOffIcon className="w-5 h-5 text-gray-400" />
                             )}
                         </button>
                     </div>
