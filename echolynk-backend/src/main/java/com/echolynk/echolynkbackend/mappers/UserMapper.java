@@ -3,6 +3,10 @@ package com.echolynk.echolynkbackend.mappers;
 import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.entity.User;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 public interface UserMapper {
 
     static User toEntity(UserDto userDto) {
@@ -13,7 +17,7 @@ public interface UserMapper {
         user.setPassword(userDto.getPassword());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setRole(userDto.getRole());
-        user.setTimestamp(userDto.getTimestamp());
+        user.setTimestamp(userDto.getTimestamp());  // Directly set as String
         return user;
     }
 
@@ -25,7 +29,7 @@ public interface UserMapper {
         userDto.setPassword(user.getPassword());
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setRole(user.getRole());
-        userDto.setTimestamp(user.getTimestamp());
+        userDto.setTimestamp(user.getTimestamp());  // Directly set as String
         return userDto;
     }
 }
