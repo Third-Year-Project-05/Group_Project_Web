@@ -5,11 +5,13 @@ import { BellIcon, StarIcon } from '@heroicons/react/outline';
 import { ModeToggle } from '../mode-toggle';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import userPhoto from '../../assets/Wikum.png';
 import logo from '../../assets/echolynk.png';
 import AuthContext from '../../context/AuthContext';
 import 'typeface-poppins';
-import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover';
+
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
