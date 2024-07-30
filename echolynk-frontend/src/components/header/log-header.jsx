@@ -1,5 +1,5 @@
 import { MenuIcon } from '@heroicons/react/solid';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import logo from '../../assets/echolynk.png';
 import 'typeface-poppins';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,10 +12,14 @@ import { DropdownMenu,   DropdownMenuContent,
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import userPhoto from '../../assets/Wikum.png';
+import AuthContext from '../../context/AuthContext';
+
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+
     const [activeLink, setActiveLink] = useState('');
 
     const handleLinkClick = (link) => {
@@ -23,6 +27,9 @@ const Navbar = () => {
     };
 
     const navigate = useNavigate();
+
+
+    const { logout } = useContext(AuthContext);
 
 
     return (
@@ -117,8 +124,7 @@ const Navbar = () => {
                         </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-   
-
+  
 
                 </div>
 
