@@ -34,7 +34,12 @@ import AdminProfile from './pages/admin/admin-profile';
 import AdminSettings from './pages/admin/settings/settings';
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
+
 import UserBlog from './pages/user/blog/blog';
+import UserHome from './pages/user/home/home';
+
+import VerbalHome from './pages/verbalUser/home/home';
+
 import {useContext, useEffect, useState} from 'react';
 
 import Game from './pages/user/game/game';
@@ -135,12 +140,12 @@ function App() {
                         <Route path="/register" element={<Register />} />
 
                         {/* Login User */}
-                        <Route path="/user-home" element={<PrivateUser element={<LoginLayout><Home /></LoginLayout>} />} />
+                        <Route path="/user-home" element={<PrivateUser element={<LoginLayout><UserHome /></LoginLayout>} />} />
                         <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
                         <Route path="/user-game" element={<PrivateUser element={<LoginLayout><Game /></LoginLayout>} />} />
 
                         {/* Verbal User */}
-                        <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><Home /></VerbalLayout>} />} />
+                        <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><VerbalHome /></VerbalLayout>} />} />
                         <Route path="/verbal-blog" element={<PrivateVerbal element={<VerbalLayout><UserBlog /></VerbalLayout>} />} />
                         <Route path="/verbal-game" element={<PrivateVerbal element={<VerbalLayout><Game /></VerbalLayout>} />} />
 
