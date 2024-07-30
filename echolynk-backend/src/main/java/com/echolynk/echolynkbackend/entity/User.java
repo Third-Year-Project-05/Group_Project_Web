@@ -3,6 +3,7 @@ package com.echolynk.echolynkbackend.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Setter
 @Getter
 public class User {
