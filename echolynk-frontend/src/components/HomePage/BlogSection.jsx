@@ -5,7 +5,7 @@ const BlogSection = () => {
         <div className="container mx-auto py-14 px-6">
             <div className="text-center mb-8">
                 <h2 className="text-xl font-medium text-gray-500">Our Blog</h2>
-                <h1 className="text-3xl font-semibold text-black">Recent Articles</h1>
+                <h1 className="text-3xl font-semibold text-black dark:text-gray-400">Recent Articles</h1>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 shadow-md rounded-lg">

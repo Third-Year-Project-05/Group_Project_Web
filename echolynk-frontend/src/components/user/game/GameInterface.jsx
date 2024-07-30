@@ -2,7 +2,7 @@ import React from 'react';
 import trophyImage from '../../../assets/trophy.png';
 
 const GameInterface = ({ onPlay }) => (
-    <div className="bg-white shadow-2xl rounded-lg p-8 w-full max-w-lg text-center relative overflow-hidden">
+    <div className="bg-white dark:bg-inherit shadow-2xl rounded-lg p-8 w-full max-w-lg text-center relative overflow-hidden">
         {/* Gradient Overlay */}
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-blue-800 to-transparent opacity-20 pointer-events-none rounded-lg"></div>
 
@@ -10,10 +10,10 @@ const GameInterface = ({ onPlay }) => (
         <img src={trophyImage} alt="Trophy" className="w-32 mx-auto mb-6" />
 
         {/* Heading */}
-        <h1 className="text-3xl font-extrabold mb-6 text-gray-800">Welcome to the Quiz Game!</h1>
+        <h1 className="text-3xl font-extrabold mb-6 text-gray-800 dark:text-gray-400">Welcome to the Quiz Game!</h1>
 
         {/* Description */}
-        <p className="text-lg mb-6 text-gray-700">Improve your sign language skills and have fun!</p>
+        <p className="text-lg mb-6 text-gray-700 dark:text-gray-400">Improve your sign language skills and have fun!</p>
 
         {/* Play Button */}
         <button

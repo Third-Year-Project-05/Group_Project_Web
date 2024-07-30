@@ -22,7 +22,7 @@ const Leaderboard = ({ data = [] }) => {
     const paginatedData = data.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
     return (
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md relative">
+        <div className="bg-white dark:bg-inherit shadow-lg dark:shadow-slate-900 rounded-lg p-6 w-full max-w-md relative">
             <h2 className="text-xl font-bold mb-4">Leaderboard</h2>
             <ul className="space-y-2">
                 {paginatedData.length > 0 ? (

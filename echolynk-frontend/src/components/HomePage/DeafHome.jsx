@@ -10,7 +10,7 @@ const UserHome = () => {
             <div className="flex flex-col md:flex-row items-center justify-between md:px-12 h-full">
                 <div className="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
                     <h1 className="text-5xl font-bold mb-4 text-blue-900">Welcome Back, {user.name}!</h1>
-                    <h2 className="text-3xl font-semibold mb-4 text-black">Your Progress Matters</h2>
+                    <h2 className="text-3xl font-semibold mb-4 text-black dark:text-gray-400">Your Progress Matters</h2>
                     <p className="text-lg mb-4 text-gray-600">
                         Continue your journey in learning and connecting with others. Your dedication is inspiring!
                     </p>

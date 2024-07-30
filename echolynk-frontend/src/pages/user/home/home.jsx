@@ -8,7 +8,7 @@ import AppSection from '../../../components/HomePage/AppSection';
 
 const UserHome = () => {
     return (
-        <div className="min-h-screen bg-white pt-12">
+        <div className="min-h-screen bg-white dark:bg-inherit pt-12">
             <Helmet>
                 <title>Echolynk - User Home</title>
             </Helmet>
