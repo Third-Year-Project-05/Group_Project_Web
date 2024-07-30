@@ -12,7 +12,6 @@ import { DropdownMenu,   DropdownMenuContent,
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import userPhoto from '../../assets/Wikum.png';
 import AuthContext from '../../context/AuthContext';
 
 
