@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
             setUser(JSON.parse(storedUser));
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
-    }, []);
+    }, []); // Empty dependency array ensures this runs only once on mount
 
     const login = async (userData) => {
         setError(null);

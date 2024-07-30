@@ -6,6 +6,7 @@ import CurrentScore from '../../../components/user/game/CurrentScore';
 import LeaderboardData from '../../../components/user/game/LeaderboardData';
 import LevelSelectionModal from '../../../components/user/game/LevelSelection';
 
+
 const Game = () => {
     const [currentScore, setCurrentScore] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);

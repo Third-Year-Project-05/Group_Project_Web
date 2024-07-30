@@ -8,8 +8,8 @@ const Private = ({ element }) => {
     if (user && user.role === 'Admin') {
         return element;
     }
+    console.log(user.role);
 
-    return <Navigate to="/login" replace />;
 };
 
 export default Private;
