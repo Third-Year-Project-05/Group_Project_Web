@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import Form from '../../components/auth/register/RegisterForm.jsx';
 import SidePanel from '../../components/auth/register/SidePanel';
 import logo from '../../assets/echolynk.png';
+import { toast } from 'react-toastify'; // Import toast if you're using react-toastify
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const RegisterPage = () => {
     });
     const [userType, setUserType] = useState('Deaf');
     const { register } = useContext(AuthContext);
+    const navigate = useNavigate(); // Use navigate hook for redirection
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,7 +39,13 @@ const RegisterPage = () => {
             timestamp: Date.now()
         };
 
-        await register(userDto);
+        try {
+            await register(userDto);
+            console.log('Registration successful! Please login.');
+            navigate('/login');
+        } catch (error) {
+            console.error('Registration failed. Please try again.', error);
+        }
     };
 
     return (

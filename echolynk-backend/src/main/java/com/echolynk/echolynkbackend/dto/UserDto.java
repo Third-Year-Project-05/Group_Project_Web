@@ -3,9 +3,6 @@ package com.echolynk.echolynkbackend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
-
 @Getter
 @Setter
 public class UserDto {
@@ -15,5 +12,5 @@ public class UserDto {
     private String userName;
     private String phoneNumber;
     private String role;
-    private Timestamp timestamp;
+    private String timestamp;  // Change to String
 }

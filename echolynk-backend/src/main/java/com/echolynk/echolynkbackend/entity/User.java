@@ -3,8 +3,6 @@ package com.echolynk.echolynkbackend.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
 
 @Setter
 @Getter
@@ -15,12 +13,12 @@ public class User {
     private String password;
     private String phoneNumber;
     private String role;
-    private Timestamp timestamp;
+    private String timestamp;  // Change to String
 
     public User() {
     }
 
-    public User(String id, String userName, String email, String password, String phoneNumber, String role, Timestamp timestamp) {
+    public User(String id, String userName, String email, String password, String phoneNumber, String role, String timestamp) {
         this.id = id;
         this.userName = userName;
         this.email = email;

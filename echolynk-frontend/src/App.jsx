@@ -35,6 +35,10 @@ import AdminSettings from './pages/admin/settings/settings';
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 
+import Game from './pages/user/game/game';
+import EasyLevel from "./pages/user/game/easy-level";
+import QuizPage from "./pages/user/game/quiz";
+
 import UserBlog from './pages/user/blog/blog';
 
 import UserProfile from './pages/user/user-profile';
@@ -47,6 +51,7 @@ import {useContext, useEffect, useState} from 'react';
 
 import Game from './pages/user/game/game';
 import VideoChat from './pages/user/video-chat/video-chat';
+
 
 const Layout = ({ children }) => {
     return (
@@ -149,6 +154,8 @@ function App() {
                         <Route path="/user-video-chat" element={<LoginLayout><VideoChat /></LoginLayout>} />
                         <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
                         <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
+                        <Route path='/game/level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
+                        <Route path='/quiz/:level' element={<LoginLayout><QuizPage /></LoginLayout>} />
 
                         {/* Verbal User */}
                         <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><VerbalHome /></VerbalLayout>} />} />

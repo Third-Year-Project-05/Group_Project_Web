@@ -9,7 +9,7 @@ const PrivateUser = ({ element }) => {
         return element;
     }
 
-    return <Navigate to="/login" replace />;
+
 };
 
 export default PrivateUser;

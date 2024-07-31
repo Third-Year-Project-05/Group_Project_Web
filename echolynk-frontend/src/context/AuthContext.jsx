@@ -8,21 +8,21 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         const token = localStorage.getItem('token');
         if (storedUser && token) {
-            setUser(JSON.parse(storedUser));
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
+        setLoading(false);
     }, []);
 
     const login = async (userData) => {
-        setError(null);
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/auth/login', userData);
@@ -41,8 +41,7 @@ export const AuthProvider = ({ children }) => {
             } else if (role === 'Admin') {
                 navigate('/admin-dashboard');
             } else {
-                setError('Invalid user role.');
-                logout();
+                throw new Error('Invalid user role.');
             }
         } catch (error) {
             toast.error('Login failed. Please check your credentials.');
@@ -53,24 +52,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     const register = async (userData) => {
-        setError(null);
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:8080/auth/register', userData);
-            toast.success('Registration successful!');
+            await axios.post('http://localhost:8080/auth/register', userData);
+            toast.success('Registration successful! Please login.');
 
-            const { role } = response.data;
-
-            if (role === 'Deaf') {
-                navigate('/user-home');
-            } else if (role === 'Verbal') {
-                navigate('/verbal-home');
-            } else if (role === 'Admin') {
-                navigate('/admin-dashboard');
-            }
+            navigate('/login');
         } catch (error) {
-            toast.error('Error registering user. Please try again.');
-            console.error('Error registering user:', error);
+            toast.error('Registration failed. Please try again.');
+            console.error('Registration failed:', error);
         } finally {
             setLoading(false);
         }
@@ -104,7 +94,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, error, loading }}>
+        <AuthContext.Provider value={{ user, login, register, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
