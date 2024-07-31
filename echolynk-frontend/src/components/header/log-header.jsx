@@ -65,9 +65,9 @@ const Navbar = () => {
                         Game
                     </Link>
                     <Link
-                        to="/user-videocall"
-                        className={`my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 ${activeLink === '/user-videocall' ? 'selected-link' : ''}`}
-                        onClick={() => handleLinkClick('/user-videocall')}
+                        to="/user-video-chat"
+                        className={`my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 ${activeLink === '/user-video-chat' ? 'selected-link' : ''}`}
+                        onClick={() => handleLinkClick('/user-video-chat')}
                     >
                         Video Chat
                     </Link>

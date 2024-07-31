@@ -25,7 +25,7 @@ const Game = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100 dark:bg-inherit">
             <Header />
             <div className="flex items-start justify-center p-8 space-x-6">
                 <Leaderboard data={LeaderboardData} />

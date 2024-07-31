@@ -7,7 +7,7 @@ const ServicesSection = () => {
         <div className="container mx-auto py-14 px-6">
             <div className="text-center mb-8">
                 <h2 className="text-xl font-medium text-gray-500">What We Provide to You</h2>
-                <h1 className="text-3xl font-semibold text-black">Our Services</h1>
+                <h1 className="text-3xl font-semibold text-black dark:text-gray-400">Our Services</h1>
             </div>
             <div className="flex flex-wrap md:flex-nowrap justify-between items-center">
                 <div className="w-full md:w-1/2 mb-6 md:mb-0 flex items-center justify-center">

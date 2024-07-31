@@ -49,6 +49,8 @@ import VerbalHome from './pages/verbalUser/home/home';
 
 import {useContext, useEffect, useState} from 'react';
 
+import Game from './pages/user/game/game';
+import VideoChat from './pages/user/video-chat/video-chat';
 
 
 const Layout = ({ children }) => {
@@ -149,6 +151,7 @@ function App() {
                         <Route path="/user-home" element={<PrivateUser element={<LoginLayout><UserHome /></LoginLayout>} />} />
                         <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
                         <Route path="/user-game" element={<PrivateUser element={<LoginLayout><Game /></LoginLayout>} />} />
+                        <Route path="/user-video-chat" element={<LoginLayout><VideoChat /></LoginLayout>} />
                         <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
                         <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
                         <Route path='/game/level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
