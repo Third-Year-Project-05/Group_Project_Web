@@ -36,7 +36,6 @@ const RegisterPage = () => {
             password: formData.password,
             role: userType,
             phoneNumber: '',
-            timestamp: Date.now()
         };
 
         try {
