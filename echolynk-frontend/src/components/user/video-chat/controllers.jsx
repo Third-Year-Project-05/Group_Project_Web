@@ -4,7 +4,7 @@ import { AudioLines, Camera, DotIcon, Mic, ScreenShare, Speaker, SpeakerIcon, St
 
 export const Controllers = () => {
     return(
-        <div className='flex flex-col gap-3 mb-4'>
+        <div className='flex flex-col gap-3 mb-4 bg-gray-100 dark:bg-inherit shadow-sm dark:shadow-slate-700 p-2 px-6 rounded-lg'>
             <div className='flex gap-3 justify-between'>
                 <SpeakerModerateIcon className='w-5 h-5 self-center'/>
                 <div className="flex gap-10">
