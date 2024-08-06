@@ -25,4 +25,20 @@ public class GameService {
 
         return gameId;
     }
+
+    public List<GameDto> getAllGames() {
+        return gameRepository.getAllGames();
+    }
+
+    public GameDto getGame(String id) {
+        return gameRepository.getGame(id);
+    }
+
+    public void updateGame(String id, GameDto gameDto) {
+        gameRepository.updateGame(id, gameDto);
+    }
+
+    public void deleteGame(String id) {
+        gameRepository.deleteGame(id);
+    }
 }

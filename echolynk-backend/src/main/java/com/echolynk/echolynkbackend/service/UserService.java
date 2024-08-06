@@ -134,4 +134,32 @@ public class UserService implements UserDetailsService {
     public List<UserDto> getAllUsers() throws FirebaseAuthException {
         return userRepository.getAllUsers();
     }
+
+    public UserDto getUser(String id) {
+        return userRepository.getUser(id);
+    }
+
+    public List<UserDto> getUserBlogs(String id) {
+        return userRepository.getUserBlogs(id);
+    }
+
+    public UserDto updateUser(String id, UserDto userDto) {
+        return userRepository.updateUser(id, userDto);
+    }
+
+    public UserDto updateUserBlog(String id, String blogId, UserDto userDto) {
+        return userRepository.updateUserBlog(id, blogId, userDto);
+    }
+
+    public UserDto deleteUser(String id) {
+        return userRepository.deleteUser(id);
+    }
+
+    public UserDto deleteUserBlog(String id, String blogId) {
+        return userRepository.deleteUserBlog(id, blogId);
+    }
+
+    public Long getUserCount() {
+        return userRepository.getUserCount();
+    }
 }
