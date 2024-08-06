@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MailIcon, LockClosedIcon, EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
-import SocialLoginButtons from './SocialLoginButtons.jsx';
+import SocialLogin from '../register/SocialLogin';
 
 const RightSection = ({ logo, formData, errorMessage, successMessage, handleChange, handleSubmit }) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -81,7 +81,7 @@ const RightSection = ({ logo, formData, errorMessage, successMessage, handleChan
                 <hr className="w-1/3 border-gray-300" />
             </div>
 
-            <SocialLoginButtons />
+            <SocialLogin />
 
             <p className="mt-4 text-sm text-gray-500">
                 Don't have an account? <Link to="/register" className="text-blue-900 hover:underline">Signup</Link>

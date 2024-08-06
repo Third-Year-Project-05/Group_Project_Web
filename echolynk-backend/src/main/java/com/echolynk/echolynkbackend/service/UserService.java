@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -41,6 +43,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -131,8 +136,78 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public AuthResponse googleLogin(String token) {
+        String url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token;
+        ResponseEntity<Map<String, Object>> response = restTemplate.getForEntity(url, (Class<Map<String, Object>>) (Object) Map.class);
+        Map<String, Object> body = response.getBody();
+
+        if (body == null || body.get("email") == null) {
+            throw new RuntimeException("Invalid Google token");
+        }
+
+        String email = (String) body.get("email");
+        return handleOAuth2Login(email);
+    }
+
+    public AuthResponse facebookLogin(String token) {
+        String url = "https://graph.facebook.com/me?access_token=" + token + "&fields=id,name,email";
+        ResponseEntity<Map<String, Object>> response = restTemplate.getForEntity(url, (Class<Map<String, Object>>) (Object) Map.class);
+        Map<String, Object> body = response.getBody();
+
+        if (body == null || body.get("email") == null) {
+            throw new RuntimeException("Invalid Facebook token");
+        }
+
+        String email = (String) body.get("email");
+        return handleOAuth2Login(email);
+    }
+
+    private AuthResponse handleOAuth2Login(String email) {
+        try {
+            // Check if user exists in Firebase Authentication
+            UserRecord userRecord;
+            try {
+                userRecord = firebaseAuth.getUserByEmail(email);
+            } catch (FirebaseAuthException e) {
+                // Register new user if not found
+                UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest()
+                        .setEmail(email)
+                        .setPassword(generateRandomPassword());
+                userRecord = firebaseAuth.createUser(createRequest);
+            }
+
+            // Fetch or save user details in Firestore
+            Map<String, Object> userMap = firestore.collection("users").document(userRecord.getUid()).get().get().getData();
+            if (userMap == null) {
+                userMap = new HashMap<>();
+                userMap.put("email", email);
+                userMap.put("role", "Deaf"); // Or assign a default role
+                userMap.put("timestamp", Timestamp.now());
+                firestore.collection("users").document(userRecord.getUid()).set(userMap).get();
+            }
+
+            // Generate JWT token
+            UserDetails userDetails = new CustomUserDetails(userRecord);
+            String token = jwtUtil.generateToken(userDetails);
+            String role = (String) userMap.get("role");
+
+            return new AuthResponse(token, role);
+        } catch (FirebaseAuthException | ExecutionException | InterruptedException e) {
+            throw new RuntimeException("OAuth2 Login error", e);
+        }
+    }
+
+    private String generateRandomPassword() {
+        // Generate a random password for OAuth2 users
+        return UUID.randomUUID().toString().substring(0, 12);
+    }
+
     public List<UserDto> getAllUsers() throws FirebaseAuthException {
         return userRepository.getAllUsers();
+    }
+
+    public void integratePremiumAccount(String userId, Timestamp premiumExpirationDate) {
+        userRepository.updatePremiumStatus(userId, true, premiumExpirationDate);
     }
 
     public UserDto getUser(String id) {

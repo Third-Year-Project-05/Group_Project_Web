@@ -51,12 +51,65 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const googleLogin = async (credential) => {
+        setLoading(true);
+        try {
+            const response = await axios.post('http://localhost:8080/auth/google-login', { token: credential });
+            const { token, role, email } = response.data;
+            const loggedUser = { email, role };
+
+            setUser(loggedUser);
+            localStorage.setItem('user', JSON.stringify(loggedUser));
+            localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+            navigateBasedOnRole(role);
+        } catch (error) {
+            toast.error('Google login failed. Please try again.');
+            console.error('Google login failed:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const facebookLogin = async (accessToken) => {
+        setLoading(true);
+        try {
+            const response = await axios.post('http://localhost:8080/auth/facebook-login', { token: accessToken });
+            const { token, role, email } = response.data;
+            const loggedUser = { email, role };
+
+            setUser(loggedUser);
+            localStorage.setItem('user', JSON.stringify(loggedUser));
+            localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+            navigateBasedOnRole(role);
+        } catch (error) {
+            toast.error('Facebook login failed. Please try again.');
+            console.error('Facebook login failed:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const navigateBasedOnRole = (role) => {
+        if (role === 'Deaf') {
+            navigate('/user-home');
+        } else if (role === 'Verbal') {
+            navigate('/verbal-home');
+        } else if (role === 'Admin') {
+            navigate('/admin-dashboard');
+        } else {
+            throw new Error('Invalid user role.');
+        }
+    };
+
     const register = async (userData) => {
         setLoading(true);
         try {
             await axios.post('http://localhost:8080/auth/register', userData);
             toast.success('Registration successful! Please login.');
-
             navigate('/login');
         } catch (error) {
             toast.error('Registration failed. Please try again.');
@@ -94,7 +147,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, googleLogin, facebookLogin, register, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
