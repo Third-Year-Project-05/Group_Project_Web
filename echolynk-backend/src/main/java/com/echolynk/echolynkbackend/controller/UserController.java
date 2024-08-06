@@ -3,12 +3,15 @@ package com.echolynk.echolynkbackend.controller;
 import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.service.UserService;
 
+import com.google.cloud.Timestamp;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -28,6 +31,29 @@ public class UserController {
 		UserDto user = userService.getUser(id);
 		return ResponseEntity.ok(user);
 	}
+
+	@PostMapping("/integratePremium")
+	public ResponseEntity<?> integratePremiumAccount(@RequestBody Map<String, Object> payload) {
+		try {
+			String userId = (String) payload.get("userId");
+			int premiumDurationInDays = (Integer) payload.get("premiumDurationInDays");
+
+			// Calculate the expiration date
+			Instant expirationInstant = Instant.now().plusSeconds(premiumDurationInDays * 86400);
+			Timestamp premiumExpirationDate = Timestamp.ofTimeSecondsAndNanos(
+					expirationInstant.getEpochSecond(),
+					expirationInstant.getNano()
+			);
+
+			// Call the service to integrate the premium account
+			userService.integratePremiumAccount(userId, premiumExpirationDate);
+
+			return ResponseEntity.ok("User upgraded to premium");
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Error upgrading to premium: " + e.getMessage());
+		}
+	}
+
 
 	@GetMapping("/user/{id}/blogs")
 	public ResponseEntity<List<UserDto>> getUserBlogs(String id) throws FirebaseAuthException {

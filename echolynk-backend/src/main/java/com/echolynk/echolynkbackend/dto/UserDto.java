@@ -14,4 +14,6 @@ public class UserDto {
     private String phoneNumber;
     private String role;
     private Timestamp timestamp;
+    private boolean isPremium;
+    private Timestamp premiumExpirationDate;
 }

@@ -3,10 +3,8 @@ package com.echolynk.echolynkbackend.repository;
 import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.entity.User;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.Timestamp;
+import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
@@ -53,6 +51,8 @@ public class UserRepository {
             throw new RuntimeException("Error retrieving user from Firestore", e);
         }
     }
+
+
 
     public List<UserDto> getAllUsers() {
         CollectionReference usersCollection = firestore.collection("users");
@@ -195,4 +195,21 @@ public class UserRepository {
             throw new RuntimeException("Error retrieving user count from Firestore", e);
         }
     }
+
+    public void updatePremiumStatus(String userId, boolean isPremium, Timestamp premiumExpirationDate) {
+        DocumentReference userRef = firestore.collection("users").document(userId);
+
+        ApiFuture<WriteResult> future = userRef.update(
+                "isPremium", isPremium,
+                "premiumExpirationDate", premiumExpirationDate,
+                "role", isPremium ? "Premium" : "Deaf"
+        );
+
+        try {
+            future.get();
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating premium status for user: " + userId, e);
+        }
+    }
+
 }
