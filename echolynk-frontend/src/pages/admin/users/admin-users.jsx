@@ -53,9 +53,9 @@ const AdminUsers = () => {
 
     useEffect(() => {
         getAllUsers().then(response => {
-            response = [response]
+            
             setUsers(response);
-            console.log('Users:', response);
+            // console.log('Users:', response);
         }).catch(error => {
             console.error('Error fetching data:', error);
         });
@@ -87,7 +87,7 @@ const AdminUsers = () => {
                     <div className="flex flex-row justify-between items-start w-full">
                         <CardHeader className="gap-5">
                             <CardDescription style={{fontSize: '18px'}}>Free Users</CardDescription>
-                            <CardTitle>{users.filter(user => user.type === 'Free').length}</CardTitle>
+                            <CardTitle>{users.filter(user => user.premium == false).length}</CardTitle>
                         </CardHeader>
                         <FaUser className="text-4xl text-green-500 mt-7 mr-4" />
                     </div>
@@ -97,7 +97,7 @@ const AdminUsers = () => {
                     <div className="flex flex-row justify-between items-start w-full">
                         <CardHeader className="gap-5">
                             <CardDescription style={{fontSize: '18px'}}>Premium Users</CardDescription>
-                            <CardTitle>{users.filter(user => user.type === 'Premium').length}</CardTitle>
+                            <CardTitle>{users.filter(user => user.premium == true).length}</CardTitle>
                         </CardHeader>
                         <FaCrown className="text-4xl text-yellow-500 mt-7 mr-4" />
                     </div>

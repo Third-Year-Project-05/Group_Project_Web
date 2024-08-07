@@ -77,7 +77,7 @@ export const columnsAll: ColumnDef<User>[] = [
   //   },
   // },
     {
-        accessorKey: "name",
+        accessorKey: "userName",
         header: "Name",
     },
     {
@@ -86,22 +86,38 @@ export const columnsAll: ColumnDef<User>[] = [
     },
     {
         accessorKey: "created_on",
-        header: "Created On",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+              Created On
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+        cell: ({ cell }) => {
+          return(
+            <span className="self-center text-center p-5">{cell.getValue() as String}</span>
+          )
+        }
     },
     {
-        accessorKey: "type",
+        accessorKey: "premium",
         header: "Type",
         cell: ({ cell }) => {
-            const value = cell.getValue() as string;
+            const value = cell.getValue() as boolean;
+            // console.log((value==true));
             const style = {
-                backgroundColor: value === 'Premium' ? 'rgba(255, 215, 0, 0.4)' : 'rgba(0, 128, 0, 0.5)',
+                backgroundColor: value ? 'rgba(255, 215, 0, 0.4)' : 'rgba(0, 128, 0, 0.5)',
                 padding: '5px',
                 borderRadius: '12px', 
                   
             };
             return (
                 <span style={style} className="self-center">
-                    {value}
+                    {value ? 'Premium' : 'Free'}
                 </span>
             );
         },
