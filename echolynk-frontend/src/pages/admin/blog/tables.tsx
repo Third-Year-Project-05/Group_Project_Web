@@ -10,6 +10,7 @@ const fetchData = async () => {
 
   try {
       var response = await getAllBlogs();
+      console.log('Response:', response);
       var formattedResponse = response
       .map((blog: { timestamp: { seconds: any; nanos: any; }; id: String; }) => {
         const { seconds, nanos } = blog.timestamp;

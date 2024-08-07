@@ -13,6 +13,8 @@ import {
 import { Checkbox } from "../../../components/ui/checkbox"
 import ConfirmationPopup from "../../../components/confirmationPopup"
 import { useState } from "react"
+import { approveBlog, dismissBlog } from "../../../api"
+import { useToast } from "../../../components/ui/use-toast"
 
 
 export type Payment = {
@@ -30,6 +32,7 @@ export type Blog = {
   date: string
   image: string
   status: "pending" | "approved" | "dismissed" | "deleted"
+  blogId: string
 }
 
 
@@ -119,9 +122,18 @@ export const columnsNew: ColumnDef<Blog>[] = [
       const blog = row.original
       const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+      const { toast } = useToast();
+
       const handleApprove = () => {
-        console.log('Approve action!');
-        // approval logic
+        approveBlog(blog.id);
+        toast({
+          variant: "success",
+          title: "Blog approved",
+          description: `The blog "${blog.blogId}" has been approved.`,
+        })
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); 
       }
 
       const handleOpenPopup = () => {
@@ -134,10 +146,16 @@ export const columnsNew: ColumnDef<Blog>[] = [
         document.body.style.overflow = 'auto'; 
       };
 
-      const handleConfirm = () => {
-        console.log('Action confirmed!');
-        handleClosePopup();
-        // confirmation logic
+      const handleDismiss = () => {
+        dismissBlog(blog.id);
+        toast({
+          variant: "destructive",
+          title: "Blog dismissed",
+          description: `The blog "${blog.blogId}" has been dismissed.`,
+        })
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); 
       };
 
       return (
@@ -153,7 +171,7 @@ export const columnsNew: ColumnDef<Blog>[] = [
 
         <ConfirmationPopup
 
-          onConfirm={handleConfirm}
+          onConfirm={handleDismiss}
       />
      
         <DropdownMenu>

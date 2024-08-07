@@ -50,6 +50,7 @@ import VerbalHome from './pages/verbalUser/home/home';
 import {useContext, useEffect, useState} from 'react';
 
 import VideoChat from './pages/user/video-chat/video-chat';
+import { Toaster } from './components/ui/toaster';
 
 
 const Layout = ({ children }) => {
@@ -86,6 +87,7 @@ const AdminLayout = ({ children }) => {
                     {children}
                 </div>
             </main>
+            <Toaster />
         </div>
     );
 };

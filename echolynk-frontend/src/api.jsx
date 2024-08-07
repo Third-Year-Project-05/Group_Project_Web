@@ -25,3 +25,25 @@ export const getAllBlogs = async () => {
         throw error;
     }
 }
+
+export const approveBlog = async (id) => {
+    try {
+        const response = await api.put(`/updateBlog/${id}`, { status: 'approved' });
+        console.log('Blog Approved:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error approving blog:', error);
+        throw error;
+    }
+}
+
+export const dismissBlog = async (id) => {
+    try {
+        const response = await api.put(`/updateBlog/${id}`, { status: 'dismissed' });
+        console.log('Blog Dismissed:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error dismissing blog:', error);
+        throw error;
+    }
+}
