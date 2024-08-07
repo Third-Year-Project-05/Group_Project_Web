@@ -15,3 +15,13 @@ export const getAllUsers = async () => {
     }
 };
 
+export const getAllBlogs = async () => {
+    try {
+        const response = await api.get('/getBlog');
+        console.log('Blogs:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching blogs:', error);
+        throw error;
+    }
+}

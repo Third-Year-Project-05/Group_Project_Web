@@ -57,7 +57,7 @@ export const columnsNew: ColumnDef<Blog>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
+    accessorKey: "blogId",
     header: ({ column }) => {
       return (
         <Button
@@ -98,7 +98,7 @@ export const columnsNew: ColumnDef<Blog>[] = [
     header: "Author",
   },
   {
-    accessorKey: "date",
+    accessorKey: "created_on",
     header: ({ column }) => {
       return (
         <Button
@@ -206,7 +206,7 @@ export const columnsAll: ColumnDef<Blog>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
+    accessorKey: "blogId",
     header: "ID",
   },
   {
@@ -222,7 +222,7 @@ export const columnsAll: ColumnDef<Blog>[] = [
     header: "Author",
   },
   {
-    accessorKey: "date",
+    accessorKey: "created_on",
     header: "Date",
   },
   {

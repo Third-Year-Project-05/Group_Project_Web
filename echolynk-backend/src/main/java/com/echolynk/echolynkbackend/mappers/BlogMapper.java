@@ -12,7 +12,8 @@ public class BlogMapper {
         entity.setTitle(dto.getTitle());
         entity.setAuthor(dto.getAuthor());
         entity.setContent(dto.getContent());
-        entity.setTimestamp(dto.getTimestamp()); // Directly set the Timestamp object
+        entity.setTimestamp(dto.getTimestamp());
+        entity.setStatus(dto.getStatus());
         return entity;
     }
 
@@ -22,7 +23,8 @@ public class BlogMapper {
         dto.setTitle(entity.getTitle());
         dto.setAuthor(entity.getAuthor());
         dto.setContent(entity.getContent());
-        dto.setTimestamp(entity.getTimestamp()); // Directly set the Timestamp object
+        dto.setTimestamp(entity.getTimestamp());
+        dto.setStatus(entity.getStatus());
         return dto;
     }
 }

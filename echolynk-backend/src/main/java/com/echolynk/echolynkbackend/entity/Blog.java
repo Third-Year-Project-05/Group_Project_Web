@@ -13,14 +13,16 @@ public class Blog {
     private String author;
     private String content;
     private Timestamp timestamp;
+    private String status;
 
     public Blog() {}
 
-    public Blog(String id, String title, String author, String content, Timestamp timestamp) {
+    public Blog(String id, String title, String author, String content, Timestamp timestamp, String status) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.content = content;
         this.timestamp = timestamp;
+        this.status = status;
     }
 }

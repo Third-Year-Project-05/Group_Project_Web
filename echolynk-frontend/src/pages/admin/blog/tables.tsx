@@ -4,21 +4,35 @@ import image from '../../../assets/home.png';
 
 
 import React, { useState, useEffect } from 'react';
+import { getAllBlogs } from "../../../api";
 
+const fetchData = async () => {
 
+  try {
+      var response = await getAllBlogs();
+      var formattedResponse = response
+      .map((blog: { timestamp: { seconds: any; nanos: any; }; id: String; }) => {
+        const { seconds, nanos } = blog.timestamp;
+        const milliseconds = seconds * 1000 + nanos / 1000000;
+        return {
+            blogId:'BLG-' + blog.id.slice(-4),
+            ...blog,
+            created_on: new Date(milliseconds).toLocaleDateString()
+        };
+      });
+     
+      console.log('Blogs:', formattedResponse);
+      return formattedResponse;
 
-async function getData(): Promise<Blog[]> {
-  // Fetch data from your API here.
-  return [
-    {id: 1, title: 'Blog 1', author: 'Author 1', date: '2023-01-15', image: image, content: 'Content 1', status: 'pending'},	
-    {id: 2, title: 'Blog 2', author: 'Author 2', date: '2023-01-15', image: image, content: 'Content 2', status: 'approved'},
-    {id: 3, title: 'Blog 3', author: 'Author 3', date: '2023-01-15', image: image, content: 'Content 3', status: 'dismissed'},
-  ];
-}
+  } catch (error) {
+      console.error('Error fetching data:', error);
+  }
+};
 
 export function TableNew() {
-  const [dataNew, setDataNew] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  // const [dataNew, setDataNew] = useState<Blog[]>([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleOpenPopup = () => {
@@ -31,13 +45,18 @@ export function TableNew() {
     document.body.style.overflow = 'auto'; 
   };
 
+  // const [loading, setLoading] = useState(false);
+
+
   useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setDataNew(result);
+    const fetchDataAsync = async () => {
+      var data = await fetchData();
+      console.log('Data:', data);
+      setBlogs(data.filter((blog: { status: string; }) => blog.status === 'pending'));
       setLoading(false);
-    }
-    fetchData();
+    };
+  
+    fetchDataAsync();
   }, []);
 
   if (loading) {
@@ -46,24 +65,26 @@ export function TableNew() {
 
   return (
     <div className="container mx-auto py-5">
-      <DataTable columns={columnsNew} data={dataNew} />
+      <DataTable columns={columnsNew} data={blogs} />
     </div>
   );
 }
 
 
 export function TableAll(){
-    const [dataAll, setDataAll] = useState<Blog[]>([]);
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [blogsAll, setBlogsAll] = useState<Blog[]>([]);
 
     useEffect(() => {
-        async function fetchData() {
-          const result = await getData();
-          setDataAll(result);
-          setLoading(false);
-        }
-        fetchData();
-      }, []);
+      const fetchDataAsync = async () => {
+        var data = await fetchData();
+        console.log('Data:', data);
+        setBlogsAll(data);
+        setLoading(false);
+      };
+    
+      fetchDataAsync();
+    }, []);
     
       if (loading) {
         return <div>Loading...</div>;
@@ -71,7 +92,7 @@ export function TableAll(){
 
     return (
         <div className="container mx-auto py-5">
-        <DataTable columns={columnsAll} data={dataAll} />
+        <DataTable columns={columnsAll} data={blogsAll} />
         </div>
     );
 }

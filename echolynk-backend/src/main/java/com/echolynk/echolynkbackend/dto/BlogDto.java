@@ -13,5 +13,5 @@ public class BlogDto {
     private String content;
     private String author;
     private Timestamp timestamp;
-
+    private String status;
 }
