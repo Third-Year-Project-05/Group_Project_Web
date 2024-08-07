@@ -6,6 +6,7 @@ import Form from '../../components/auth/register/RegisterForm.jsx';
 import SidePanel from '../../components/auth/register/SidePanel';
 import logo from '../../assets/echolynk.png';
 import { toast } from 'react-toastify'; // Import toast if you're using react-toastify
+import SocialLogin from '../../components/auth/register/SocialLogin';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -15,7 +16,7 @@ const RegisterPage = () => {
         confirmPassword: ''
     });
     const [userType, setUserType] = useState('Deaf');
-    const { register } = useContext(AuthContext);
+    const { register, googleLogin, facebookLogin } = useContext(AuthContext);
     const navigate = useNavigate(); // Use navigate hook for redirection
 
     const handleChange = (e) => {
@@ -36,7 +37,6 @@ const RegisterPage = () => {
             password: formData.password,
             role: userType,
             phoneNumber: '',
-            timestamp: Date.now()
         };
 
         try {
@@ -45,6 +45,26 @@ const RegisterPage = () => {
             navigate('/login');
         } catch (error) {
             console.error('Registration failed. Please try again.', error);
+        }
+    };
+
+    const handleGoogleLoginSuccess = async (response) => {
+        try {
+            await googleLogin(response.credential);
+            console.log('Google login successful!');
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Google login failed.', error);
+        }
+    };
+
+    const handleFacebookLogin = async (response) => {
+        try {
+            await facebookLogin(response.accessToken);
+            console.log('Facebook login successful!');
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Facebook login failed.', error);
         }
     };
 
@@ -67,6 +87,13 @@ const RegisterPage = () => {
                         handleChange={handleChange}
                         handleSubmit={handleSubmit}
                     />
+
+                    {/*<div className="mt-4">*/}
+                    {/*    <SocialLogin*/}
+                    {/*        handleGoogleLogin={handleGoogleLoginSuccess}*/}
+                    {/*        handleFacebookLogin={handleFacebookLogin}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                 </div>
 
                 <SidePanel userType={userType} setUserType={setUserType} />

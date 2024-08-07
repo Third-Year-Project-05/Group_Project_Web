@@ -1,5 +1,6 @@
 package com.echolynk.echolynkbackend.entity;
 
+import com.google.cloud.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +14,14 @@ public class User {
     private String password;
     private String phoneNumber;
     private String role;
-    private String timestamp;  // Change to String
+    private Timestamp timestamp;
+    private boolean isPremium;
+    private Timestamp premiumExpirationDate;
 
     public User() {
     }
 
-    public User(String id, String userName, String email, String password, String phoneNumber, String role, String timestamp) {
+    public User(String id, String userName, String email, String password, String phoneNumber, String role, Timestamp timestamp,boolean isPremium, Timestamp premiumExpirationDate) {
         this.id = id;
         this.userName = userName;
         this.email = email;
@@ -26,5 +29,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.timestamp = timestamp;
+        this.isPremium = isPremium;
+        this.premiumExpirationDate = premiumExpirationDate;
     }
 }

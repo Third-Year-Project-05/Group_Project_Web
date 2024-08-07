@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -39,6 +42,22 @@ public class AuthController {
             return ResponseEntity.status(401).body(null);
         }
     }
+
+    @PostMapping("/google-login")
+    public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        AuthResponse authResponse = userService.googleLogin(token);  // Use UserService for Google login
+        return ResponseEntity.ok(Collections.singletonMap("token", authResponse.getToken()));
+    }
+
+    @PostMapping("/facebook-login")
+    public ResponseEntity<?> facebookLogin(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        AuthResponse authResponse = userService.facebookLogin(token);  // Use UserService for Facebook login
+        return ResponseEntity.ok(Collections.singletonMap("token", authResponse.getToken()));
+    }
+
+
 
     @PostMapping("/verifyToken")
     public ResponseEntity<?> verifyToken(@RequestBody String idToken) {
