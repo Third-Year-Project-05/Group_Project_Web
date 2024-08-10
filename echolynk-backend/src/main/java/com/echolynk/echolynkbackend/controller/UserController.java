@@ -27,10 +27,15 @@ public class UserController {
 	}
 
 	@GetMapping("/user/{id}")
-	public ResponseEntity<UserDto> getUser(String id) throws FirebaseAuthException {
-		UserDto user = userService.getUser(id);
-		return ResponseEntity.ok(user);
+	public ResponseEntity<UserDto> getUser(@PathVariable String id) throws FirebaseAuthException {
+		try {
+			UserDto user = userService.getUser(id);
+			return ResponseEntity.ok(user);
+		} catch (Exception e) {
+			return ResponseEntity.status(404).body(null);
+		}
 	}
+
 
 	@PostMapping("/integratePremium")
 	public ResponseEntity<?> integratePremiumAccount(@RequestBody Map<String, Object> payload) {

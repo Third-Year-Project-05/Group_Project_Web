@@ -26,23 +26,15 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/auth/login', userData);
-            const { token, role } = response.data;
-            const loggedUser = { ...userData, role };
+            const { token, role, userId } = response.data;
+            const loggedUser = { ...userData, role, id: userId }; // Include userId in the user object
 
             setUser(loggedUser);
             localStorage.setItem('user', JSON.stringify(loggedUser));
             localStorage.setItem('token', token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-            if (role === 'Deaf') {
-                navigate('/user-home');
-            } else if (role === 'Verbal') {
-                navigate('/verbal-home');
-            } else if (role === 'Admin') {
-                navigate('/admin-dashboard');
-            } else {
-                throw new Error('Invalid user role.');
-            }
+            navigateBasedOnRole(role);
         } catch (error) {
             toast.error('Login failed. Please check your credentials.');
             console.error('Login failed:', error);
@@ -55,8 +47,8 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/auth/google-login', { token: credential });
-            const { token, role, email } = response.data;
-            const loggedUser = { email, role };
+            const { token, role, email, userId } = response.data; // Make sure userId is returned from the backend
+            const loggedUser = { email, role, id: userId }; // Include userId in the user object
 
             setUser(loggedUser);
             localStorage.setItem('user', JSON.stringify(loggedUser));
@@ -76,8 +68,8 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/auth/facebook-login', { token: accessToken });
-            const { token, role, email } = response.data;
-            const loggedUser = { email, role };
+            const { token, role, email, userId } = response.data; // Make sure userId is returned from the backend
+            const loggedUser = { email, role, id: userId }; // Include userId in the user object
 
             setUser(loggedUser);
             localStorage.setItem('user', JSON.stringify(loggedUser));
