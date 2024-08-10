@@ -33,18 +33,18 @@ public class UserRepository {
         }
     }
 
-    public Optional<User> getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         try {
             ApiFuture<QuerySnapshot> query = firestore.collection("users").whereEqualTo("email", email).get();
             QuerySnapshot querySnapshot = query.get();
 
-            if (querySnapshot.isEmpty()) {
-                return Optional.empty();
-            }
+//            if (querySnapshot.isEmpty()) {
+//                return Optional.empty();
+//            }
 
             QueryDocumentSnapshot document = querySnapshot.getDocuments().get(0);
-            User user = document.toObject(User.class);
-            return Optional.ofNullable(user);
+            return document.toObject(User.class);
+//            return Optional.ofNullable(user);
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error retrieving user from Firestore", e);
             Thread.currentThread().interrupt();  // Restore the interrupted status

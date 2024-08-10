@@ -1,5 +1,6 @@
 package com.echolynk.echolynkbackend.dto;
 
+import com.echolynk.echolynkbackend.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +15,6 @@ public class BlogDto {
     private String author;
     private Timestamp timestamp;
     private String status;
+    private String email;
+    private User authorAll;
 }

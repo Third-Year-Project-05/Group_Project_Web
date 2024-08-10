@@ -12,14 +12,14 @@ import {
 import { Input } from "../../../components/ui/input"
 import { Label } from "../../../components/ui/label"
 import { addBlog } from "../../../api"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useToast } from "../../../components/ui/use-toast"
 
 const AddBlog = () => {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
     const [file, setFile] = useState(null);
-    const [data, setData] = useState({ title: "", content: "" });
+    const [data, setData] = useState({ title: "", content: "", email: ""});
   
     const handleFileChange = (e) => {
       setFile(e.target.files[0]);
@@ -32,6 +32,20 @@ const AddBlog = () => {
         [name]: value,
       }));
     };
+
+    useEffect(() => {
+        // Retrieve user data from localStorage
+        const userString = localStorage.getItem("user");
+        
+        // Parse the JSON string to an object
+        const user = userString ? JSON.parse(userString) : null;
+
+        // Update state with the email value if user object exists
+        setData((prevState) => ({
+            ...prevState,
+            email: user ? user.email : "",
+        }));
+    }, []);
   
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -40,6 +54,7 @@ const AddBlog = () => {
     //     alert("Please select an image file");
     //     return;
     //   }
+
   
       const formData = new FormData();
     //   formData.append("image", file);
@@ -47,6 +62,7 @@ const AddBlog = () => {
       formData.append("content", data.content);
       formData.append("status", "approved");
       formData.append("author", "Admin");
+      formData.append("authorId", data.email);
   
       addBlog(formData);
 
@@ -60,6 +76,10 @@ const AddBlog = () => {
             description: "Your blog has been added successfully",
             variant: "success",
         });
+
+        setInterval(() => {
+            window.location.reload();
+        }, 3000);
 
     };
 
