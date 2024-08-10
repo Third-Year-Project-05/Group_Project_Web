@@ -1,46 +1,59 @@
-import { Game, columnsAll } from "./table-col"
-import { DataTable } from "../../../components/admin/data-table"
-import image from '../../../assets/home.png';
-import { DropdownMenu,   DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger, } from '../../../components/ui/dropdown-menu';
-import { Button } from '../../../components/ui/button';
-
 import React, { useState, useEffect } from 'react';
-import { FaFilter } from "react-icons/fa";
+import { Game, columnsAll } from "./table-col";
+import { DataTable } from "../../../components/admin/data-table";
+import { getAllGames } from "../../../services/gameService";
+import GamePopup from './viewGame'; // Import the GamePopup component
 
+type TableAllProps = {
+    onRowClick: (game: Game) => void;
+};
 
-
-async function getData(): Promise<Game[]> {
-  // Fetch data from your API here.
-  return [
-    {id: 1, name: 'Sign Language Quiz', description: ' A quiz to learn and practice sign languages.', level: 'Easy', type: 'Beginner', rounds: 10},
-    {id: 2, name: 'Sign Language Quiz', description: ' A quiz to learn and practice sign languages.', level: 'Medium', type: 'Intermediate', rounds: 20},
-    {id: 3, name: 'Sign Language Quiz', description: ' A quiz to learn and practice sign languages.', level: 'Hard', type: 'Advanced', rounds: 10},
-  ];
-}
-
-
-export function TableAll(){
+export function TableAll({ onRowClick }: TableAllProps) {
     const [dataAll, setDataAll] = useState<Game[]>([]);
+    const [selectedGame, setSelectedGame] = useState<Game | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchData() {
-          const result = await getData();
-          setDataAll(result);
-          setLoading(false);
-        }
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await getAllGames();
+                setDataAll(response);
+                console.log('Games:', response);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchData();
-      }, []);
-    
-      if (loading) {
+    }, []);
+
+    const handleRowClick = (game: Game) => {
+        setSelectedGame(game);
+    };
+
+    const handleClosePopup = () => {
+        setSelectedGame(null);
+    };
+
+    if (loading) {
         return <div>Loading...</div>;
-      }
+    }
 
     return (
         <div className="container mx-auto py-5">
-        <DataTable columns={columnsAll} data={dataAll} />
+            <DataTable
+                columns={columnsAll}
+                data={dataAll}
+                onRowClick={handleRowClick}
+            />
+            {selectedGame && (
+                <GamePopup
+                    game={selectedGame}
+                    onClose={handleClosePopup}
+                />
+            )}
         </div>
     );
 }

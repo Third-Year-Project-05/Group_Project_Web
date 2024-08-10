@@ -1,12 +1,14 @@
 package com.echolynk.echolynkbackend.controller;
 
 import com.echolynk.echolynkbackend.dto.GameDto;
+import com.echolynk.echolynkbackend.dto.QuestionDto;
 import com.echolynk.echolynkbackend.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/api")
 @RestController
@@ -35,6 +37,28 @@ public class GameController {
         }
     }
 
+    //get the questions
+    @GetMapping("/getQuestions")
+        public ResponseEntity<?> getAllQuestions() {
+            try {
+                List<QuestionDto> questions = gameService.getAllQuestions();
+                return ResponseEntity.ok(questions);
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Error getting questions: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/with-questions")
+    public ResponseEntity<?> getAllGamesWithQuestions() {
+        try {
+            List<Map<String, Object>> gamesWithQuestions = gameService.getAllGamesWithQuestions();
+            return ResponseEntity.ok(gamesWithQuestions);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error getting games with questions: " + e.getMessage());
+        }
+    }
+
+
     @GetMapping("/getGame/{id}")
     public ResponseEntity<?> getGame(@PathVariable String id) {
         try {
@@ -42,6 +66,16 @@ public class GameController {
             return ResponseEntity.ok(game);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error getting game: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/getGameCount")
+    public ResponseEntity<?> getGameCount() {
+        try {
+            int gameCount = gameService.getGameCount();
+            return ResponseEntity.ok(gameCount);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error getting game count: " + e.getMessage());
         }
     }
 

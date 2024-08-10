@@ -35,9 +35,9 @@ import AdminSettings from './pages/admin/settings/settings';
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 
-import Game from './pages/user/game/game';
-import EasyLevel from "./pages/user/game/easy-level";
-import QuizPage from "./pages/user/game/quiz";
+import Game from './pages/game/game.jsx';
+import EasyLevel from "./pages/game/easy-level.jsx";
+import QuizPage from "./pages/game/quiz.jsx";
 
 import UserBlog from './pages/user/blog/blog';
 

@@ -6,7 +6,10 @@ import com.echolynk.echolynkbackend.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GameService {
@@ -40,5 +43,36 @@ public class GameService {
 
     public void deleteGame(String id) {
         gameRepository.deleteGame(id);
+    }
+
+    public List<QuestionDto> getAllQuestions() {
+        try {
+            return gameRepository.getAllQuestions();
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting questions: " + e.getMessage(), e);
+        }
+    }
+
+    public List<Map<String, Object>> getAllGamesWithQuestions() {
+        List<GameDto> games = gameRepository.getAllGames();
+        List<Map<String, Object>> gamesWithQuestions = new ArrayList<>();
+
+        for (GameDto game : games) {
+            List<QuestionDto> questions = gameRepository.getQuestionsForGame(game.getId());
+            Map<String, Object> gameMap = new HashMap<>();
+            gameMap.put("game", game);
+            gameMap.put("questions", questions);
+            gamesWithQuestions.add(gameMap);
+        }
+
+        return gamesWithQuestions;
+    }
+
+    public int getGameCount() {
+        try {
+            return gameRepository.getAllGames().size();
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting game count: " + e.getMessage(), e);
+        }
     }
 }

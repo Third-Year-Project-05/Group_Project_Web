@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import level1Image from '../../../assets/level-1.jpg'; // Correctly import the image
+import level1Image from '../../assets/level-1.jpg'; // Correctly import the image
 
 // Sample quiz data
 const quizData = {
