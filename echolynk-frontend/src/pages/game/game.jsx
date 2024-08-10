@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Header from '../../../components/user/game/Header';
-import GameInterface from '../../../components/user/game/GameInterface';
-import Leaderboard from '../../../components/user/game/Leaderboard';
-import CurrentScore from '../../../components/user/game/CurrentScore';
-import LeaderboardData from '../../../components/user/game/LeaderboardData';
-import LevelSelectionModal from '../../../components/user/game/LevelSelection';
+import Header from '../../components/user/game/Header.jsx';
+import GameInterface from '../../components/user/game/GameInterface.jsx';
+import Leaderboard from '../../components/user/game/Leaderboard.jsx';
+import CurrentScore from '../../components/user/game/CurrentScore.jsx';
+import LeaderboardData from '../../components/user/game/LeaderboardData.jsx';
+import LevelSelectionModal from '../../components/user/game/LevelSelection.jsx';
 
 
 const Game = () => {

@@ -15,3 +15,25 @@ export const createGame = async (game) => {
         throw error;
     }
 }
+
+export const getAllGames = async () => {
+    try {
+        const response = await api.get(`/getGame`);
+        console.log('Game fetched:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching game:', error);
+        throw error;
+    }
+}
+
+export const gameCount = async () => {
+    try {
+        const response = await api.get(`/getGameCount`);
+        console.log('Game Count:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching game count:', error);
+        throw error;
+    }
+}
