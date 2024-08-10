@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -11,6 +11,7 @@ import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
 import { CameraIcon } from '@heroicons/react/outline';
 import userPhoto from '../../assets/Wikum.png';
+import { getUser } from '../../services/userService.jsx';
 
 const UserProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
@@ -19,6 +20,34 @@ const UserProfile = () => {
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
+
+  // Retrieve userId from local storage
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userId = user?.id;
+  console.log('User ID:', userId);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!userId) {
+        console.error('No userId found in local storage');
+        return;
+      }
+
+      try {
+        const userData = await getUser(userId);
+        console.log('Fetched User Data:', userData);
+
+        setFullName(userData.userName || '');
+        setEmail(userData.email || '');
+        setProfileImage(userData.photo || userPhoto);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error.message);
+        // Optionally display an error message to the user
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {

@@ -41,7 +41,7 @@ import QuizPage from "./pages/user/game/quiz";
 
 import UserBlog from './pages/user/blog/blog';
 
-import UserProfile from './pages/user/user-profile';
+import UserProfile from './pages/common/user-profile.jsx';
 
 import UserHome from './pages/user/home/home';
 
@@ -160,6 +160,7 @@ function App() {
                         <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><VerbalHome /></VerbalLayout>} />} />
                         <Route path="/verbal-blog" element={<PrivateVerbal element={<VerbalLayout><UserBlog /></VerbalLayout>} />} />
                         <Route path="/verbal-game" element={<PrivateVerbal element={<VerbalLayout><Game /></VerbalLayout>} />} />
+                        <Route path="/verbal-profile" element={<VerbalLayout><UserProfile /></VerbalLayout>} />
 
                         {/* 404 Error */}
                         <Route path="*" element={<Nofound />} />

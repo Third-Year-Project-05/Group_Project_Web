@@ -80,7 +80,7 @@ public class UserRepository {
 
     public UserDto getUser(String id) {
         try {
-            ApiFuture<QuerySnapshot> query = firestore.collection("users").whereEqualTo("id", id).get();
+            ApiFuture<QuerySnapshot> query = firestore.collection("users").whereEqualTo("userId", id).get();
             QuerySnapshot querySnapshot = query.get();
 
             if (querySnapshot.isEmpty()) {
@@ -95,6 +95,8 @@ public class UserRepository {
             throw new RuntimeException("Error retrieving user from Firestore", e);
         }
     }
+
+
 
     public List<UserDto> getUserBlogs(String id) {
         try {
