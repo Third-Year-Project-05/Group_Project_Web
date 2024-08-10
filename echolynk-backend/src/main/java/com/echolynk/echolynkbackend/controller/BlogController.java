@@ -15,7 +15,7 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
 
-    @PostMapping("/blog")
+    @PostMapping("/addBlog")
     public ResponseEntity<?> createBlog(@RequestBody BlogDto blogDto) {
         try {
             String blogId = blogService.createBlog(blogDto);

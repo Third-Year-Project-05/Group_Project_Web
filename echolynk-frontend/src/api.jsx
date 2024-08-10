@@ -47,3 +47,18 @@ export const dismissBlog = async (id) => {
         throw error;
     }
 }
+
+export const addBlog = async (data) => {
+    try {
+        const response = await api.post('/addBlog', data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log('Blog Added:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error adding blog:', error);
+        throw error;
+    }
+}
