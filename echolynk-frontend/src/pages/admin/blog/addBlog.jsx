@@ -36,6 +36,8 @@ const AddBlog = () => {
     useEffect(() => {
         // Retrieve user data from localStorage
         const userString = localStorage.getItem("user");
+
+        console.log(userString);
         
         // Parse the JSON string to an object
         const user = userString ? JSON.parse(userString) : null;
@@ -62,7 +64,7 @@ const AddBlog = () => {
       formData.append("content", data.content);
       formData.append("status", "approved");
       formData.append("author", "Admin");
-      formData.append("authorId", data.email);
+      formData.append("email", data.email);
   
       addBlog(formData);
 
@@ -77,9 +79,9 @@ const AddBlog = () => {
             variant: "success",
         });
 
-        setInterval(() => {
-            window.location.reload();
-        }, 3000);
+        // setInterval(() => {
+        //     window.location.reload();
+        // }, 3000);
 
     };
 
