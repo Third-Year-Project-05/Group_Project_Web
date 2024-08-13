@@ -47,6 +47,8 @@ import {useContext, useEffect, useState} from 'react';
 
 import Game from './pages/user/game/game';
 
+import Blogview2 from './components/blog/blog-view';
+
 const Layout = ({ children }) => {
     return (
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -170,6 +172,9 @@ function App() {
                         <Route path="/admin-settings" element={<Private element={<AdminLayout><AdminSettings /></AdminLayout>} />} />
 
 
+                        {/* Test */}
+                        <Route path="/blogview" element={<Layout><Blogview2 /></Layout>} />
+                                            
                     </Routes>
 
                     </AuthProvider>
