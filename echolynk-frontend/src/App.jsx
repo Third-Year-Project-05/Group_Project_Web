@@ -52,6 +52,8 @@ import {useContext, useEffect, useState} from 'react';
 import VideoChat from './pages/user/video-chat/video-chat';
 
 
+import Blogview2 from './components/blog/blog-view';
+
 const Layout = ({ children }) => {
     return (
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -179,6 +181,9 @@ function App() {
                         <Route path="/admin-settings" element={<Private element={<AdminLayout><AdminSettings /></AdminLayout>} />} />
 
 
+                        {/* Test */}
+                        <Route path="/blogview" element={<Layout><Blogview2 /></Layout>} />
+                                            
                     </Routes>
 
                     </AuthProvider>
