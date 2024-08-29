@@ -78,6 +78,7 @@ public class UserService implements UserDetailsService {
         user.put("role", userDto.getRole());
         user.put("phoneNumber", userDto.getPhoneNumber());
         user.put("timestamp", Timestamp.now());
+        user.put("isPremium", false);
 
         ApiFuture<WriteResult> future = firestore.collection("users").document(userRecord.getUid()).set(user);
         future.get();
@@ -119,11 +120,13 @@ public class UserService implements UserDetailsService {
                     throw new RuntimeException("User role not found");
                 }
 
+                boolean isPremium = (boolean) userMap.get("isPremium");
+
                 // Generate and return a JWT token if the credentials are valid
                 UserDetails userDetails = new CustomUserDetails(firebaseUserRecord);
                 String token = jwtUtil.generateToken(userDetails);
 
-                return new AuthResponse(token, role);
+                return new AuthResponse(token, role, isPremium);
             } else {
                 throw new RuntimeException("Invalid email or password");
             }
@@ -183,6 +186,7 @@ public class UserService implements UserDetailsService {
                 userMap.put("email", email);
                 userMap.put("role", "Deaf"); // Or assign a default role
                 userMap.put("timestamp", Timestamp.now());
+                userMap.put("isPremium", false);
                 firestore.collection("users").document(userRecord.getUid()).set(userMap).get();
             }
 
@@ -190,8 +194,9 @@ public class UserService implements UserDetailsService {
             UserDetails userDetails = new CustomUserDetails(userRecord);
             String token = jwtUtil.generateToken(userDetails);
             String role = (String) userMap.get("role");
+            boolean isPremium = (boolean) userMap.get("isPremium");
 
-            return new AuthResponse(token, role);
+            return new AuthResponse(token, role, isPremium);
         } catch (FirebaseAuthException | ExecutionException | InterruptedException e) {
             throw new RuntimeException("OAuth2 Login error", e);
         }

@@ -50,6 +50,8 @@ import VerbalHome from './pages/verbalUser/home/home';
 import {useContext, useEffect, useState} from 'react';
 
 import VideoChat from './pages/user/video-chat/video-chat';
+import PremiumUpgrade from './pages/user/premium-upgrade';
+import PaymentSuccess from './pages/user/payment-success';
 import { Toaster } from './components/ui/toaster';
 
 
@@ -93,9 +95,19 @@ const AdminLayout = ({ children }) => {
 };
 
 const LoginLayout = ({ children }) => {
+    const [isPremium, setIsPremium] = useState(false);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        console.log(user);
+        const premiumStatus = user.premium;
+        console.log(isPremium);
+        setIsPremium(premiumStatus);
+    }, []);
+
     return (
         <div className="flex flex-col min-h-screen bg-gray-200 dark:bg-inherit">
-            <LogHeader />
+            <LogHeader isPremium={isPremium}/>
             <main className="flex-grow">{children}</main>
             <Footer />
         </div>
@@ -157,6 +169,9 @@ function App() {
                         <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
                         <Route path='/game/level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
                         <Route path='/quiz/:level' element={<LoginLayout><QuizPage /></LoginLayout>} />
+                        <Route path="/premium-upgrade" element={<PremiumUpgrade />} />
+                        <Route path="/payment-success" element={<PaymentSuccess />} />
+                        
 
                         {/* Verbal User */}
                         <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><VerbalHome /></VerbalLayout>} />} />

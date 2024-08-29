@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BellIcon, StarIcon } from '@heroicons/react/outline';
 import { ModeToggle } from '../mode-toggle';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
@@ -11,17 +12,25 @@ import userPhoto from '../../assets/Wikum.png';
 import logo from '../../assets/echolynk.png';
 import AuthContext from '../../context/AuthContext';
 import 'typeface-poppins';
+import PremiumCarouselPopup from '../user/premium-popup';
 
 
-const Navbar = () => {
+const Navbar = ( {isPremium} ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
     const { logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const [isCarouselOpen, setIsCarouselOpen] = useState(false);
+
+    const handleUpgradeClick = () => {
+      setIsCarouselOpen(true);
+    };
+
     const handleLinkClick = (link) => {
         setActiveLink(link);
     };
+    console.log(isPremium);
 
     return (
         <nav className="bg-echolynk px-9 py-0">
@@ -75,6 +84,32 @@ const Navbar = () => {
 
                 <div className="flex items-center space-x-4">
 
+                
+
+                <Button 
+                    variant="outline" 
+                    size="icon" 
+                    style={{ 
+                        borderRadius: '0.5rem', 
+                        width: 'fit-content', 
+                        height: '2.2rem', 
+                        padding: '0.5rem',
+                        opacity: '0.9',
+                        color: isPremium ? '#131313' : 'white',
+                        backgroundColor: isPremium ? '#dc9d0d' : '#363bab'
+                    }}
+                    >
+                    {isPremium ? (
+                        <>
+                        <span>Premium</span>
+                        </>
+                    ) : (
+                        <>
+                        <span>Free</span>
+                        </>
+                    )}
+                </Button>
+
                     <Popover>
                         <PopoverTrigger>
                             <BellIcon className="relative text-center bg-blue-900 p-2 rounded-full h-[2.2rem] w-[2.2rem] self-center text-white" />
@@ -93,8 +128,8 @@ const Navbar = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => navigate('/user-premium')} className="flex items-center space-x-2">
-                                <span>Upgrade Premium</span>
+                            <DropdownMenuItem onClick={handleUpgradeClick} className="flex items-center space-x-2">
+                                <span>Upgrade to Premium</span>
                                 <StarIcon className="h-5 w-5 text-yellow-500" /> {/* Add icon after text */}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => navigate('/user-profile')}>
@@ -112,7 +147,14 @@ const Navbar = () => {
                 </div>
 
             </div>
+            <PremiumCarouselPopup
+                isOpen={isCarouselOpen}
+                onClose={() => setIsCarouselOpen(false)}
+            />
+
         </nav>
+
+        
     );
 };
 
