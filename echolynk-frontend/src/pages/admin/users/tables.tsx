@@ -24,7 +24,9 @@ export function TableAll(){
           try {
               var response = await getAllUsers();
               
-              const formattedResponse = response.map((user: { timestamp: { seconds: any; nanos: any; }; userId: String; }) => {
+              const formattedResponse = response
+              .filter((user: { role: String; }) => user.role !== 'Admin')
+              .map((user: { timestamp: { seconds: any; nanos: any; }; userId: String; }) => {
                 const { seconds, nanos } = user.timestamp;
                 const milliseconds = seconds * 1000 + nanos / 1000000;
                 return {
