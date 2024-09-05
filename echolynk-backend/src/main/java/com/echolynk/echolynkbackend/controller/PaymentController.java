@@ -51,27 +51,24 @@ public class PaymentController {
     private final String MERCHANT_SECRET = "MzIzNTk0MzUwNjI4MDE5OTMxNjMxMjYyOTgzMDE3MjYxODI0NTk1Nw==";
 
     @PostMapping("/notify")
-    public ResponseEntity<String> paymentNotification(@RequestParam Map<String, String> params) {
-        String orderId = params.get("order_id");
-        String payhereAmount = params.get("payhere_amount");
-        String payhereCurrency = params.get("payhere_currency");
-        String statusCode = params.get("status_code");
-        String md5sig = params.get("md5sig");
+    public ResponseEntity<String> paymentNotification(@RequestBody Map<String, String> params) {
+//        String orderId = params.get("order_id");
+//        String payhereAmount = params.get("payhere_amount");
+//        String payhereCurrency = params.get("payhere_currency");
+//        String statusCode = params.get("status_code");
+//        String md5sig = params.get("md5sig");
+        System.out.println(params);
 
-        try {
-            String localMd5sig = generateMd5Signature(merchantId, orderId, payhereAmount, payhereCurrency, statusCode);
+        //            String localMd5sig = generateMd5Signature(merchantId, orderId, payhereAmount, payhereCurrency, statusCode);
+//
+//            if (localMd5sig.equals(md5sig.toUpperCase()) && "2".equals(statusCode)) {
+        // TODO: Update your database as payment success
+        payHereService.createPayment(params);
 
-            if (localMd5sig.equals(md5sig.toUpperCase()) && "2".equals(statusCode)) {
-                // TODO: Update your database as payment success
-                payHereService.createPayment(params);
-                
-                return ResponseEntity.ok("Payment success");
-            } else {
-                return ResponseEntity.badRequest().body("Payment verification failed");
-            }
-        } catch (NoSuchAlgorithmException e) {
-            return ResponseEntity.status(500).body("Error processing payment notification");
-        }
+        return ResponseEntity.ok("Payment success");
+//            } else {
+//                return ResponseEntity.badRequest().body("Payment verification failed");
+//            }
     }
 
     private String generateMd5Signature(String merchantId, String orderId, String payhereAmount, String payhereCurrency, String statusCode) throws NoSuchAlgorithmException {

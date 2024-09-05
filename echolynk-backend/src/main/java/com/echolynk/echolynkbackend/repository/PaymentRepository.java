@@ -26,11 +26,12 @@ public class PaymentRepository {
 
 
     public String createPayment(Map<String, String> params) {
+        System.out.println(params);
         Payment payment = new Payment();
         String paymentId = UUID.randomUUID().toString();
         payment.setId(paymentId);
         payment.setUserId(params.get("order_id"));
-        payment.setAmount(Integer.parseInt(params.get("amount")));
+        payment.setAmount(Integer.parseInt(params.get("payhere_amount")));
         payment.setPaymentDate(Timestamp.now());
 
         DocumentReference paymentRef = firestore.collection("payments").document(paymentId);
