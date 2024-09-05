@@ -4,6 +4,10 @@ const api = axios.create({
     baseURL: 'http://localhost:8080/api',
 });
 
+const report = axios.create({
+    baseURL: 'http://localhost:8080/report',
+});
+
 export const getAllUsers = async () => {
     try {
         const response = await api.get('/users');
@@ -62,3 +66,21 @@ export const addBlog = async (data) => {
         throw error;
     }
 }
+
+
+export const getReportData = async (startDate, endDate, reportType) => {
+    console.log(typeof startDate);
+    try {
+        const response = await report.get(
+            '/get-data',
+            {
+                params: { startDate, endDate, reportType },
+            }
+        );
+        console.log('Report Data:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching report data:', error);
+        throw error;
+    }
+};
