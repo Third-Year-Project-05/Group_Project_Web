@@ -1,17 +1,18 @@
 package com.echolynk.echolynkbackend.repository;
 
 import com.echolynk.echolynkbackend.dto.BlogDto;
-import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.entity.Blog;
 import com.echolynk.echolynkbackend.entity.User;
 import com.echolynk.echolynkbackend.mappers.BlogMapper;
-import com.echolynk.echolynkbackend.mappers.UserMapper;
+import com.echolynk.echolynkbackend.service.FirebaseStorageService;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.cloud.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -23,23 +24,27 @@ public class BlogRepository {
     private Firestore firestore;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
 
-    public String saveBlog(BlogDto blogDto) {
+    public String saveBlog(MultipartFile image, BlogDto blogDto) throws IOException {
         // Generate a unique ID for the blog
         String blogId = UUID.randomUUID().toString();
         blogDto.setId(blogId);
 
+        String imageUrl = firebaseStorageService.uploadFile(image);
+
+
         User author = userRepository.getUserByEmail(blogDto.getEmail());
 //        User author = UserMapper.toEntity(authorDto);
-
         // Map BlogDto to Blog entity
         Blog blog = BlogMapper.dtoToEntity(blogDto, author);
-
+        blog.setImageUrl(imageUrl);
         blog.setTimestamp(Timestamp.now());
         if(blog.getAuthor() != "Admin"){
             blog.setAuthor(author.getUserName());
         }
-
+        System.out.println(blog);
         // Reference to the Firestore document
         DocumentReference blogRef = firestore.collection("blogs").document(blogId);
 

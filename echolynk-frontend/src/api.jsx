@@ -56,7 +56,7 @@ export const addBlog = async (data) => {
     try {
         const response = await api.post('/addBlog', data, {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
             },
         });
         console.log('Blog Added:', response.data);

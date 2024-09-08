@@ -60,12 +60,24 @@ const AddBlog = () => {
   
       const formData = new FormData();
     //   formData.append("image", file);
-      formData.append("title", data.title);
-      formData.append("content", data.content);
-      formData.append("status", "approved");
-      formData.append("author", "Admin");
-      formData.append("email", data.email);
+      // formData.append("title", data.title);
+      // formData.append("content", data.content);
+      // formData.append("status", "approved");
+      // formData.append("author", "Admin");
+      // formData.append("email", data.email);
+      // formData.append("image", file);
   
+      formData.append("image", file);  
+      formData.append("blogDto", new Blob([JSON.stringify({
+          title: data.title,
+          content: data.content,
+          status: "approved",
+          author: "Admin",
+          email: data.email
+      })], {
+          type: "application/json"
+      }));
+
       addBlog(formData);
 
       //close the form
@@ -98,14 +110,14 @@ const AddBlog = () => {
             Add your blog post here. Click submit when you are done
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="grid gap-4 py-4">
-            {/* <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="image" className="text-right">
                 Image
               </Label>
               <Input type="file" id="image" name="image" className="col-span-3" onChange={handleFileChange}/>
-            </div> */}
+            </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="title" className="text-right">
                 Title
