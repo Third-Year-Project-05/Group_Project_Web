@@ -120,13 +120,18 @@ public class UserService implements UserDetailsService {
                     throw new RuntimeException("User role not found");
                 }
 
-                boolean isPremium = (boolean) userMap.get("isPremium");
+                // Retrieve user ID
+                String userID = (String) userMap.get("userId");
+                if (userID == null) {
+                    throw new RuntimeException("User ID not found");
+                }
 
                 // Generate and return a JWT token if the credentials are valid
                 UserDetails userDetails = new CustomUserDetails(firebaseUserRecord);
                 String token = jwtUtil.generateToken(userDetails);
 
-                return new AuthResponse(token, role, isPremium);
+                return new AuthResponse(token, role, userID);
+
             } else {
                 throw new RuntimeException("Invalid email or password");
             }
@@ -184,7 +189,7 @@ public class UserService implements UserDetailsService {
             if (userMap == null) {
                 userMap = new HashMap<>();
                 userMap.put("email", email);
-                userMap.put("role", "Deaf"); // Or assign a default role
+                userMap.put("role", "Deaf");
                 userMap.put("timestamp", Timestamp.now());
                 userMap.put("isPremium", false);
                 firestore.collection("users").document(userRecord.getUid()).set(userMap).get();
@@ -196,7 +201,7 @@ public class UserService implements UserDetailsService {
             String role = (String) userMap.get("role");
             boolean isPremium = (boolean) userMap.get("isPremium");
 
-            return new AuthResponse(token, role, isPremium);
+            return new AuthResponse(token, role,userRecord.getUid());
         } catch (FirebaseAuthException | ExecutionException | InterruptedException e) {
             throw new RuntimeException("OAuth2 Login error", e);
         }
@@ -216,7 +221,11 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDto getUser(String id) {
-        return userRepository.getUser(id);
+        try {
+            return userRepository.getUser(id);
+        } catch (Exception e) {
+            throw new RuntimeException("User not found", e);
+        }
     }
 
     public List<UserDto> getUserBlogs(String id) {
@@ -242,4 +251,5 @@ public class UserService implements UserDetailsService {
     public Long getUserCount() {
         return userRepository.getUserCount();
     }
+
 }

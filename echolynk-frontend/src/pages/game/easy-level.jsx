@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import levelImage from '../../../assets/level-1.jpg'; // Use your own level image
+import levelImage from '../../assets/level-1.jpg'; // Use your own level image
 
 const EasyLevelPage = () => {
     const navigate = useNavigate();

@@ -35,13 +35,13 @@ import AdminSettings from './pages/admin/settings/settings';
 import UserSidebar from './components/sidebar/user-sidebar';
 // import userDashboard from './pages/user/dashboard/dashboard';
 
-import Game from './pages/user/game/game';
-import EasyLevel from "./pages/user/game/easy-level";
-import QuizPage from "./pages/user/game/quiz";
+import Game from './pages/game/game.jsx';
+import EasyLevel from "./pages/game/easy-level.jsx";
+import QuizPage from "./pages/game/quiz.jsx";
 
 import UserBlog from './pages/user/blog/blog';
 
-import UserProfile from './pages/user/user-profile';
+import UserProfile from './pages/common/user-profile.jsx';
 
 import UserHome from './pages/user/home/home';
 
@@ -54,6 +54,8 @@ import PremiumUpgrade from './pages/user/premium-upgrade';
 import PaymentSuccess from './pages/user/payment-success';
 import { Toaster } from './components/ui/toaster';
 
+
+import Blogview2 from './components/blog/blog-view';
 
 const Layout = ({ children }) => {
     return (
@@ -177,6 +179,7 @@ function App() {
                         <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><VerbalHome /></VerbalLayout>} />} />
                         <Route path="/verbal-blog" element={<PrivateVerbal element={<VerbalLayout><UserBlog /></VerbalLayout>} />} />
                         <Route path="/verbal-game" element={<PrivateVerbal element={<VerbalLayout><Game /></VerbalLayout>} />} />
+                        <Route path="/verbal-profile" element={<VerbalLayout><UserProfile /></VerbalLayout>} />
 
                         {/* 404 Error */}
                         <Route path="*" element={<Nofound />} />
@@ -195,6 +198,9 @@ function App() {
                         <Route path="/admin-settings" element={<Private element={<AdminLayout><AdminSettings /></AdminLayout>} />} />
 
 
+                        {/* Test */}
+                        <Route path="/blogview" element={<Layout><Blogview2 /></Layout>} />
+                                            
                     </Routes>
 
                     </AuthProvider>

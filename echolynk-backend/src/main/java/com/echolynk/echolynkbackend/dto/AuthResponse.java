@@ -8,11 +8,11 @@ import lombok.Setter;
 public class AuthResponse {
     private String token;
     private String role;
-    private boolean isPremium;
+    private String userId;
 
-    public AuthResponse(String token, String role, boolean isPremium) {
+    public AuthResponse(String token, String role, String userId) {
         this.token = token;
         this.role = role;
-        this.isPremium = isPremium;
+        this.userId = userId;
     }
 }

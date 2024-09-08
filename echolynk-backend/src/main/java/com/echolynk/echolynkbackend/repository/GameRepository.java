@@ -9,7 +9,9 @@ import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -72,6 +74,17 @@ public class GameRepository {
         }
     }
 
+    public List<QuestionDto> getAllQuestions() {
+        try {
+            // Get all questions from Firestore
+            ApiFuture<QuerySnapshot> future = firestore.collectionGroup("questions").get();
+            return future.get().toObjects(QuestionDto.class);
+        } catch (InterruptedException | ExecutionException e) {
+            // Handle exceptions (e.g., log error)
+            throw new RuntimeException("Error getting questions from Firestore: " + e.getMessage(), e);
+        }
+    }
+
 
     public void updateGame(String id, GameDto gameDto) {
         try {
@@ -94,6 +107,37 @@ public class GameRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Handle exceptions (e.g., log error)
             throw new RuntimeException("Error deleting game from Firestore: " + e.getMessage(), e);
+        }
+    }
+
+    public List<QuestionDto> getQuestionsForGame(String gameId) {
+        try {
+            // Get all questions for a specific game
+            ApiFuture<QuerySnapshot> future = firestore.collection("games").document(gameId).collection("questions").get();
+            return future.get().toObjects(QuestionDto.class);
+        } catch (InterruptedException | ExecutionException e) {
+            // Handle exceptions (e.g., log error)
+            throw new RuntimeException("Error getting questions from Firestore: " + e.getMessage(), e);
+        }
+    }
+
+
+    public Map<GameDto, List<QuestionDto>> getAllGamesWithQuestions() {
+        try {
+            // Fetch all games
+            List<GameDto> games = getAllGames();
+            Map<GameDto, List<QuestionDto>> gamesWithQuestions = new HashMap<>();
+
+            // Fetch questions for each game
+            for (GameDto game : games) {
+                List<QuestionDto> questions = getQuestionsForGame(game.getId());
+                gamesWithQuestions.put(game, questions);
+            }
+
+            return gamesWithQuestions;
+        } catch (Exception e) {
+            // Handle exceptions (e.g., log error)
+            throw new RuntimeException("Error getting games with questions from Firestore: " + e.getMessage(), e);
         }
     }
 }
