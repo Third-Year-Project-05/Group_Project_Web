@@ -33,7 +33,7 @@ const AdminUsers = () => {
     useEffect(() => {
         getAllUsers().then(response => {
             setUsers(response);
-            console.log('Users:', response);
+            // console.log('Users:', response);
         }).catch(error => {
             console.error('Error fetching data:', error);
         });

@@ -5,6 +5,7 @@ import com.echolynk.echolynkbackend.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,10 +16,11 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
 
-    @PostMapping("/blog")
-    public ResponseEntity<?> createBlog(@RequestBody BlogDto blogDto) {
+    @PostMapping("/addBlog")
+    public ResponseEntity<?> createBlog(        @RequestPart("image") MultipartFile image,
+                                                @RequestPart("blogDto") BlogDto blogDto) {
         try {
-            String blogId = blogService.createBlog(blogDto);
+            String blogId = blogService.createBlog(image, blogDto);
             return ResponseEntity.ok("Blog created with ID: " + blogId);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error creating blog: " + e.getMessage());

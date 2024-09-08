@@ -70,13 +70,22 @@ export const columnsAll: ColumnDef<User>[] = [
         header: "Role",
         cell: ({ cell }) => {
             const value = cell.getValue() as string;
+            // console.log((value==true));
             const style = {
                 backgroundColor: value === 'Premium' ? 'rgba(255, 215, 0, 0.4)' : 'rgba(0, 128, 0, 0.5)',
                 padding: '7px',
                 borderRadius: '14px',
             };
-            return <span style={style} className="self-center">{value}</span>;
+            return (
+                <span style={style} className="self-center">
+                    {value ? 'Premium' : 'Free'}
+                </span>
+            );
         },
+    },
+    {
+        accessorKey: "status",
+        header: "Status",
     },
     {
         id: "actions",

@@ -4,7 +4,9 @@ import com.echolynk.echolynkbackend.dto.BlogDto;
 import com.echolynk.echolynkbackend.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -13,8 +15,8 @@ public class BlogService {
     @Autowired
     private BlogRepository blogRepository;
 
-    public String createBlog(BlogDto blogDto) {
-        String blogId = blogRepository.saveBlog(blogDto);
+    public String createBlog(MultipartFile image, BlogDto blogDto) throws IOException {
+        String blogId = blogRepository.saveBlog(image, blogDto);
         return blogId;
     }
 

@@ -78,6 +78,7 @@ public class UserService implements UserDetailsService {
         user.put("role", userDto.getRole());
         user.put("phoneNumber", userDto.getPhoneNumber());
         user.put("timestamp", Timestamp.now());
+        user.put("isPremium", false);
 
         ApiFuture<WriteResult> future = firestore.collection("users").document(userRecord.getUid()).set(user);
         future.get();
@@ -190,6 +191,7 @@ public class UserService implements UserDetailsService {
                 userMap.put("email", email);
                 userMap.put("role", "Deaf");
                 userMap.put("timestamp", Timestamp.now());
+                userMap.put("isPremium", false);
                 firestore.collection("users").document(userRecord.getUid()).set(userMap).get();
             }
 
@@ -197,6 +199,7 @@ public class UserService implements UserDetailsService {
             UserDetails userDetails = new CustomUserDetails(userRecord);
             String token = jwtUtil.generateToken(userDetails);
             String role = (String) userMap.get("role");
+            boolean isPremium = (boolean) userMap.get("isPremium");
 
             return new AuthResponse(token, role,userRecord.getUid());
         } catch (FirebaseAuthException | ExecutionException | InterruptedException e) {
