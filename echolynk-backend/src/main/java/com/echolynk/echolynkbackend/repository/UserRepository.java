@@ -244,8 +244,7 @@ public class UserRepository {
 
         ApiFuture<WriteResult> future = userRef.update(
                 "isPremium", isPremium,
-                "premiumExpirationDate", premiumExpirationDate,
-                "role", isPremium ? "Premium" : "Deaf"
+                "premiumExpirationDate", premiumExpirationDate
         );
 
         try {
