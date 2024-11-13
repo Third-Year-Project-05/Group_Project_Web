@@ -26,8 +26,9 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/auth/login', userData);
-            const { token, role, userId } = response.data;
-            const loggedUser = { ...userData, role, id: userId }; // Include userId in the user object
+            console.log(response.data);
+            const { token, role, isPremium, userId } = response.data;
+            const loggedUser = { ...userData, role, isPremium, id: userId }; // Include userId in the user object
 
             setUser(loggedUser);
             localStorage.setItem('user', JSON.stringify(loggedUser));

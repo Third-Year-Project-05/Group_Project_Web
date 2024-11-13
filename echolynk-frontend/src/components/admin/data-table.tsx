@@ -29,6 +29,8 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { FaFilter } from "react-icons/fa";
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -36,11 +38,16 @@ interface DataTableProps<TData, TValue> {
     onRowClick?: (row: TData) => void;
 }
 
+type TableAllProps = {
+    filter: string;
+    onFilterChange: (type: string) => void;
+};
+
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
                                              onRowClick, // Destructure onRowClick
-                                         }: DataTableProps<TData, TValue>) {
+                                         }: DataTableProps<TData, TValue>, { filter, onFilterChange }: TableAllProps) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -65,9 +72,31 @@ export function DataTable<TData, TValue>({
         },
     });
 
+    const [dropdownOpen, setDropdownOpen] = React.useState(false);
+
+    const handleFilterChange = (type: string) => {
+        setDropdownOpen(false);
+        onFilterChange(type);
+    };
+
     return (
         <div>
             <div className="flex items-center py-4">
+                <div className="flex justify-end p-4">
+                    <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="icon" style={{ width: '2.2rem', height: '2.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <FaFilter className="h-4 w-4 text-black dark:text-white" />
+                                <span className="sr-only">Filter</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleFilterChange("All")}>All</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleFilterChange("Deaf")}>Deaf</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleFilterChange("Premium")}>Premium</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">

@@ -38,6 +38,8 @@ export function TableAll({ filter, onRowClick, onFilterChange }: TableAllProps) 
                     created_on: new Date(milliseconds).toLocaleDateString()
                 };
 
+            console.log(formattedResponse);
+
             });
               
               setUsers(formattedResponse);
@@ -59,21 +61,7 @@ export function TableAll({ filter, onRowClick, onFilterChange }: TableAllProps) 
 
     return (
         <div className="container mx-auto py-5">
-            <div className="flex justify-end p-4">
-                <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="icon" style={{ width: '2.2rem', height: '2.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <FaFilter className="h-4 w-4 text-black dark:text-white" />
-                            <span className="sr-only">Filter</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleFilterChange("All")}>All</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleFilterChange("Deaf")}>Deaf</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleFilterChange("Premium")}>Premium</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+
 
             <DataTable columns={columnsAll} data={users} onRowClick={onRowClick} />
 

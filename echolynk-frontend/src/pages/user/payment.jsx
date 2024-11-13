@@ -36,8 +36,25 @@ const PaymentButton = () => {
           }).catch((error) => {
             console.error(error);
           });
+
+          const user = JSON.parse(localStorage.getItem('user'));
+          const userId = user ? user.id : null;
+          console.log(user);
+
+          axios.post('http://localhost:8080/api/integratePremium', {
+            userId: userId
+          }).then((response) => {
+            console.log(response.data);
+          }).catch((error) => {
+            console.error(error);
+          });
+
+          user.isPremium = true;
+          localStorage.setItem('user', JSON.stringify(user));
+
           window.location.href = '/payment-success';
         };
+
 
         window.payhere.onDismissed = function onDismissed() {
           console.log("Payment dismissed");

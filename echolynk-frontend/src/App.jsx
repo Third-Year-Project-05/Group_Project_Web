@@ -102,9 +102,27 @@ const LoginLayout = ({ children }) => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         console.log(user);
-        const premiumStatus = user.premium;
+        const premiumStatus = user.isPremium;
         console.log(isPremium);
         setIsPremium(premiumStatus);
+
+        const updatePremiumStatus = () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if(user){
+                setIsPremium(user.isPremium);
+            }
+        }
+
+        const handleStorageChange = (event) => {
+            if (event.key === 'user') {
+                updatePremiumStatus();
+            }
+        }
+
+        window.addEventListener('storage', handleStorageChange);
+
+        
+
     }, []);
 
     return (

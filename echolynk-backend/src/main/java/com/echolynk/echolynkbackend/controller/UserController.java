@@ -38,10 +38,10 @@ public class UserController {
 
 
 	@PostMapping("/integratePremium")
-	public ResponseEntity<?> integratePremiumAccount(@RequestBody Map<String, Object> payload) {
+	public ResponseEntity<?> integratePremiumAccount(@RequestBody Map<String, String> payload) {
 		try {
 			String userId = (String) payload.get("userId");
-			int premiumDurationInDays = (Integer) payload.get("premiumDurationInDays");
+			int premiumDurationInDays = 30;
 
 			// Calculate the expiration date
 			Instant expirationInstant = Instant.now().plusSeconds(premiumDurationInDays * 86400);

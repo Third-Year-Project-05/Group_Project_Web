@@ -72,6 +72,7 @@ public class UserRepository {
                     }
                 }
             }
+            System.out.println(userList);
             return userList;
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error retrieving users from Firestore", e);
@@ -244,8 +245,7 @@ public class UserRepository {
 
         ApiFuture<WriteResult> future = userRef.update(
                 "isPremium", isPremium,
-                "premiumExpirationDate", premiumExpirationDate,
-                "role", isPremium ? "Premium" : "Deaf"
+                "premiumExpirationDate", premiumExpirationDate
         );
 
         try {

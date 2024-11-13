@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 const PaymentSuccess = () => {
   const navigate = useNavigate();
 
+  //redirect to home page after successful payment
   const handleBackToHome = () => {
-    navigate('/'); // Redirect to the homepage or any other page
+    navigate('/user-home'); 
   };
 
   return (

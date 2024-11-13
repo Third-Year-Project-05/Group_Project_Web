@@ -70,7 +70,7 @@ const AdminUsers = () => {
                     <div className="flex flex-row justify-between items-start w-full">
                         <CardHeader className="gap-5">
                             <CardDescription style={{ fontSize: '18px' }}>Premium Users</CardDescription>
-                            <CardTitle>{users.filter(user => user.role === 'Premium').length}</CardTitle>
+                            <CardTitle>{users.filter(user => user.isPremium === true).length}</CardTitle>
                         </CardHeader>
                         <FaCrown className="text-4xl text-yellow-500 mt-7 mr-4" />
                     </div>
