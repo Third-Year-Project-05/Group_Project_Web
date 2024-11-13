@@ -72,6 +72,7 @@ public class UserRepository {
                     }
                 }
             }
+            System.out.println(userList);
             return userList;
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error retrieving users from Firestore", e);
