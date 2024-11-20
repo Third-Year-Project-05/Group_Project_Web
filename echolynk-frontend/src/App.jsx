@@ -50,12 +50,15 @@ import VerbalHome from './pages/verbalUser/home/home';
 import {useContext, useEffect, useState} from 'react';
 
 import VideoChat from './pages/user/video-chat/video-chat';
+import Room from './pages/user/video-chat/Room';
+
 import PremiumUpgrade from './pages/user/premium-upgrade';
 import PaymentSuccess from './pages/user/payment-success';
 import { Toaster } from './components/ui/toaster';
 
 
 import Blogview2 from './components/blog/blog-view';
+import JoinRoom from './pages/user/video-chat/joinRoom';
 
 const Layout = ({ children }) => {
     return (
@@ -191,6 +194,9 @@ function App() {
                         <Route path='/quiz/:level' element={<LoginLayout><QuizPage /></LoginLayout>} />
                         <Route path="/premium-upgrade" element={<PremiumUpgrade />} />
                         <Route path="/payment-success" element={<PaymentSuccess />} />
+
+                        <Route path="/room/:roomID" element={<Room/>} />
+                        <Route path="/join/:roomID" element={<JoinRoom />} />
                         
 
                         {/* Verbal User */}
