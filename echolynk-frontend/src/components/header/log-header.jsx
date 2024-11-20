@@ -24,7 +24,8 @@ const Navbar = ( {isPremium} ) => {
     const [isCarouselOpen, setIsCarouselOpen] = useState(false);
 
     const handleUpgradeClick = () => {
-      setIsCarouselOpen(true);
+        {isPremium ? navigate('/user-premium') : setIsCarouselOpen(true)}
+    //   setIsCarouselOpen(true);
     };
 
     const handleLinkClick = (link) => {
@@ -129,8 +130,17 @@ const Navbar = ( {isPremium} ) => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={handleUpgradeClick} className="flex items-center space-x-2">
-                                <span>Upgrade to Premium</span>
-                                <StarIcon className="h-5 w-5 text-yellow-500" /> {/* Add icon after text */}
+                                {isPremium ? (
+                                    <>
+                                    <span>View Premium Usage</span>
+                                    </>
+                                ) : (
+                                    <>
+                                    <span>Upgrade to Premium</span>
+                                    <StarIcon className="h-5 w-5 text-yellow-500" /> {/* Add icon after text */}
+                                    </>
+                                )}
+                                {/* <span>Upgrade to Premium</span> */}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => navigate('/user-profile')}>
                                 Profile
