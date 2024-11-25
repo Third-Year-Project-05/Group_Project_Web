@@ -1,134 +1,66 @@
-import axios from 'axios';
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 
-const loadPayHereScript = () => {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://www.payhere.lk/lib/payhere.js';
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Failed to load PayHere SDK'));
-    document.body.appendChild(script);
-  });
-};
+const stripePromise = loadStripe(''); // Replace with your actual publishable key
 
 const PaymentButton = () => {
-  // const navigate = useNavigate();
-
   useEffect(() => {
-    loadPayHereScript().then(() => {
-      // PayHere SDK is now loaded
-      console.log('PayHere SDK loaded');
-      console.log(window.payhere);
-      if (window.payhere) {
-        window.payhere.onCompleted = function onCompleted(orderId) {
-          console.log("Payment completed. OrderID:", orderId);
-          // After successful payment completion, redirect or update UI
-          axios.post('http://localhost:8080/api/payments/notify', {
-            
-              order_id: orderId,
-              payhere_amount: '100',
-              payhere_currency: 'LKR',
-              status_code: 'success',
-            
-          }).then((response) => {
-            console.log(response.data);
-          }).catch((error) => {
-            console.error(error);
-          });
+    const backendUrl = "https://python-backend-taupe.vercel.app/payment-sheet";
 
-          const user = JSON.parse(localStorage.getItem('user'));
-          const userId = user ? user.id : null;
-          console.log(user);
+    async function fetchPaymentSheet() {
+      try {
+        console.log('Fetching payment sheet from:', backendUrl);
+        const response = await fetch(backendUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer abc" // Example auth key
+          }
+        });
 
-          axios.post('http://localhost:8080/api/integratePremium', {
-            userId: userId
-          }).then((response) => {
-            console.log(response.data);
-          }).catch((error) => {
-            console.error(error);
-          });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-          user.isPremium = true;
-          localStorage.setItem('user', JSON.stringify(user));
+        const data = await response.json();
+        console.log('Payment sheet data:', data);
 
-          window.location.href = '/payment-success';
-        };
+        const stripe = await stripePromise;
 
+        const elements = stripe.elements();
 
-        window.payhere.onDismissed = function onDismissed() {
-          console.log("Payment dismissed");
-          // Handle user dismissing the payment
-        };
+        const paymentElement = elements.create("payment");
+        paymentElement.mount("#payment-form");
 
-        window.payhere.onError = function onError(error) {
-          console.log("Payment error:", error);
-          // Handle payment errors
-        };
+        const { error } = await stripe.confirmPayment({
+          clientSecret: data.paymentIntent,
+          confirmParams: {
+            return_url: "https://your-website.com/payment-success", // Replace with your success page
+          },
+        });
 
-        console.log(window.payhere);
-      } else {
-        console.error("PayHere script not loaded");
+        if (error) {
+          alert(`Payment failed: ${error.message}`);
+        } else {
+          alert("Payment successful!");
+        }
+      } catch (error) {
+        console.error("Error fetching payment sheet:", error);
+        alert("Failed to fetch payment details. Please try again.");
       }
-    }).catch((error) => {
-      console.error(error);
-    });
+    }
+
+    document.getElementById("payButton").addEventListener("click", fetchPaymentSheet);
   }, []);
 
-  const handlePayment = async () => {
-    const url = 'http://localhost:8080/api/payments/generate-hash';
-    const data = {
-      orderId: '12345',
-      amount: '100.00',
-      currency: 'LKR'
-    };
-
-    // Send the POST request
-    const response = await axios.post(url, new URLSearchParams(data).toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    });
-
-    const hash = response.data;
-
-    const payment = {
-      sandbox: true,
-      merchant_id: '1227963',
-      return_url: 'http://localhost:5173/payment-success',
-      cancel_url: 'http://localhost:5173/payment-cancel',
-      notify_url: 'http://localhost:8080/api/payments/notify',
-      order_id: '12345',
-      items: 'Premium Subscription',
-      amount: '100.00',
-      currency: 'LKR',
-      hash: hash,
-      first_name: 'Saman',
-      last_name: 'Perera',
-      email: 'samanp@gmail.com',
-      phone: '0771234567',
-      address: 'No.1, Galle Road',
-      city: 'Colombo',
-      country: 'Sri Lanka',
-      delivery_address: 'No. 46, Galle road, Kalutara South',
-      delivery_city: 'Kalutara',
-      delivery_country: 'Sri Lanka',
-    };
-
-    if (window.payhere) {
-      window.payhere.startPayment(payment);
-    } else {
-      console.error("PayHere script not loaded");
-    }
-  };
-
   return (
-    <button
-      onClick={handlePayment}
-      className="px-4 py-2 bg-blue-600 text-white rounded-md"
-    >
-      Pay Now
-    </button>
+    <Elements stripe={stripePromise}>
+      <div>
+        <button id="payButton">Pay Now</button>
+        <div id="payment-form"></div>
+      </div>
+    </Elements>
   );
 };
 
