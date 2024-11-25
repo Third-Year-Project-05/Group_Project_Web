@@ -146,30 +146,30 @@ const Room = ({ roomID }) => {
                     ref={userVideo}
                     autoPlay
                     muted
-                    className="w-1/2 h-1/2 border-2 border-blue-500"
+                    className="w-1/2 border-2 border-blue-500 h-1/2"
                 />
                 <video
                     ref={partnerVideo}
                     autoPlay
-                    className="w-1/2 h-1/2 border-2 border-green-500"
+                    className="w-1/2 border-2 border-green-500 h-1/2"
                 />
             </div>
-            <div className="mt-4 flex gap-4">
+            <div className="flex gap-4 mt-4">
                 <button
                     onClick={toggleMute}
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="px-4 py-2 text-white bg-red-500 rounded"
                 >
                     {isMuted ? "Unmute" : "Mute"}
                 </button>
                 <button
                     onClick={toggleVideo}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    className="px-4 py-2 text-white bg-blue-500 rounded"
                 >
                     {isVideoOff ? "Turn Video On" : "Turn Video Off"}
                 </button>
                 <button
                     onClick={endCall}
-                    className="bg-gray-700 text-white px-4 py-2 rounded"
+                    className="px-4 py-2 text-white bg-gray-700 rounded"
                 >
                     End Call
                 </button>
