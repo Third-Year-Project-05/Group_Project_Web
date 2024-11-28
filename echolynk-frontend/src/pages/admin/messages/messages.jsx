@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import userPhoto from '../../../assets/Wikum.png';
+import { getAllChatrooms } from '../../../services/chatService';
 
 const AdminMessages = () => {
+
+    const [chatrooms, setChatrooms] = useState([]);
+    
+    useEffect(() => {
+        let userId = JSON.parse(localStorage.getItem('user')).id;
+        console.log('User ID:', userId);
+        getAllChatrooms(userId).then((chatrooms) => {
+            setChatrooms(chatrooms);
+            console.log('Chatrooms:', chatrooms);
+        });
+    }, []);
+
+
     return (
         <div className="flex flex-col justify-start items-start h-full mt-0 ml-4">
             <h1 className="text-xl font-semibold mb-4">MESSAGES</h1>

@@ -11,22 +11,25 @@ const Room = ({ roomID }) => {
 
     const [isMuted, setIsMuted] = useState(false);
     const [isVideoOff, setIsVideoOff] = useState(false);
-    
+    const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState("");
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(stream => {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
             userVideo.current.srcObject = stream;
             userStream.current = stream;
 
             socketRef.current = io.connect("http://localhost:8000");
             socketRef.current.emit("join room", roomID);
 
-            socketRef.current.on("other user", userID => {
+            socketRef.current.on("other user", (userID) => {
+                console.log("Other user in the room:", userID);
                 callUser(userID);
                 otherUser.current = userID;
             });
 
-            socketRef.current.on("user joined", userID => {
+            socketRef.current.on("user joined", (userID) => {
+                console.log("User joined the room:", userID);
                 otherUser.current = userID;
             });
 
@@ -35,30 +38,40 @@ const Room = ({ roomID }) => {
             socketRef.current.on("answer", handleAnswer);
 
             socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
+
+            // Listen for messages
+            socketRef.current.on("receive message", handleReceiveMessage);
         });
 
-        // Cleanup on unmount
         return () => {
             if (peerRef.current) peerRef.current.close();
             if (socketRef.current) socketRef.current.disconnect();
         };
     }, [roomID]);
 
+    function handleReceiveMessage(data) {
+        console.log("msg reciieved", data);
+        setMessages((prev) => [...prev, { sender: data['sender'], text: data['text'] }]);
+        console.log(messages);
+    }
+
     function callUser(userID) {
         peerRef.current = createPeer(userID);
-        userStream.current.getTracks().forEach(track => peerRef.current.addTrack(track, userStream.current));
-    } 
+        userStream.current.getTracks().forEach((track) =>
+            peerRef.current.addTrack(track, userStream.current)
+        );
+    }
 
     function createPeer(userID) {
         const peer = new RTCPeerConnection({
             iceServers: [
                 { urls: "stun:stun.stunprotocol.org" },
                 {
-                    urls: 'turn:numb.viagenie.ca',
-                    credential: 'muazkh',
-                    username: 'webrtc@live.com' 
-                }
-            ]
+                    urls: "turn:numb.viagenie.ca",
+                    credential: "muazkh",
+                    username: "webrtc@live.com",
+                },
+            ],
         });
 
         peer.onicecandidate = handleICECandidateEvent;
@@ -69,31 +82,32 @@ const Room = ({ roomID }) => {
     }
 
     function handleNegotiationNeededEvent(userID) {
-        peerRef.current.createOffer().then(offer => {
-            return peerRef.current.setLocalDescription(offer);
-        }).then(() => {
-            const payload = {
-                target: userID,
-                caller: socketRef.current.id,
-                sdp: peerRef.current.localDescription
-            };
-            socketRef.current.emit("offer", payload);
-        });
+        peerRef.current
+            .createOffer()
+            .then((offer) => peerRef.current.setLocalDescription(offer))
+            .then(() => {
+                const payload = {
+                    target: userID,
+                    caller: socketRef.current.id,
+                    sdp: peerRef.current.localDescription,
+                };
+                socketRef.current.emit("offer", payload);
+            });
     }
 
     function handleReceiveCall(incoming) {
-        peerRef.current.setRemoteDescription(new RTCSessionDescription(incoming.sdp)).then(() => {
-            return peerRef.current.createAnswer();
-        }).then(answer => {
-            return peerRef.current.setLocalDescription(answer);
-        }).then(() => {
-            const payload = {
-                target: incoming.caller,
-                caller: socketRef.current.id,
-                sdp: peerRef.current.localDescription
-            };
-            socketRef.current.emit("answer", payload);
-        });
+        peerRef.current
+            .setRemoteDescription(new RTCSessionDescription(incoming.sdp))
+            .then(() => peerRef.current.createAnswer())
+            .then((answer) => peerRef.current.setLocalDescription(answer))
+            .then(() => {
+                const payload = {
+                    target: incoming.caller,
+                    caller: socketRef.current.id,
+                    sdp: peerRef.current.localDescription,
+                };
+                socketRef.current.emit("answer", payload);
+            });
     }
 
     function handleAnswer(message) {
@@ -105,8 +119,8 @@ const Room = ({ roomID }) => {
         if (e.candidate) {
             const payload = {
                 target: otherUser.current,
-                candidate: e.candidate
-            }
+                candidate: e.candidate,
+            };
             socketRef.current.emit("ice-candidate", payload);
         }
     }
@@ -130,6 +144,14 @@ const Room = ({ roomID }) => {
         const enabled = userStream.current.getVideoTracks()[0].enabled;
         userStream.current.getVideoTracks()[0].enabled = !enabled;
         setIsVideoOff(!enabled);
+    };
+
+    const sendMessage = () => {
+        console.log("Sending message:", message);
+        socketRef.current.emit("send message", { text: message, roomID });
+        // setMessages((prev) => [...prev, { sender: socketRef.current.id, text: message }]);
+        console.log(messages);
+        setMessage("");
     };
 
     const endCall = () => {
@@ -173,6 +195,41 @@ const Room = ({ roomID }) => {
                 >
                     End Call
                 </button>
+            </div>
+            <div className="mt-4 w-full max-w-lg">
+                <div className="border rounded-lg p-4 h-64 overflow-y-scroll">
+                    {messages.map((msg, index) => (
+                        <div
+                            key={index}
+                            className={`${
+                                msg.sender === socketRef.current.id ? "text-right" : "text-left"
+                            }`}
+                        >
+                            <span
+                                className={`inline-block p-2 rounded ${
+                                    msg.sender === socketRef.current.id ? "bg-blue-200" : "bg-green-200"
+                                }`}
+                            >
+                                {msg.text}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+                <div className="flex mt-2">
+                    <input
+                        type="text"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="flex-grow border rounded p-2"
+                        placeholder="Type a message"
+                    />
+                    <button
+                        onClick={sendMessage}
+                        className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
+                    >
+                        Send
+                    </button>
+                </div>
             </div>
         </div>
     );
