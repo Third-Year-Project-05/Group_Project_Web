@@ -1,7 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import { useRef, useEffect, useState } from "react";
+import io from "socket.io-client";
+import HolisticComponent from "./HolisticComponent";
 
 const Room = ({ roomID }) => {
+  
     const userVideo = useRef();
     const partnerVideo = useRef();
     const peerRef = useRef();
