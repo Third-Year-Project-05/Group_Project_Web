@@ -1,96 +1,25 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 import io from "socket.io-client";
-import { Holistic } from "@mediapipe/holistic";
-import { Camera } from "@mediapipe/camera_utils";
+import HolisticComponent from "./HolisticComponent";
+// import { Holistic } from "@mediapipe/holistic";
+// import { Camera } from "@mediapipe/camera_utils";
 
 const Room = ({ roomID }) => {
-  const userVideo = useRef();
+  const userVideo = useRef(null);
   const partnerVideo = useRef();
   const peerRef = useRef();
   const socketRef = useRef();
   const otherUser = useRef();
   const userStream = useRef();
-  const holistic = useRef(null);
   const camera = useRef(null);
   const keypointsSequenceRef = useRef([]);
+  const canvasRef = useRef(null);
+
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
-  const [isBackendEnabled, setIsBackendEnabled] = useState(true);
 
-  const signModelEndpoint = "http://127.0.0.1:9100/predict";
+  // const signModelEndpoint = "http://127.0.0.1:9100/predict";
   const socketEndpoint = "http://127.0.0.1:8000";
-
-  const sendToBackend = useCallback(async (keypointsSequence) => {
-    try {
-      const response = await fetch(signModelEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ keypoint: keypointsSequence }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Prediction:", data);
-      } else {
-        console.error("Error in backend response", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error connecting to backend", error);
-    }
-  }, []);
-
-  const flattenLandmarks = useCallback((landmarks, expectedLength) => {
-    if (landmarks) {
-      const flattened = landmarks.flatMap((point) => [point.x, point.y, point.z]);
-      return [
-        ...flattened,
-        ...Array(expectedLength - flattened.length).fill(0),
-      ];
-    }
-    return Array(expectedLength).fill(0);
-  }, []);
-
-  const extractKeypoints = useCallback((results) => {
-    const pose = results.poseLandmarks
-      ? results.poseLandmarks.flatMap((point) => [
-          point.x,
-          point.y,
-          point.z,
-          point.visibility,
-        ])
-      : Array(33 * 4).fill(0);
-
-    const face = flattenLandmarks(results.faceLandmarks, 468 * 3);
-    const leftHand = flattenLandmarks(results.leftHandLandmarks, 21 * 3);
-    const rightHand = flattenLandmarks(results.rightHandLandmarks, 21 * 3);
-
-    return [...pose, ...face, ...leftHand, ...rightHand];
-  }, [flattenLandmarks]);
-
-  const processHolisticResults = useCallback(
-    (results) => {
-      if (
-        (!results.leftHandLandmarks || results.leftHandLandmarks.length === 0) &&
-        (!results.rightHandLandmarks || results.rightHandLandmarks.length === 0)
-      ) {
-        return;
-      }
-
-      const keypoints = extractKeypoints(results);
-      keypointsSequenceRef.current.push(keypoints);
-
-      if (keypointsSequenceRef.current.length > 30) {
-        keypointsSequenceRef.current = keypointsSequenceRef.current.slice(-30);
-      }
-
-      if (keypointsSequenceRef.current.length === 30) {
-        sendToBackend(keypointsSequenceRef.current);
-      }
-    },
-    [extractKeypoints, sendToBackend]
-  );
 
   useEffect(() => {
     navigator.mediaDevices
@@ -114,33 +43,6 @@ const Room = ({ roomID }) => {
         socketRef.current.on("offer", handleReceiveCall);
         socketRef.current.on("answer", handleAnswer);
         socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
-
-        // Initialize Holistic and Camera
-        holistic.current = new Holistic({
-          locateFile: (file) =>
-            `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
-        });
-
-        holistic.current.setOptions({
-          modelComplexity: 1,
-          smoothLandmarks: true,
-          enableSegmentation: false,
-          refineFaceLandmarks: true,
-          minDetectionConfidence: 0.5,
-          minTrackingConfidence: 0.5,
-        });
-
-        holistic.current.onResults(processHolisticResults);
-
-        camera.current = new Camera(userVideo.current, {
-          onFrame: async () => {
-            if (isBackendEnabled) {
-              await holistic.current.send({ image: userVideo.current });
-            }
-          },
-        });
-
-        camera.current.start();
       });
 
     return () => {
@@ -148,7 +50,7 @@ const Room = ({ roomID }) => {
       if (socketRef.current) socketRef.current.disconnect();
       if (camera.current) camera.current.stop();
     };
-  }, [roomID, processHolisticResults, isBackendEnabled]);
+  }, [roomID]);
 
   function callUser(userID) {
     peerRef.current = createPeer(userID);
@@ -251,11 +153,13 @@ const Room = ({ roomID }) => {
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-row gap-4">
+        <HolisticComponent/>
         <video
           ref={userVideo}
           autoPlay
           muted
           className="w-1/2 border-2 border-blue-500 h-1/2"
+          style={{ display: "none" }}
         />
         <video
           ref={partnerVideo}
@@ -264,13 +168,22 @@ const Room = ({ roomID }) => {
         />
       </div>
       <div className="flex gap-4 mt-4">
-        <button onClick={toggleMute} className="px-4 py-2 text-white bg-red-500 rounded">
+        <button
+          onClick={toggleMute}
+          className="px-4 py-2 text-white bg-red-500 rounded"
+        >
           {isMuted ? "Unmute" : "Mute"}
         </button>
-        <button onClick={toggleVideo} className="px-4 py-2 text-white bg-blue-500 rounded">
+        <button
+          onClick={toggleVideo}
+          className="px-4 py-2 text-white bg-blue-500 rounded"
+        >
           {isVideoOff ? "Turn On Video" : "Turn Off Video"}
         </button>
-        <button onClick={endCall} className="px-4 py-2 text-white bg-black rounded">
+        <button
+          onClick={endCall}
+          className="px-4 py-2 text-white bg-black rounded"
+        >
           End Call
         </button>
       </div>
