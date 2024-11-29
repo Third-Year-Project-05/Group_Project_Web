@@ -1,19 +1,20 @@
 import { useRef, useEffect, useState } from "react";
 import io from "socket.io-client";
+
 import HolisticComponent from "./HolisticComponent";
+import ChatFeature from "./components/ChatFeature";
 
 const Room = ({ roomID }) => {
-  const userVideo = useRef();
-  const partnerVideo = useRef();
-  const peerRef = useRef();
-  const socketRef = useRef();
-  const otherUser = useRef();
-  const userStream = useRef();
+  const userVideo = useRef(null);
+  const partnerVideo = useRef(null);
+  const peerRef = useRef(null);
+  const socketRef = useRef(null);
+  const otherUser = useRef(null);
+  const userStream = useRef(null);
 
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     navigator.mediaDevices
@@ -51,6 +52,17 @@ const Room = ({ roomID }) => {
       if (socketRef.current) socketRef.current.disconnect();
     };
   }, [roomID]);
+
+  const sendMessage = (message) => {
+    console.log("Sending message:", message);
+
+    socketRef.current.emit("send message", { text: message, roomID });
+    setMessages((prev) => [
+      ...prev,
+      { sender: socketRef.current.id, text: message },
+    ]);
+    console.log(messages);
+  };
 
   function handleReceiveMessage(data) {
     console.log("msg reciieved", data);
@@ -152,14 +164,6 @@ const Room = ({ roomID }) => {
     setIsVideoOff(!enabled);
   };
 
-  const sendMessage = () => {
-    console.log("Sending message:", message);
-    socketRef.current.emit("send message", { text: message, roomID });
-    // setMessages((prev) => [...prev, { sender: socketRef.current.id, text: message }]);
-    console.log(messages);
-    setMessage("");
-  };
-
   const endCall = () => {
     socketRef.current.disconnect();
     if (peerRef.current) peerRef.current.close();
@@ -168,80 +172,45 @@ const Room = ({ roomID }) => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex flex-row gap-4">
-        <HolisticComponent />
-        <video
-          ref={userVideo}
-          autoPlay
-          muted
-          className="w-1/2 border-2 border-blue-500 h-1/2"
-          style={{ display: "none" }}
-        />
-        <video
-          ref={partnerVideo}
-          autoPlay
-          className="w-1/2 border-2 border-green-500 h-1/2"
-        />
-      </div>
-      <div className="flex gap-4 mt-4">
-        <button
-          onClick={toggleMute}
-          className="px-4 py-2 text-white bg-red-500 rounded"
-        >
-          {isMuted ? "Unmute" : "Mute"}
-        </button>
-        <button
-          onClick={toggleVideo}
-          className="px-4 py-2 text-white bg-blue-500 rounded"
-        >
-          {isVideoOff ? "Turn Video On" : "Turn Video Off"}
-        </button>
-        <button
-          onClick={endCall}
-          className="px-4 py-2 text-white bg-gray-700 rounded"
-        >
-          End Call
-        </button>
-      </div>
-      <div className="w-full max-w-lg mt-4">
-        <div className="h-64 p-4 overflow-y-scroll border rounded-lg">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`${
-                msg.sender === socketRef.current.id ? "text-right" : "text-left"
-              }`}
-            >
-              <span
-                className={`inline-block p-2 rounded ${
-                  msg.sender === socketRef.current.id
-                    ? "bg-blue-200"
-                    : "bg-green-200"
-                }`}
-              >
-                {msg.text}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="flex mt-2">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="flex-grow p-2 border rounded"
-            placeholder="Type a message"
+    <>
+      <div className="flex flex-col items-center">
+        <div className="flex flex-row gap-4">
+          <HolisticComponent />
+          <video
+            ref={userVideo}
+            autoPlay
+            muted
+            className="w-1/2 border-2 border-blue-500 h-1/2"
           />
+          <video
+            ref={partnerVideo}
+            autoPlay
+            className="w-1/2 border-2 border-green-500 h-1/2"
+          />
+        </div>
+        <div className="flex gap-4 mt-4">
           <button
-            onClick={sendMessage}
-            className="px-4 py-2 ml-2 text-white bg-blue-500 rounded"
+            onClick={toggleMute}
+            className="px-4 py-2 text-white bg-red-500 rounded"
           >
-            Send
+            {isMuted ? "Unmute" : "Mute"}
+          </button>
+          <button
+            onClick={toggleVideo}
+            className="px-4 py-2 text-white bg-blue-500 rounded"
+          >
+            {isVideoOff ? "Turn Video On" : "Turn Video Off"}
+          </button>
+          <button
+            onClick={endCall}
+            className="px-4 py-2 text-white bg-gray-700 rounded"
+          >
+            End Call
           </button>
         </div>
+        <ChatFeature messages={messages} sendMessage={sendMessage} />
       </div>
-    </div>
+    </>
   );
 };
 

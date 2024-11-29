@@ -200,7 +200,13 @@ const HolisticComponent = () => {
 
   return (
     <div>
-      <video ref={videoRef} autoPlay muted className="w-full border-blue-500" />
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        className="w-full border-blue-500"
+        style={{ display: "none" }}
+      />
       <canvas
         ref={canvasRef}
         width="1280"
