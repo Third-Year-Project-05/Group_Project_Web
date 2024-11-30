@@ -59,6 +59,7 @@ import { Toaster } from './components/ui/toaster';
 
 import Blogview2 from './components/blog/blog-view';
 import JoinRoom from './pages/user/video-chat/joinRoom';
+import StripePayment from './pages/user/payment';
 
 const Layout = ({ children }) => {
     return (
@@ -194,6 +195,8 @@ function App() {
                         <Route path='/quiz/:level' element={<LoginLayout><QuizPage /></LoginLayout>} />
                         <Route path="/premium-upgrade" element={<PremiumUpgrade />} />
                         <Route path="/payment-success" element={<PaymentSuccess />} />
+                        <Route path="/stripe-payment" element={<StripePayment />} />
+
 
                         <Route path="/room/:roomID" element={<Room/>} />
                         <Route path="/join/:roomID" element={<JoinRoom />} />

@@ -53,7 +53,13 @@ function PremiumUpgrade() {
           >
             Cancel
           </button>
-          <PaymentButton />
+          <button
+            onClick={() => navigate('/stripe-payment')}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md"
+          >
+            Pay
+          </button>
+          
         </CardFooter>
       </Card>
     </div>

@@ -31,10 +31,10 @@ const PaymentSuccess = () => {
         <h1 style={styles.title}>Payment Successful!</h1>
         <p style={styles.text}>Thank you for your purchase. Your payment has been processed successfully.</p>
         <p style={styles.orderInfo}>
-          <strong>Order ID:</strong> {new URLSearchParams(window.location.search).get('order_id')}
+          <strong>Payment ID:</strong> {new URLSearchParams(window.location.search).get('payId')}
         </p>
         <p style={styles.orderInfo}>
-          <strong>Payment ID:</strong> {new URLSearchParams(window.location.search).get('payment_id')}
+          <strong>Payment Amount:</strong> Rs. 
         </p>
         <button onClick={handleBackToHome} style={styles.button}>
           Back to Home

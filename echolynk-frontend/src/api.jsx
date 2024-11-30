@@ -84,3 +84,21 @@ export const getReportData = async (startDate, endDate, reportType) => {
         throw error;
     }
 };
+
+export const makePayment = async (userId) => {
+    try {
+        const response = await api.post('/payments/notify', {
+            userId
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        
+        console.log('Payment Added:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error making payment:', error);
+        throw error;
+    }
+}
