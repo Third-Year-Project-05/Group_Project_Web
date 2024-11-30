@@ -91,7 +91,7 @@ const AdminLayout = ({ children }) => {
         <div className="flex -z-30">
             <AdminSidebar theme={theme} isOpen={isOpen} toggleSidebar={toggleSidebar} />
             <main className={`flex-grow relative transition-all duration-300 -z-0 mt-20 ${isOpen ? 'ml-64' : 'ml-20'}`}>
-                <div className="p-4 overflow-x-hidden h-full">
+                <div className="h-full p-4 overflow-x-hidden">
                     {children}
                 </div>
             </main>
@@ -100,7 +100,7 @@ const AdminLayout = ({ children }) => {
     );
 };
 
-const LoginLayout = ({ children }) => {
+const LoginLayout = ({ children, needFooter=true }) => {
     const [isPremium, setIsPremium] = useState(false);
 
     useEffect(() => {
@@ -133,7 +133,7 @@ const LoginLayout = ({ children }) => {
         <div className="flex flex-col min-h-screen bg-gray-200 dark:bg-inherit">
             <LogHeader isPremium={isPremium}/>
             <main className="flex-grow">{children}</main>
-            <Footer />
+            { needFooter && <Footer />}
         </div>
     );
 }
@@ -188,7 +188,7 @@ function App() {
                         <Route path="/user-home" element={<PrivateUser element={<LoginLayout><UserHome /></LoginLayout>} />} />
                         <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
                         <Route path="/user-game" element={<PrivateUser element={<LoginLayout><Game /></LoginLayout>} />} />
-                        <Route path="/user-video-chat" element={<LoginLayout><VideoChat /></LoginLayout>} />
+                        <Route path="/user-video-chat" element={<LoginLayout needFooter={false} ><VideoChat /></LoginLayout>} />
                         <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
                         <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
                         <Route path='/game/level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
