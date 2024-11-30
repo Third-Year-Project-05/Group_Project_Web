@@ -3,8 +3,12 @@ import io from "socket.io-client";
 
 import HolisticComponent from "./HolisticComponent";
 import ChatFeature from "./components/ChatFeature";
+import { useNavigate, useParams } from "react-router-dom";
+import CopyLinkModal from "./components/CopyLinkModal";
 
-const Room = ({ roomID }) => {
+const Room = () => {
+  const { roomID } = useParams();
+
   const userVideo = useRef(null);
   const partnerVideo = useRef(null);
   const peerRef = useRef(null);
@@ -15,6 +19,8 @@ const Room = ({ roomID }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [messages, setMessages] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     navigator.mediaDevices
@@ -66,10 +72,10 @@ const Room = ({ roomID }) => {
 
   function handleReceiveMessage(data) {
     console.log("msg reciieved", data);
-    setMessages((prev) => [
-      ...prev,
-      { sender: data["sender"], text: data["text"] },
-    ]);
+    // setMessages((prev) => [
+    //   ...prev,
+    //   { sender: data["sender"], text: data["text"] },
+    // ]);
     console.log(messages);
   }
 
@@ -167,8 +173,9 @@ const Room = ({ roomID }) => {
   const endCall = () => {
     socketRef.current.disconnect();
     if (peerRef.current) peerRef.current.close();
-    userStream.current.getTracks().forEach((track) => track.stop());
-    window.location.reload(); // Reload the page or navigate to a different page
+    // userStream.current.getTracks().forEach((track) => track.stop());
+    navigate('/user-video-chat');
+    window.location.reload();
   };
 
   return (
@@ -208,7 +215,9 @@ const Room = ({ roomID }) => {
             End Call
           </button>
         </div>
-        <ChatFeature messages={messages} sendMessage={sendMessage} />
+        <CopyLinkModal link={`${window.location.origin}/user-video-chat/join/${roomID}`} />
+
+        <ChatFeature messages={messages} sendMessage={sendMessage} socketId={socketRef.current ? socketRef.current.id : null} />
       </div>
     </>
   );

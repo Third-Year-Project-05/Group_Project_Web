@@ -198,8 +198,8 @@ function App() {
                         <Route path="/stripe-payment" element={<StripePayment />} />
 
 
-                        <Route path="/room/:roomID" element={<Room/>} />
-                        <Route path="/join/:roomID" element={<JoinRoom />} />
+                        <Route path="user-video-chat/room/:roomID" element={<Room/>} />
+                        <Route path="user-video-chat/join/:roomID" element={<JoinRoom />} />
                         
 
                         {/* Verbal User */}

@@ -34,7 +34,7 @@ const PaymentSuccess = () => {
           <strong>Payment ID:</strong> {new URLSearchParams(window.location.search).get('payId')}
         </p>
         <p style={styles.orderInfo}>
-          <strong>Payment Amount:</strong> Rs. 
+          <strong>Payment Amount:</strong> $5.00
         </p>
         <button onClick={handleBackToHome} style={styles.button}>
           Back to Home

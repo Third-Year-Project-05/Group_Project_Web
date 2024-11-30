@@ -25,25 +25,32 @@ function PremiumUpgrade() {
             <h2 className="text-xl font-semibold mb-2">Premium Plan</h2>
             <p className="text-gray-700">Enjoy exclusive features and a better experience:</p>
             <ul className="list-disc ml-5 mt-2 text-gray-700">
-              <li>Ad-free browsing</li>
+              
               <li>Access to premium content</li>
               <li>Priority customer support</li>
-              <li>Advanced analytics</li>
+              <li>Visual cues for difficult words</li>
             </ul>
           </div>
 
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Total Cost</h3>
-            <p className="text-xl font-bold text-blue-600">$9.99/month</p>
+            <p className="text-xl font-bold text-blue-600">$5.00</p>
           </div>
 
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Terms and Conditions</h3>
             <p className="text-gray-600 text-sm">
-              By upgrading to premium, you agree to our terms and conditions. This subscription
-              is billed monthly and will auto-renew unless canceled. You can cancel at any time
-              through your account settings.
+              When this subscription is active, you are granted access to the premium features listed below within the specified usage limits:
+              <br />
+              <br />
+              <b>Suggestions for Responses:</b> 1000 uses
+              <br />
+              <b>Visual Cue Generation:</b> 100 uses
+              <br />
+              <br />
+              Once these limits are reached, you will need to renew your premium subscription to continue enjoying these features, unless the subscription is canceled.
             </p>
+
           </div>
         </CardContent>
         <CardFooter className="flex justify-end space-x-2">

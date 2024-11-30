@@ -3,6 +3,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { makePayment } from "../../api";
 import { redirect, useNavigate } from "react-router-dom";
+import { upgradeToPremium } from "../../services/userService";
 
 const stripePromise = loadStripe('pk_test_51QMYsaA4LnMO44o0fGuTiUxM4EQyJ5NmStuShPa2Tll2FaDeJzPyDgqiwNBp1GOt1dvJ8rtyI5lFDX99Wnj5QRPS00gCshWJH2');
 
@@ -60,7 +61,14 @@ const StripePayment = () => {
               } else {
                 console.log("Payment successful!");
                 const payId = await makePayment(userId);
-                console.log(payId);
+                await upgradeToPremium(userId);
+
+                // set local storage value
+                const user = JSON.parse(localStorage.getItem('user'));
+                user.isPremium = true;
+                localStorage.setItem('user', JSON.stringify(user));
+
+                // console.log(payId);
                 navigate(`/payment-success?payId=${payId}`);
                 alert("Payment successful!");
               }

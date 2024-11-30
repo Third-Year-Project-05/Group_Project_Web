@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ChatFeature = ({ messages, sendMessage }) => {
+const ChatFeature = ({ messages, sendMessage, socketId }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -35,12 +35,12 @@ const ChatFeature = ({ messages, sendMessage }) => {
               <div
                 key={index}
                 className={`mb-2 ${
-                  msg.sender === "you" ? "text-left" : "text-right"
+                  msg.sender === socketId ? "text-left" : "text-right"
                 }`}
               >
                 <span
                   className={`inline-block p-2 rounded ${
-                    msg.sender === "you" ? "bg-blue-200" : "bg-green-200"
+                    msg.sender === socketId ? "bg-blue-200" : "bg-green-200"
                   }`}
                 >
                   {msg.text}
