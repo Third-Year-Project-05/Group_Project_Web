@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Payment {
-    private String paymentId;
-    private int total_cost;
+
+    private int totalCost;
     private String userId;
     private Timestamp paymentDate;
     private int imageCount;

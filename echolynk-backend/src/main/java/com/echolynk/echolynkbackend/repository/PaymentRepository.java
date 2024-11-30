@@ -22,18 +22,16 @@ public class PaymentRepository {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public String createPayment(Map<String, String> params) {
+    public void createPayment(Map<String, String> params) {
         System.out.println(params);
         Payment payment = new Payment();
-        String paymentId = UUID.randomUUID().toString();
-        payment.setPaymentId(paymentId);
         payment.setUserId(params.get("userId"));
         payment.setImageCount(5);
         payment.setSuggestionCount(100);
-        payment.setTotal_cost(5);
+        payment.setTotalCost(5);
         payment.setPaymentDate(Timestamp.now());
 
-        DocumentReference paymentRef = firestore.collection("payments").document(paymentId);
+        DocumentReference paymentRef = firestore.collection("payments").document();
 
         ApiFuture<WriteResult> result = paymentRef.set(payment);
 
@@ -42,7 +40,5 @@ public class PaymentRepository {
         } catch (Exception e) {
             throw new RuntimeException("Error saving payment to Firestore: " + e.getMessage(), e);
         }
-
-        return paymentId;
     }
 }
