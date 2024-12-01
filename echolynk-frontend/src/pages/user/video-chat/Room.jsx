@@ -1,10 +1,19 @@
 import { useRef, useEffect, useState } from "react";
+import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import io from "socket.io-client";
 
 import HolisticComponent from "./HolisticComponent";
 import ChatFeature from "./components/ChatFeature";
+import { useNavigate, useParams } from "react-router-dom";
+import CopyLinkModal from "./components/CopyLinkModal";
 
-const Room = ({ roomID }) => {
+// For Speech Recognition
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+
+const Room = () => {
+  const { roomID } = useParams();
+
   const userVideo = useRef(null);
   const partnerVideo = useRef(null);
   const peerRef = useRef(null);
@@ -15,6 +24,10 @@ const Room = ({ roomID }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [transcript, setTranscript] = useState(""); 
+  const [isListening, setIsListening] = useState(false); 
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     navigator.mediaDevices
@@ -23,7 +36,7 @@ const Room = ({ roomID }) => {
         userVideo.current.srcObject = stream;
         userStream.current = stream;
 
-        socketRef.current = io.connect("http://localhost:8000");
+        socketRef.current = io.connect("https://video-call-backend-test-production.up.railway.app/");
         socketRef.current.emit("join room", roomID);
 
         socketRef.current.on("other user", (userID) => {
@@ -43,9 +56,28 @@ const Room = ({ roomID }) => {
 
         socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
 
-        // Listen for messages
+      
         socketRef.current.on("receive message", handleReceiveMessage);
       });
+
+    // Set up speech recognition
+    recognition.continuous = true; 
+    recognition.interimResults = true; 
+    recognition.onresult = (event) => {
+      let latestTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        latestTranscript += event.results[i][0].transcript;
+      }
+      setTranscript(latestTranscript); 
+    };
+
+    recognition.onstart = () => {
+      setIsListening(true); 
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
 
     return () => {
       if (peerRef.current) peerRef.current.close();
@@ -57,10 +89,10 @@ const Room = ({ roomID }) => {
     console.log("Sending message:", message);
 
     socketRef.current.emit("send message", { text: message, roomID });
-    setMessages((prev) => [
-      ...prev,
-      { sender: socketRef.current.id, text: message },
-    ]);
+    // setMessages((prev) => [
+    //   ...prev,
+    //   { sender: socketRef.current.id, text: message },
+    // ]);
     console.log(messages);
   };
 
@@ -68,7 +100,7 @@ const Room = ({ roomID }) => {
     console.log("msg reciieved", data);
     setMessages((prev) => [
       ...prev,
-      { sender: data["sender"], text: data["text"] },
+      { sender: data["sender"], text: data["text"], time: data["timestamp"] },
     ]);
     console.log(messages);
   }
@@ -167,8 +199,17 @@ const Room = ({ roomID }) => {
   const endCall = () => {
     socketRef.current.disconnect();
     if (peerRef.current) peerRef.current.close();
-    userStream.current.getTracks().forEach((track) => track.stop());
-    window.location.reload(); // Reload the page or navigate to a different page
+    navigate("/user-video-chat");
+    window.location.reload();
+  };
+
+  // speech recognition
+  const startListening = () => {
+    recognition.start(); 
+  };
+
+  const stopListening = () => {
+    recognition.stop(); 
   };
 
   return (
@@ -208,7 +249,26 @@ const Room = ({ roomID }) => {
             End Call
           </button>
         </div>
-        <ChatFeature messages={messages} sendMessage={sendMessage} />
+
+        <div className="mt-4 flex gap-4">
+        <button
+          onClick={isListening ? stopListening : startListening} // Toggle between start and stop
+          className="px-4 py-2 text-white bg-green-500 rounded flex items-center gap-2"
+        >
+          {isListening ? (
+            <FaMicrophone className="h-6 w-6" />
+          ) : (
+            <FaMicrophoneSlash className="h-6 w-6" />
+          )}
+          {isListening ? 'Stop Voice to Text' : 'Start Voice to Text'}
+        </button>
+      </div>
+
+        <p>Transcript: {transcript}</p> 
+
+        <CopyLinkModal link={`${window.location.origin}/user-video-chat/join/${roomID}`} />
+
+        <ChatFeature messages={messages} sendMessage={sendMessage} socketId={socketRef.current ? socketRef.current.id : null} />
       </div>
     </>
   );

@@ -10,16 +10,11 @@ import com.google.firebase.cloud.StorageClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 
 @Configuration
 public class FirebaseConfig {
-
-    Dotenv dotenv = Dotenv.configure().load();
-    String storageBucket = dotenv.get("FIREBASE_STORAGE_BUCKET");
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
@@ -28,7 +23,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket(storageBucket)
+                .setStorageBucket("echolynk-cf3ca.appspot.com")
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {

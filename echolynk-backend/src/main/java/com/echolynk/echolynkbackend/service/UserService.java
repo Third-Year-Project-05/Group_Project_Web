@@ -222,8 +222,8 @@ public class UserService implements UserDetailsService {
         return userRepository.getAllUsers();
     }
 
-    public void integratePremiumAccount(String userId, Timestamp premiumExpirationDate) {
-        userRepository.updatePremiumStatus(userId, true, premiumExpirationDate);
+    public void integratePremiumAccount(String userId) {
+        userRepository.updatePremiumStatus(userId, true);
     }
 
     public UserDto getUser(String id) {

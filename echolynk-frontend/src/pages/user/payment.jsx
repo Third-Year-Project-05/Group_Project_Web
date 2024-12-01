@@ -1,22 +1,28 @@
-import React, { useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
+import React, { useEffect, useRef } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { makePayment } from "../../api";
+import { redirect, useNavigate } from "react-router-dom";
+import { upgradeToPremium } from "../../services/userService";
 
-const stripePromise = loadStripe(''); // Replace with your actual publishable key
+const stripePromise = loadStripe('pk_test_51QMYsaA4LnMO44o0fGuTiUxM4EQyJ5NmStuShPa2Tll2FaDeJzPyDgqiwNBp1GOt1dvJ8rtyI5lFDX99Wnj5QRPS00gCshWJH2');
 
-const PaymentButton = () => {
+const StripePayment = () => {
+  const paymentFormRef = useRef(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const backendUrl = "https://python-backend-taupe.vercel.app/payment-sheet";
+    const userId = JSON.parse(localStorage.getItem('user')).id;
 
-    async function fetchPaymentSheet() {
+    const fetchPaymentSheet = async () => {
       try {
-        console.log('Fetching payment sheet from:', backendUrl);
         const response = await fetch(backendUrl, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer abc" // Example auth key
-          }
+            "Authorization": "Bearer abc",
+          },
         });
 
         if (!response.ok) {
@@ -24,44 +30,69 @@ const PaymentButton = () => {
         }
 
         const data = await response.json();
-        console.log('Payment sheet data:', data);
+        console.log("Payment sheet data:", data);
 
+        // Initialize Stripe with the publishable key from the backend
         const stripe = await stripePromise;
 
-        const elements = stripe.elements();
-
-        const paymentElement = elements.create("payment");
-        paymentElement.mount("#payment-form");
-
-        const { error } = await stripe.confirmPayment({
+        // Pass the clientSecret to Stripe Elements
+        const elements = stripe.elements({
           clientSecret: data.paymentIntent,
-          confirmParams: {
-            return_url: "https://your-website.com/payment-success", // Replace with your success page
-          },
         });
 
-        if (error) {
-          alert(`Payment failed: ${error.message}`);
+        // Create and mount the Payment Element only if the element is present in the DOM
+        if (paymentFormRef.current) {
+          const paymentElement = elements.create("payment");
+          paymentElement.mount(paymentFormRef.current);
+
+          // Attach event listener to the button to confirm payment
+          document
+            .getElementById("confirmButton")
+            .addEventListener("click", async () => {
+              const { error } = await stripe.confirmPayment({
+                elements,
+                redirect: 'if_required'
+              });
+          
+
+              if (error) {
+                console.error("Payment failed:", error);
+                alert(`Payment failed: ${error.message}`);
+              } else {
+                console.log("Payment successful!");
+                const payId = await makePayment(userId);
+                await upgradeToPremium(userId);
+
+                // set local storage value
+                const user = JSON.parse(localStorage.getItem('user'));
+                user.isPremium = true;
+                localStorage.setItem('user', JSON.stringify(user));
+
+                // console.log(payId);
+                navigate(`/payment-success?payId=${payId}`);
+                alert("Payment successful!");
+              }
+            });
         } else {
-          alert("Payment successful!");
+          console.error("Payment form element not found in the DOM.");
         }
       } catch (error) {
         console.error("Error fetching payment sheet:", error);
         alert("Failed to fetch payment details. Please try again.");
       }
-    }
+    };
 
-    document.getElementById("payButton").addEventListener("click", fetchPaymentSheet);
+    fetchPaymentSheet();
   }, []);
 
   return (
     <Elements stripe={stripePromise}>
       <div>
-        <button id="payButton">Pay Now</button>
-        <div id="payment-form"></div>
+        <div id="payment-form" ref={paymentFormRef}></div>
+        <button id="confirmButton">Pay Now</button>
       </div>
     </Elements>
   );
 };
 
-export default PaymentButton;
+export default StripePayment;

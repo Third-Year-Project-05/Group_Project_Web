@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 
-const ChatFeature = ({ messages, sendMessage }) => {
+const ChatFeature = ({ messages, sendMessage, socketId }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [message, setMessage] = useState("");
+
+  console.log(messages);
+  const uniqueMessages = messages.filter((msg, index, self) =>
+    index === self.findIndex((m) => JSON.stringify(m) === JSON.stringify(msg))
+  );
+  console.log(uniqueMessages);
 
   const toggleChat = () => {
     setIsChatOpen((prev) => !prev);
@@ -31,16 +37,14 @@ const ChatFeature = ({ messages, sendMessage }) => {
             <h3 className="text-lg font-semibold">Chat</h3>
           </div>
           <div className="flex-grow p-4 overflow-y-auto border-t border-gray-200">
-            {messages.map((msg, index) => (
+            {uniqueMessages.map((msg, index) => (
               <div
                 key={index}
-                className={`mb-2 ${
-                  msg.sender === "you" ? "text-left" : "text-right"
-                }`}
+                className={`mb-2 ${msg.sender === socketId ? "text-left" : "text-right"}`}
               >
                 <span
                   className={`inline-block p-2 rounded ${
-                    msg.sender === "you" ? "bg-blue-200" : "bg-green-200"
+                    msg.sender === socketId ? "bg-blue-200" : "bg-green-200"
                   }`}
                 >
                   {msg.text}
