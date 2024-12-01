@@ -1,0 +1,60 @@
+name: Firebase Deployment
+
+on:
+  push:
+    branches:
+      - master
+      - webhost/workflow
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      
+      # Step 2: Navigate to the frontend directory
+      - name: Change Directory to Frontend
+        working-directory: ./echolynk-frontend
+        run: echo "Changed directory to frontend"
+        
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        working-directory: ./echolynk-frontend
+        run: npm install --legacy-peer-deps
+
+      # Step 4: Build the project
+      - name: Build
+        working-directory: ./echolynk-frontend  
+        env:
+          CI: false
+        run: npm run build
+
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: echolynk-frontend/build
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting --config ./echolynk-frontend/firebase.json
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
