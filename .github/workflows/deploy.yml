@@ -50,7 +50,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build
-          path: build
+          path: echolynk-frontend/build
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
