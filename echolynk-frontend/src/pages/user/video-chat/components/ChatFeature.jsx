@@ -3,13 +3,14 @@ import { FaPaperPlane } from "react-icons/fa";
 
 const ChatFeature = ({ messages, sendMessage, socketId }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState([]);
 
-  console.log(messages);
-  const uniqueMessages = messages.filter((msg, index, self) =>
-    index === self.findIndex((m) => JSON.stringify(m) === JSON.stringify(msg))
+  // console.log(messages);
+  const uniqueMessages = messages.filter(
+    (msg, index, self) =>
+      index === self.findIndex((m) => JSON.stringify(m) === JSON.stringify(msg))
   );
-  console.log(uniqueMessages);
+  // console.log(uniqueMessages);
 
   const toggleChat = () => {
     setIsChatOpen((prev) => !prev);
@@ -23,7 +24,7 @@ const ChatFeature = ({ messages, sendMessage, socketId }) => {
   };
 
   return (
-    <div className="fixed bottom-3 right-4">
+    <div className="fixed bottom-20 right-4 md:bottom-3">
       <button
         onClick={toggleChat}
         className="flex items-center justify-center text-white bg-blue-600 rounded-full shadow-lg w-14 h-14 hover:bg-blue-700 dark:bg-gray-800"
@@ -33,26 +34,34 @@ const ChatFeature = ({ messages, sendMessage, socketId }) => {
 
       {/* Chat Widget */}
       {isChatOpen && (
-        <div className="absolute right-0 flex flex-col bg-white rounded-lg shadow-lg bottom-16 w-96 h-96">
+        <div className="absolute right-0 flex flex-col bg-white rounded-lg shadow-lg dark:bg-gray-700 bottom-16 w-96 h-96">
           <div className="p-4 text-white bg-gray-800 rounded-t-lg">
             <h3 className="text-lg font-semibold">Meeting Chat</h3>
           </div>
-          <div className="flex-grow p-4 overflow-y-auto border-t border-gray-200">
-            {uniqueMessages.map((msg, index) => (
-              <div
-                key={index}
-                className={`mb-2 ${msg.sender === socketId ? "text-left" : "text-right"}`}
-              >
-                <span
-                  className={`inline-block p-2 rounded ${
-                    msg.sender === socketId ? "bg-blue-400" : "bg-green-400"
+          {messages ? (
+            <div className="flex-grow p-4 overflow-y-auto border-t border-gray-200">
+              {uniqueMessages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`mb-2 ${
+                    msg.sender === socketId ? "text-left" : "text-right"
                   }`}
                 >
-                  {msg.text}
-                </span>
-              </div>
-            ))}
-          </div>
+                  <span
+                    className={`inline-block p-2 rounded ${
+                      msg.sender === socketId ? "bg-blue-400" : "bg-green-400"
+                    }`}
+                  >
+                    {msg.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center flex-grow p-4 overflow-y-auto border-t border-gray-200">
+              No Messages yet
+            </div>
+          )}
 
           {/* Input Area */}
           <div className="flex items-center gap-2 p-4 border-t">
@@ -67,7 +76,7 @@ const ChatFeature = ({ messages, sendMessage, socketId }) => {
               onClick={handleSendMessage}
               className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
             >
-              <FaPaperPlane className="w-5 h-6"/>
+              <FaPaperPlane className="w-5 h-6" />
             </button>
           </div>
         </div>

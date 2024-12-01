@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import CreateRoom from "./createRoom";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+
+import CreateRoom from "./createRoom";
 import { getAllUsers } from "../../../services/userService";
 
 const VideoChat = () => {
@@ -40,11 +42,11 @@ const VideoChat = () => {
   return (
     <div className="flex flex-col h-screen text-gray-900 bg-white md:flex-row dark:bg-gray-900 dark:text-white">
       {/* Left Section: Hero Content */}
-      <div className="flex flex-col items-start justify-center px-2 py-0 pr-3 mt-0 md:px-2 lg:pl-32 md:w-1/2">
-        <h1 className="mb-6 text-5xl font-extrabold leading-tight text-gray-900 md:text-6xl dark:text-gray-100">
+      <div className="flex flex-col items-start justify-center px-4 py-6 md:px-6 lg:px-12 md:w-1/2">
+        <h1 className="mb-6 text-4xl font-extrabold leading-tight text-gray-900 md:text-5xl dark:text-gray-100">
           Connect with <span className="text-indigo-300">Ease</span>
         </h1>
-        <p className="mb-8 text-lg text-gray-700 md:text-xl dark:text-gray-300">
+        <p className="mb-8 text-gray-700 text-md md:text-xl dark:text-gray-300">
           Experience seamless video calls and meetings with crystal-clear
           communication and an engaging interface.
         </p>
@@ -69,7 +71,7 @@ const VideoChat = () => {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-1/2 px-6 py-3 font-semibold text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-500"
+            className="w-1/2 px-6 py-2 font-semibold text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-500"
           >
             Invite User
           </button>

@@ -64,7 +64,7 @@ const CopyLinkModal = ({ link, isModalVisible,toggleModal }) => {
                 >
                   {isCopied ? (
                     <svg
-                      className="w-5 h-5 text-blue-700 dark:text-blue-500"
+                      className="w-4 h-4 text-blue-700 dark:text-blue-500"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 16 12"
@@ -79,7 +79,7 @@ const CopyLinkModal = ({ link, isModalVisible,toggleModal }) => {
                     </svg>
                   ) : (
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
                       viewBox="0 0 18 20"
