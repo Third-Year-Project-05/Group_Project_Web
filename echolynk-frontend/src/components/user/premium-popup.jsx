@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '../ui/dialog';
 import { useNavigate } from 'react-router-dom';
+import  chat  from '../../assets/chat.png';
+import cues from '../../assets/cues.png'
+import upgrade from '../../assets/upgrade.png'
 
 function PremiumCarouselPopup({ isOpen, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -8,21 +11,23 @@ function PremiumCarouselPopup({ isOpen, onClose }) {
 
   const slides = [
     {
-      title: 'Feature 1',
-      description: 'Get access to exclusive content with our premium subscription.',
+      title: 'Enhanced Suggestions',
+      description: 'Get smart, AI-driven suggestions for user responses to improve communication efficiency.',
+      image: chat,
+      details: 'With AI-driven suggestions, the app can help you craft precise and effective responses, saving time and enhancing communication clarity.'
     },
     {
-      title: 'Feature 2',
-      description: 'Enjoy an ad-free experience and uninterrupted browsing.',
-    },
-    {
-      title: 'Feature 3',
-      description: 'Unlock advanced analytics and insights on your usage.',
+      title: 'Visual Cues',
+      description: 'Unlock visual aids for complex or hard-to-understand words, making conversations easier to follow.',
+      image: cues,
+      details: 'Visual cues like images and icons will accompany text, helping you understand difficult words or phrases instantly.'
     },
     {
       title: 'Upgrade Now',
-      description: 'Ready to take your experience to the next level? Upgrade now!',
-      isLastSlide: true,
+      description: 'Ready to take your experience to the next level? Upgrade now to access all these features and more!',
+      image: upgrade,
+      details: 'By upgrading, you gain exclusive access to all premium features, ensuring the best possible user experience.',
+      isLastSlide: true
     },
   ];
 
@@ -48,11 +53,12 @@ function PremiumCarouselPopup({ isOpen, onClose }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{slides[currentSlide].title}</DialogTitle>
-
         </DialogHeader>
         <div className="relative">
           <div className="text-center">
+            <img src={slides[currentSlide].image} alt={slides[currentSlide].title} className="mb-4 mx-auto w-40 h-40" />
             <p>{slides[currentSlide].description}</p>
+            <p className="mt-2 text-sm text-gray-600">{slides[currentSlide].details}</p>
           </div>
 
           <div className="mt-4 flex justify-between">

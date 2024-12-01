@@ -1,4 +1,4 @@
-package com.echolynk.echolynkbackend.mapper;
+package com.echolynk.echolynkbackend.mappers;
 
 import com.echolynk.echolynkbackend.dto.GameDto;
 import com.echolynk.echolynkbackend.entity.Game;

@@ -240,13 +240,14 @@ public class UserRepository {
         }
     }
 
-    public void updatePremiumStatus(String userId, boolean isPremium, Timestamp premiumExpirationDate) {
+    public void updatePremiumStatus(String userId, boolean isPremium) {
         DocumentReference userRef = firestore.collection("users").document(userId);
 
         ApiFuture<WriteResult> future = userRef.update(
-                "isPremium", isPremium,
-                "premiumExpirationDate", premiumExpirationDate
+                "isPremium", isPremium
         );
+
+        System.out.println(userRef);
 
         try {
             future.get();

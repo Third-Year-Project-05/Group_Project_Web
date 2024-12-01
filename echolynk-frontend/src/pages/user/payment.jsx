@@ -1,135 +1,98 @@
-import axios from 'axios';
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { makePayment } from "../../api";
+import { redirect, useNavigate } from "react-router-dom";
+import { upgradeToPremium } from "../../services/userService";
 
-const loadPayHereScript = () => {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://www.payhere.lk/lib/payhere.js';
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Failed to load PayHere SDK'));
-    document.body.appendChild(script);
-  });
-};
+const stripePromise = loadStripe('pk_test_51QMYsaA4LnMO44o0fGuTiUxM4EQyJ5NmStuShPa2Tll2FaDeJzPyDgqiwNBp1GOt1dvJ8rtyI5lFDX99Wnj5QRPS00gCshWJH2');
 
-const PaymentButton = () => {
-  // const navigate = useNavigate();
+const StripePayment = () => {
+  const paymentFormRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    loadPayHereScript().then(() => {
-      // PayHere SDK is now loaded
-      console.log('PayHere SDK loaded');
-      console.log(window.payhere);
-      if (window.payhere) {
-        window.payhere.onCompleted = function onCompleted(orderId) {
-          console.log("Payment completed. OrderID:", orderId);
-          // After successful payment completion, redirect or update UI
-          axios.post('http://localhost:8080/api/payments/notify', {
-            
-              order_id: orderId,
-              payhere_amount: '100',
-              payhere_currency: 'LKR',
-              status_code: 'success',
-            
-          }).then((response) => {
-            console.log(response.data);
-          }).catch((error) => {
-            console.error(error);
-          });
+    const backendUrl = "https://python-backend-taupe.vercel.app/payment-sheet";
+    const userId = JSON.parse(localStorage.getItem('user')).id;
 
-          const user = JSON.parse(localStorage.getItem('user'));
-          const userId = user ? user.id : null;
-          console.log(user);
+    const fetchPaymentSheet = async () => {
+      try {
+        const response = await fetch(backendUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer abc",
+          },
+        });
 
-          axios.post('http://localhost:8080/api/integratePremium', {
-            userId: userId
-          }).then((response) => {
-            console.log(response.data);
-          }).catch((error) => {
-            console.error(error);
-          });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-          user.isPremium = true;
-          localStorage.setItem('user', JSON.stringify(user));
+        const data = await response.json();
+        console.log("Payment sheet data:", data);
 
-          window.location.href = '/payment-success';
-        };
+        // Initialize Stripe with the publishable key from the backend
+        const stripe = await stripePromise;
 
+        // Pass the clientSecret to Stripe Elements
+        const elements = stripe.elements({
+          clientSecret: data.paymentIntent,
+        });
 
-        window.payhere.onDismissed = function onDismissed() {
-          console.log("Payment dismissed");
-          // Handle user dismissing the payment
-        };
+        // Create and mount the Payment Element only if the element is present in the DOM
+        if (paymentFormRef.current) {
+          const paymentElement = elements.create("payment");
+          paymentElement.mount(paymentFormRef.current);
 
-        window.payhere.onError = function onError(error) {
-          console.log("Payment error:", error);
-          // Handle payment errors
-        };
+          // Attach event listener to the button to confirm payment
+          document
+            .getElementById("confirmButton")
+            .addEventListener("click", async () => {
+              const { error } = await stripe.confirmPayment({
+                elements,
+                redirect: 'if_required'
+              });
+          
 
-        console.log(window.payhere);
-      } else {
-        console.error("PayHere script not loaded");
+              if (error) {
+                console.error("Payment failed:", error);
+                alert(`Payment failed: ${error.message}`);
+              } else {
+                console.log("Payment successful!");
+                const payId = await makePayment(userId);
+                await upgradeToPremium(userId);
+
+                // set local storage value
+                const user = JSON.parse(localStorage.getItem('user'));
+                user.isPremium = true;
+                localStorage.setItem('user', JSON.stringify(user));
+
+                // console.log(payId);
+                navigate(`/payment-success?payId=${payId}`);
+                alert("Payment successful!");
+              }
+            });
+        } else {
+          console.error("Payment form element not found in the DOM.");
+        }
+      } catch (error) {
+        console.error("Error fetching payment sheet:", error);
+        alert("Failed to fetch payment details. Please try again.");
       }
-    }).catch((error) => {
-      console.error(error);
-    });
+    };
+
+    fetchPaymentSheet();
   }, []);
 
-  const handlePayment = async () => {
-    const url = 'http://localhost:8080/api/payments/generate-hash';
-    const data = {
-      orderId: '12345',
-      amount: '100.00',
-      currency: 'LKR'
-    };
-
-    // Send the POST request
-    const response = await axios.post(url, new URLSearchParams(data).toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    });
-
-    const hash = response.data;
-
-    const payment = {
-      sandbox: true,
-      merchant_id: '1227963',
-      return_url: 'http://localhost:5173/payment-success',
-      cancel_url: 'http://localhost:5173/payment-cancel',
-      notify_url: 'http://localhost:8080/api/payments/notify',
-      order_id: '12345',
-      items: 'Premium Subscription',
-      amount: '100.00',
-      currency: 'LKR',
-      hash: hash,
-      first_name: 'Saman',
-      last_name: 'Perera',
-      email: 'samanp@gmail.com',
-      phone: '0771234567',
-      address: 'No.1, Galle Road',
-      city: 'Colombo',
-      country: 'Sri Lanka',
-      delivery_address: 'No. 46, Galle road, Kalutara South',
-      delivery_city: 'Kalutara',
-      delivery_country: 'Sri Lanka',
-    };
-
-    if (window.payhere) {
-      window.payhere.startPayment(payment);
-    } else {
-      console.error("PayHere script not loaded");
-    }
-  };
-
   return (
-    <button
-      onClick={handlePayment}
-      className="px-4 py-2 bg-blue-600 text-white rounded-md"
-    >
-      Pay Now
-    </button>
+    <Elements stripe={stripePromise}>
+      <div>
+        <div id="payment-form" ref={paymentFormRef}></div>
+        <button id="confirmButton">Pay Now</button>
+      </div>
+    </Elements>
   );
 };
 
-export default PaymentButton;
+export default StripePayment;

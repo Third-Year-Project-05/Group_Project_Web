@@ -41,17 +41,8 @@ public class UserController {
 	public ResponseEntity<?> integratePremiumAccount(@RequestBody Map<String, String> payload) {
 		try {
 			String userId = (String) payload.get("userId");
-			int premiumDurationInDays = 30;
 
-			// Calculate the expiration date
-			Instant expirationInstant = Instant.now().plusSeconds(premiumDurationInDays * 86400);
-			Timestamp premiumExpirationDate = Timestamp.ofTimeSecondsAndNanos(
-					expirationInstant.getEpochSecond(),
-					expirationInstant.getNano()
-			);
-
-			// Call the service to integrate the premium account
-			userService.integratePremiumAccount(userId, premiumExpirationDate);
+			userService.integratePremiumAccount(userId);
 
 			return ResponseEntity.ok("User upgraded to premium");
 		} catch (Exception e) {
