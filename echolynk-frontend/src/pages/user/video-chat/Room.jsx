@@ -1,6 +1,18 @@
 import { useRef, useEffect, useState } from "react";
-import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
+import {
+  FaMicrophone,
+  FaMicrophoneSlash,
+  FaMicrophoneAlt,
+  FaMicrophoneAltSlash,
+  FaVideo,
+  FaVideoSlash,
+  FaAngellist,
+  FaPhoneSlash,
+  FaRegClone,
+} from "react-icons/fa";
 import io from "socket.io-client";
+import Cookies from "js-cookie";
+import { toast } from 'react-toastify';
 
 import HolisticComponent from "./HolisticComponent";
 import ChatFeature from "./components/ChatFeature";
@@ -8,7 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import CopyLinkModal from "./components/CopyLinkModal";
 
 // For Speech Recognition
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
 const Room = () => {
@@ -22,12 +35,43 @@ const Room = () => {
   const userStream = useRef(null);
 
   const [isMuted, setIsMuted] = useState(false);
-  const [isVideoOff, setIsVideoOff] = useState(false);
+  const [isVideoOff, setIsVideoOff] = useState(true);
   const [messages, setMessages] = useState([]);
-  const [transcript, setTranscript] = useState(""); 
-  const [isListening, setIsListening] = useState(false); 
+  const [transcript, setTranscript] = useState("");
+  const [isListening, setIsListening] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  // copy modal visible or not
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const navigate = useNavigate();
+
+  // sign detection state
+  const [isNeedDetection, setIsNeedDetection] = useState(
+    Cookies.get("isNeedDetection") === "true"
+  );
+  const [isToggleDisabled, setIsToggleDisabled] = useState(false);
+  const [predict, setPredict] = useState("");
+
+  const checkNeedDetection = () => {
+    if (isToggleDisabled) {
+      return;
+    }
+    const newDetectionState = !isNeedDetection;
+    setIsNeedDetection(newDetectionState);
+    Cookies.set("isNeedDetection", newDetectionState.toString(), {
+      expires: 1,
+    });
+    setIsToggleDisabled(true);
+    setTimeout(() => setIsToggleDisabled(false), 2000);
+    if (!newDetectionState && holisticRef.current) {
+      holisticRef.current.close();
+      holisticRef.current = null;
+    } else if (newDetectionState) {
+      initializeHolistic();
+    }
+  };
 
   useEffect(() => {
     navigator.mediaDevices
@@ -36,7 +80,9 @@ const Room = () => {
         userVideo.current.srcObject = stream;
         userStream.current = stream;
 
-        socketRef.current = io.connect("https://video-call-backend-test-production.up.railway.app/");
+        socketRef.current = io.connect(
+          "https://video-call-backend-test-production.up.railway.app/"
+        );
         socketRef.current.emit("join room", roomID);
 
         socketRef.current.on("other user", (userID) => {
@@ -56,23 +102,22 @@ const Room = () => {
 
         socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
 
-      
         socketRef.current.on("receive message", handleReceiveMessage);
       });
 
     // Set up speech recognition
-    recognition.continuous = true; 
-    recognition.interimResults = true; 
+    recognition.continuous = true;
+    recognition.interimResults = true;
     recognition.onresult = (event) => {
       let latestTranscript = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
         latestTranscript += event.results[i][0].transcript;
       }
-      setTranscript(latestTranscript); 
+      setTranscript(latestTranscript);
     };
 
     recognition.onstart = () => {
-      setIsListening(true); 
+      setIsListening(true);
     };
 
     recognition.onend = () => {
@@ -205,70 +250,116 @@ const Room = () => {
 
   // speech recognition
   const startListening = () => {
-    recognition.start(); 
+    recognition.start();
   };
 
   const stopListening = () => {
-    recognition.stop(); 
+    recognition.stop();
   };
+
+  const toggleModal = () => setModalVisible(!isModalVisible);
 
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className="flex flex-row gap-4">
-          <HolisticComponent />
+        <div className="flex flex-col gap-4 pt-10 md:flex-row">
+          <HolisticComponent
+            isNeedDetection={isNeedDetection}
+            isToggleDisabled={isToggleDisabled}
+            setPredict={setPredict}
+          />
           <video
             ref={userVideo}
             autoPlay
             muted
-            className="w-1/2 border-2 border-blue-500 h-1/2"
+            className="w-full h-64 border-2 border-blue-500 md:w-1/2 md:h-1/2"
           />
-          <video
-            ref={partnerVideo}
-            autoPlay
-            className="w-1/2 border-2 border-green-500 h-1/2"
-          />
+          {partnerVideo && otherUser.current && (
+            <video
+              ref={partnerVideo}
+              autoPlay
+              className="w-full h-64 border-2 border-green-500 md:w-1/2 md:h-1/2"
+            />
+          )}
         </div>
-        <div className="flex gap-4 mt-4">
+
+        {/* button section */}
+        <div className="fixed flex flex-wrap justify-center h-12 gap-4 bottom-4">
+          <button
+            type="button"
+            onClick={toggleModal}
+            className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 gap-2"
+          >
+            <FaRegClone/>
+            Copy
+          </button>
           <button
             onClick={toggleMute}
             className="px-4 py-2 text-white bg-red-500 rounded"
           >
-            {isMuted ? "Unmute" : "Mute"}
+            {isMuted ? (
+              <FaMicrophoneAlt className="w-6 h-6" />
+            ) : (
+              <FaMicrophoneAltSlash className="w-6 h-6" />
+            )}
           </button>
           <button
             onClick={toggleVideo}
             className="px-4 py-2 text-white bg-blue-500 rounded"
           >
-            {isVideoOff ? "Turn Video On" : "Turn Video Off"}
+            {isVideoOff ? (
+              <FaVideo className="w-6 h-6" />
+            ) : (
+              <FaVideoSlash className="w-6 h-6" />
+            )}
+          </button>
+          <button
+            onClick={checkNeedDetection}
+            disabled={isToggleDisabled}
+            className="px-4 py-2 text-white bg-blue-500 rounded"
+          >
+            {isNeedDetection ? (
+              "Disable Detection"
+            ) : (
+              <FaAngellist className="w-6 h-6" />
+            )}
+          </button>
+          <button
+            onClick={isListening ? stopListening : startListening} // Toggle between start and stop
+            className="flex items-center gap-2 px-4 py-2 text-white bg-green-500 rounded"
+          >
+            {isListening ? (
+              <FaMicrophone className="w-6 h-6" />
+            ) : (
+              <FaMicrophoneSlash className="w-6 h-6" />
+            )}
+            Voice to Text
           </button>
           <button
             onClick={endCall}
-            className="px-4 py-2 text-white bg-gray-700 rounded"
+            className="px-4 py-2 text-white bg-red-700 rounded"
           >
-            End Call
+            <span className="flex gap-2">
+              <FaPhoneSlash className="w-6 h-6"/>
+              End Call
+            </span>
           </button>
         </div>
 
-        <div className="mt-4 flex gap-4">
-        <button
-          onClick={isListening ? stopListening : startListening} // Toggle between start and stop
-          className="px-4 py-2 text-white bg-green-500 rounded flex items-center gap-2"
-        >
-          {isListening ? (
-            <FaMicrophone className="h-6 w-6" />
-          ) : (
-            <FaMicrophoneSlash className="h-6 w-6" />
-          )}
-          {isListening ? 'Stop Voice to Text' : 'Start Voice to Text'}
-        </button>
-      </div>
+        <p className="mt-4">Transcript: {transcript}</p>
 
-        <p>Transcript: {transcript}</p> 
+        <CopyLinkModal
+          link={`${window.location.origin}/user-video-chat/room/${roomID}`}
+          isModalVisible={isModalVisible}
+          toggleModal={toggleModal}
+        />
+        <p>{predict}</p>
 
-        <CopyLinkModal link={`${window.location.origin}/user-video-chat/join/${roomID}`} />
-
-        <ChatFeature messages={messages} sendMessage={sendMessage} socketId={socketRef.current ? socketRef.current.id : null} />
+        <ChatFeature
+          messages={messages}
+          sendMessage={sendMessage}
+          socketId={socketRef.current ? socketRef.current.id : null}
+        />
       </div>
     </>
   );
