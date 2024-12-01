@@ -1,4 +1,4 @@
-import { MenuIcon } from "@heroicons/react/solid";
+import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { useState } from "react";
 import logo from "../../assets/echolynk.png";
 import "typeface-poppins";
@@ -9,31 +9,32 @@ const Navbar = () => {
 
   const getNavLinkClass = ({ isActive }) =>
     isActive
-      ? "my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 active"
-      : "my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0";
+      ? "py-2 text-blue-900 hover:text-blue-950 md:px-5 block"
+      : "py-2 text-gray-700 hover:text-blue-950 md:px-5 block";
 
   return (
-    <nav className="py-0 bg-echolynk px-9">
+    <nav className="py-2 bg-echolynk px-9">
       <div className="container flex flex-col items-center justify-between px-6 mx-auto md:flex-row">
         <div className="flex items-center justify-between w-full md:w-auto">
           <Link to="/">
-            <img src={logo} alt="Logo" className="h-12 mb-4 md:h-20" />
+            <img src={logo} alt="Logo" className="h-12 md:h-16" />
           </Link>
-          <div className="md:hidden">
-            <button
-              type="button"
-              className="block text-gray-800 hover:text-gray-600 focus:text-gray-600 focus:outline-none"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <MenuIcon className="w-6 h-6 fill-current" />
-            </button>
-          </div>
+          <button
+            type="button"
+            className="text-gray-800 md:hidden dark:text-gray-200"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? (
+              <XIcon className="w-6 h-6" />
+            ) : (
+              <MenuIcon className="w-6 h-6" />
+            )}
+          </button>
         </div>
 
         <div
-          className={`flex-col md:flex md:flex-row md:-mx-4 w-full md:w-auto ${
-            isOpen ? "flex" : "hidden"
-          }`}
+          className={`flex-col items-center md:flex md:flex-row md:space-x-6 ${
+            isOpen ? "flex" : "hidden" }`}
         >
           <NavLink to="/" className={getNavLinkClass}>
             Home
@@ -49,13 +50,13 @@ const Navbar = () => {
           </NavLink>
           <Link
             to="/login"
-            className="my-1 text-blue-900 hover:text-blue-950 md:mx-5 md:my-0 md:hidden"
+            className="block px-4 py-2 mt-2 text-blue-900 rounded-md hover:bg-gray-100 md:hidden"
           >
             Login
           </Link>
         </div>
 
-        <div className="items-center justify-end hidden gap-4 md:flex">
+        <div className="items-center hidden space-x-4 md:flex">
           <Link to="/login">
             <button className="w-24 px-4 py-2 text-white bg-blue-900 rounded-full hover:bg-blue-950">
               Login

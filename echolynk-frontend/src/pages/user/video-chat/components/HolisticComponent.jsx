@@ -6,7 +6,8 @@ import Cookies from "js-cookie";
 const HolisticComponent = ({
   isNeedDetection,
   isToggleDisabled,
-  setPredict
+  setPredict,
+  setIsLoading,
 }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -96,50 +97,57 @@ const HolisticComponent = ({
   };
 
   const initializeHolistic = useCallback(() => {
-    const holisticInstance = new Holistic({
-      locateFile: (file) =>
-        `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
-    });
+    try {
+      setIsLoading(true);
+      const holisticInstance = new Holistic({
+        locateFile: (file) =>
+          `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
+      });
 
-    holisticInstance.setOptions({
-      modelComplexity: 1,
-      smoothLandmarks: true,
-      enableSegmentation: false,
-      refineFaceLandmarks: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-    });
+      holisticInstance.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        refineFaceLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
 
-    holisticInstance.onResults((results) => {
-      if (isNeedDetection) {
-        if (
-          (!results.leftHandLandmarks ||
-            results.leftHandLandmarks.length === 0) &&
-          (!results.rightHandLandmarks ||
-            results.rightHandLandmarks.length === 0)
-        ) {
-          // console.log("No hand detections");
-          drawCameraFeed();
-          return;
+      holisticInstance.onResults((results) => {
+        if (isNeedDetection) {
+          if (
+            (!results.leftHandLandmarks ||
+              results.leftHandLandmarks.length === 0) &&
+            (!results.rightHandLandmarks ||
+              results.rightHandLandmarks.length === 0)
+          ) {
+            // console.log("No hand detections");
+            drawCameraFeed();
+            return;
+          }
+
+          const keypoints = extractKeypoints(results);
+          keypointsSequenceRef.current.push(keypoints);
+
+          if (keypointsSequenceRef.current.length > 30) {
+            keypointsSequenceRef.current =
+              keypointsSequenceRef.current.slice(-30);
+          }
+
+          if (keypointsSequenceRef.current.length === 30) {
+            setTimeout(() => sendToBackend(keypointsSequenceRef.current), 16.7);
+          }
         }
 
-        const keypoints = extractKeypoints(results);
-        keypointsSequenceRef.current.push(keypoints);
+        drawCameraFeed();
+      });
 
-        if (keypointsSequenceRef.current.length > 30) {
-          keypointsSequenceRef.current =
-            keypointsSequenceRef.current.slice(-30);
-        }
-
-        if (keypointsSequenceRef.current.length === 30) {
-          setTimeout(() => sendToBackend(keypointsSequenceRef.current), 16.7);
-        }
-      }
-
-      drawCameraFeed();
-    });
-
-    holisticRef.current = holisticInstance;
+      holisticRef.current = holisticInstance;
+    } catch (error) {
+      
+    } finally{
+      setIsLoading(false);
+    }
   }, [isNeedDetection, extractKeypoints, sendToBackend]);
 
   useEffect(() => {

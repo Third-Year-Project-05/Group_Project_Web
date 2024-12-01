@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MailIcon, LockClosedIcon, EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
+
 import SocialLogin from '../register/SocialLogin';
 
 const RightSection = ({ logo, formData, errorMessage, successMessage, handleChange, handleSubmit }) => {
