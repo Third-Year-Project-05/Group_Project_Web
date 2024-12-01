@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,6 +23,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("echolynk-cf3ca.appspot.com")
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {
@@ -43,5 +45,11 @@ public class FirebaseConfig {
             firebaseApp();
         }
         return FirebaseAuth.getInstance();
+    }
+
+    @Bean
+    public StorageClient storageClient() throws IOException {
+        // Return the initialized StorageClient instance
+        return StorageClient.getInstance(firebaseApp());
     }
 }

@@ -1,61 +1,143 @@
-import React, { useEffect, useState } from 'react';
-import { PlusIcon } from '@heroicons/react/outline';
-import { Button } from '../../../components/ui/button';
+import { Textarea } from "../../../components/ui/textarea"
+import { Button } from "../../../components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/ui/dialog"
+import { Input } from "../../../components/ui/input"
+import { Label } from "../../../components/ui/label"
+import { addBlog } from "../../../api"
+import { useEffect, useState } from "react"
+import { useToast } from "../../../components/ui/use-toast"
 
 const AddBlog = () => {
-    const [showForm, setShowForm] = useState(false);
-
-    const toggleForm = () => setShowForm(!showForm);
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+    const [file, setFile] = useState(null);
+    const [data, setData] = useState({ title: "", content: "", email: ""});
+  
+    const handleFileChange = (e) => {
+      setFile(e.target.files[0]);
+    };
+  
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
 
     useEffect(() => {
-        if (showForm) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
+        // Retrieve user data from localStorage
+        const userString = localStorage.getItem("user");
 
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [showForm]);
-
-    return (
-        <div>
-            <Button onClick={toggleForm} style={{backgroundColor: 'rgb(30 58 138)', padding: '0.7rem', color: 'white'}} >
+        console.log(userString);
         
-                Add Blog
-            </Button>
-            {showForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-90 flex justify-center items-center z-10">
-                    <div className="bg-white dark:bg-gray-900 rounded-lg h-auto w-3/6 p-12">
-                        <form>
-                            <h1 className="text-2xl font-semibold mb-4 text-center">Add Blog</h1>
-                            <div className="mb-4">
-                                <label htmlFor="image" className="block text-gray-700 dark:text-white text-sm font-bold mb-2">Image:</label>
-                                <input type="file" id="image" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white leading-tight focus:outline-none focus:shadow-outline" accept="image/*" />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="title" className="block text-gray-700 dark:text-white text-sm font-bold mb-2">Title:</label>
-                                <input required type="text" id="title" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white leading-tight focus:outline-none focus:shadow-outline bg-inherit"/>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="content" className="block text-gray-700 dark:text-white text-sm font-bold mb-2">Content:</label>
-                                <textarea required id="content" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white leading-tight focus:outline-none focus:shadow-outline bg-inherit" rows="8"></textarea>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                    Submit
-                                </button>
-                                <button onClick={toggleForm} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-};
+        // Parse the JSON string to an object
+        const user = userString ? JSON.parse(userString) : null;
 
-export default AddBlog;
+        // Update state with the email value if user object exists
+        setData((prevState) => ({
+            ...prevState,
+            email: user ? user.email : "",
+        }));
+    }, []);
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+    //   if (!file) {
+    //     alert("Please select an image file");
+    //     return;
+    //   }
+
+  
+      const formData = new FormData();
+    //   formData.append("image", file);
+      // formData.append("title", data.title);
+      // formData.append("content", data.content);
+      // formData.append("status", "approved");
+      // formData.append("author", "Admin");
+      // formData.append("email", data.email);
+      // formData.append("image", file);
+  
+      formData.append("image", file);  
+      formData.append("blogDto", new Blob([JSON.stringify({
+          title: data.title,
+          content: data.content,
+          status: "approved",
+          author: "Admin",
+          email: data.email
+      })], {
+          type: "application/json"
+      }));
+
+      addBlog(formData);
+
+      //close the form
+        e.target.reset();
+        setOpen(false);
+
+        //toast
+        toast({
+            title: "Blog Added",
+            description: "Your blog has been added successfully",
+            variant: "success",
+        });
+
+        // setInterval(() => {
+        //     window.location.reload();
+        // }, 3000);
+
+    };
+
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">Add Blog</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[700px]">
+        <DialogHeader>
+          <DialogTitle>Add Blog Post</DialogTitle>
+          <DialogDescription>
+            Add your blog post here. Click submit when you are done
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="image" className="text-right">
+                Image
+              </Label>
+              <Input type="file" id="image" name="image" className="col-span-3" onChange={handleFileChange}/>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="title" className="text-right">
+                Title
+              </Label>
+              <Input id="title" name="title" className="col-span-3" required onChange={handleInputChange} />
+            </div>
+            <div className="grid grid-cols-4 gap-4">
+              <Label htmlFor="content" className="text-right">
+                Content
+              </Label>
+              <Textarea id="content" name="content" className="col-span-3" rows={10} required onChange={handleInputChange}/>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit">Submit</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export default AddBlog

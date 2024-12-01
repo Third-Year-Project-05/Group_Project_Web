@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Edit, Trash } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Edit, Trash, AlignCenter } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Checkbox } from "../../../components/ui/checkbox";
 import React, { useState } from "react";
@@ -70,13 +70,41 @@ export const columnsAll: ColumnDef<User>[] = [
         header: "Role",
         cell: ({ cell }) => {
             const value = cell.getValue() as string;
+            // console.log((value==true));
+
+            return (
+                <span className="self-center">
+                    {value}
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "isPremium",
+        header: ({ table }) => (
+            <div className="flex justify-center items-center">
+                <span>Status</span>
+                
+            </div>
+        ),
+        cell: ({ cell }) => {
+            const value = cell.getValue() as boolean;
             const style = {
-                backgroundColor: value === 'Premium' ? 'rgba(255, 215, 0, 0.4)' : 'rgba(0, 128, 0, 0.5)',
+                backgroundColor: value ? 'rgba(255, 215, 0, 0.4)' : 'rgba(0, 128, 0, 0.5)',
                 padding: '7px',
                 borderRadius: '14px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+
             };
-            return <span style={style} className="self-center">{value}</span>;
-        },
+            return (
+                <span style={style} className="self-center">
+                    {value ? 'Premium' : 'Free'}
+                </span>
+            );
+
+        }
     },
     {
         id: "actions",

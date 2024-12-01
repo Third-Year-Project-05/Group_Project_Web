@@ -2,16 +2,19 @@ package com.echolynk.echolynkbackend.repository;
 
 import com.echolynk.echolynkbackend.dto.BlogDto;
 import com.echolynk.echolynkbackend.entity.Blog;
+import com.echolynk.echolynkbackend.entity.User;
 import com.echolynk.echolynkbackend.mappers.BlogMapper;
+import com.echolynk.echolynkbackend.service.FirebaseStorageService;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.cloud.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Repository
@@ -19,17 +22,29 @@ public class BlogRepository {
 
     @Autowired
     private Firestore firestore;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
 
-    public String saveBlog(BlogDto blogDto) {
+    public String saveBlog(MultipartFile image, BlogDto blogDto) throws IOException {
         // Generate a unique ID for the blog
         String blogId = UUID.randomUUID().toString();
         blogDto.setId(blogId);
 
+        String imageUrl = firebaseStorageService.uploadFile(image);
+
+
+        User author = userRepository.getUserByEmail(blogDto.getEmail());
+//        User author = UserMapper.toEntity(authorDto);
         // Map BlogDto to Blog entity
-        Blog blog = BlogMapper.dtoToEntity(blogDto);
-
+        Blog blog = BlogMapper.dtoToEntity(blogDto, author);
+        blog.setImageUrl(imageUrl);
         blog.setTimestamp(Timestamp.now());
-
+        if(blog.getAuthor() != "Admin"){
+            blog.setAuthor(author.getUserName());
+        }
+        System.out.println(blog);
         // Reference to the Firestore document
         DocumentReference blogRef = firestore.collection("blogs").document(blogId);
 
@@ -83,17 +98,42 @@ public class BlogRepository {
         // Reference to the Firestore document
         DocumentReference blogRef = firestore.collection("blogs").document(id);
 
-        // Map BlogDto to Blog entity
-        Blog blog = BlogMapper.dtoToEntity(blogDto);
-
-        blog.setTimestamp(Timestamp.now());
-
-        // Update the blog in Firestore
-        ApiFuture<WriteResult> result = blogRef.set(blog);
-
         try {
-            result.get();
-        } catch (Exception e) {
+            // Fetch the existing document
+            ApiFuture<DocumentSnapshot> future = blogRef.get();
+            DocumentSnapshot document = future.get();
+
+            if (document.exists()) {
+                Blog existingBlog = document.toObject(Blog.class);
+
+                Map<String, Object> updates = new HashMap<>();
+
+                // Compare and update only if content has changed
+                if (blogDto.getTitle() != null && !blogDto.getTitle().equals(existingBlog.getTitle())) {
+                    updates.put("title", blogDto.getTitle());
+                }
+                if (blogDto.getContent() != null && !blogDto.getContent().equals(existingBlog.getContent())) {
+                    updates.put("content", blogDto.getContent());
+                }
+                if (blogDto.getAuthor() != null && !blogDto.getAuthor().equals(existingBlog.getAuthor())) {
+                    updates.put("author", blogDto.getAuthor());
+                }
+                if (blogDto.getStatus() != null && !blogDto.getStatus().equals(existingBlog.getStatus())) {
+                    updates.put("status", blogDto.getStatus());
+                }
+
+                // Always update the timestamp
+                updates.put("timestamp", Timestamp.now());
+
+                if (!updates.isEmpty()) {
+                    // Update the blog in Firestore
+                    ApiFuture<WriteResult> result = blogRef.update(updates);
+                    result.get();
+                }
+            } else {
+                throw new RuntimeException("Blog not found with id: " + id);
+            }
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException("Error updating blog in Firestore: " + e.getMessage(), e);
         }
     }

@@ -50,9 +50,16 @@ import VerbalHome from './pages/verbalUser/home/home';
 import {useContext, useEffect, useState} from 'react';
 
 import VideoChat from './pages/user/video-chat/video-chat';
+import Room from './pages/user/video-chat/Room';
+
+import PremiumUpgrade from './pages/user/premium-upgrade';
+import PaymentSuccess from './pages/user/payment-success';
+import { Toaster } from './components/ui/toaster';
 
 
 import Blogview2 from './components/blog/blog-view';
+import JoinRoom from './pages/user/video-chat/joinRoom';
+import StripePayment from './pages/user/payment';
 
 const Layout = ({ children }) => {
     return (
@@ -84,20 +91,49 @@ const AdminLayout = ({ children }) => {
         <div className="flex -z-30">
             <AdminSidebar theme={theme} isOpen={isOpen} toggleSidebar={toggleSidebar} />
             <main className={`flex-grow relative transition-all duration-300 -z-0 mt-20 ${isOpen ? 'ml-64' : 'ml-20'}`}>
-                <div className="p-4 overflow-x-hidden h-full">
+                <div className="h-full p-4 overflow-x-hidden">
                     {children}
                 </div>
             </main>
+            <Toaster />
         </div>
     );
 };
 
-const LoginLayout = ({ children }) => {
+const LoginLayout = ({ children, needFooter=true }) => {
+    const [isPremium, setIsPremium] = useState(false);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        console.log(user);
+        const premiumStatus = user.isPremium;
+        console.log(isPremium);
+        setIsPremium(premiumStatus);
+
+        const updatePremiumStatus = () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if(user){
+                setIsPremium(user.isPremium);
+            }
+        }
+
+        const handleStorageChange = (event) => {
+            if (event.key === 'user') {
+                updatePremiumStatus();
+            }
+        }
+
+        window.addEventListener('storage', handleStorageChange);
+
+        
+
+    }, []);
+
     return (
         <div className="flex flex-col min-h-screen bg-gray-200 dark:bg-inherit">
-            <LogHeader />
+            <LogHeader isPremium={isPremium}/>
             <main className="flex-grow">{children}</main>
-            <Footer />
+            { needFooter && <Footer />}
         </div>
     );
 }
@@ -152,11 +188,19 @@ function App() {
                         <Route path="/user-home" element={<PrivateUser element={<LoginLayout><UserHome /></LoginLayout>} />} />
                         <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
                         <Route path="/user-game" element={<PrivateUser element={<LoginLayout><Game /></LoginLayout>} />} />
-                        <Route path="/user-video-chat" element={<LoginLayout><VideoChat /></LoginLayout>} />
+                        <Route path="/user-video-chat" element={<LoginLayout needFooter={false} ><VideoChat /></LoginLayout>} />
                         <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
                         <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
                         <Route path='/game/level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
                         <Route path='/quiz/:level' element={<LoginLayout><QuizPage /></LoginLayout>} />
+                        <Route path="/premium-upgrade" element={<PremiumUpgrade />} />
+                        <Route path="/payment-success" element={<PaymentSuccess />} />
+                        <Route path="/stripe-payment" element={<StripePayment />} />
+
+
+                        <Route path="user-video-chat/room/:roomID" element={<Room/>} />
+                        <Route path="user-video-chat/join/:roomID" element={<JoinRoom />} />
+                        
 
                         {/* Verbal User */}
                         <Route path="/verbal-home" element={<PrivateVerbal element={<VerbalLayout><VerbalHome /></VerbalLayout>} />} />

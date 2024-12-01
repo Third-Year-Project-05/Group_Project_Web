@@ -80,3 +80,19 @@ export const getUserCount = async () => {
         throw new Error(`Error getting user count: ${error.message}`);
     }
 };
+
+export const upgradeToPremium = async ( userId ) => {
+    try {
+        const response = await api.post('/integratePremium', {
+            userId
+        },{
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error updating user: ${error.message}`);
+    }
+}

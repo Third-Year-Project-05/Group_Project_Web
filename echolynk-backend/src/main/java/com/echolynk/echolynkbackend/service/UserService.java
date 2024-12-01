@@ -78,6 +78,7 @@ public class UserService implements UserDetailsService {
         user.put("role", userDto.getRole());
         user.put("phoneNumber", userDto.getPhoneNumber());
         user.put("timestamp", Timestamp.now());
+        user.put("isPremium", false);
 
         ApiFuture<WriteResult> future = firestore.collection("users").document(userRecord.getUid()).set(user);
         future.get();
@@ -119,6 +120,12 @@ public class UserService implements UserDetailsService {
                     throw new RuntimeException("User role not found");
                 }
 
+                // Retrieve user isPremium
+                Boolean isPremium = (Boolean) userMap.get("isPremium");
+                if (isPremium == null) {
+                    throw new RuntimeException("User isPremium value not found");
+                }
+
                 // Retrieve user ID
                 String userID = (String) userMap.get("userId");
                 if (userID == null) {
@@ -129,7 +136,7 @@ public class UserService implements UserDetailsService {
                 UserDetails userDetails = new CustomUserDetails(firebaseUserRecord);
                 String token = jwtUtil.generateToken(userDetails);
 
-                return new AuthResponse(token, role, userID);
+                return new AuthResponse(token, role, isPremium, userID);
 
             } else {
                 throw new RuntimeException("Invalid email or password");
@@ -190,6 +197,7 @@ public class UserService implements UserDetailsService {
                 userMap.put("email", email);
                 userMap.put("role", "Deaf");
                 userMap.put("timestamp", Timestamp.now());
+                userMap.put("isPremium", false);
                 firestore.collection("users").document(userRecord.getUid()).set(userMap).get();
             }
 
@@ -197,8 +205,9 @@ public class UserService implements UserDetailsService {
             UserDetails userDetails = new CustomUserDetails(userRecord);
             String token = jwtUtil.generateToken(userDetails);
             String role = (String) userMap.get("role");
+            boolean isPremium = (boolean) userMap.get("isPremium");
 
-            return new AuthResponse(token, role,userRecord.getUid());
+            return new AuthResponse(token, role, isPremium, userRecord.getUid());
         } catch (FirebaseAuthException | ExecutionException | InterruptedException e) {
             throw new RuntimeException("OAuth2 Login error", e);
         }
@@ -213,8 +222,8 @@ public class UserService implements UserDetailsService {
         return userRepository.getAllUsers();
     }
 
-    public void integratePremiumAccount(String userId, Timestamp premiumExpirationDate) {
-        userRepository.updatePremiumStatus(userId, true, premiumExpirationDate);
+    public void integratePremiumAccount(String userId) {
+        userRepository.updatePremiumStatus(userId, true);
     }
 
     public UserDto getUser(String id) {

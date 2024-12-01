@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,18 +35,18 @@ public class UserRepository {
         }
     }
 
-    public Optional<User> getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         try {
             ApiFuture<QuerySnapshot> query = firestore.collection("users").whereEqualTo("email", email).get();
             QuerySnapshot querySnapshot = query.get();
 
-            if (querySnapshot.isEmpty()) {
-                return Optional.empty();
-            }
+//            if (querySnapshot.isEmpty()) {
+//                return Optional.empty();
+//            }
 
             QueryDocumentSnapshot document = querySnapshot.getDocuments().get(0);
-            User user = document.toObject(User.class);
-            return Optional.ofNullable(user);
+            return document.toObject(User.class);
+//            return Optional.ofNullable(user);
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error retrieving user from Firestore", e);
             Thread.currentThread().interrupt();  // Restore the interrupted status
@@ -70,6 +72,7 @@ public class UserRepository {
                     }
                 }
             }
+            System.out.println(userList);
             return userList;
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error retrieving users from Firestore", e);
@@ -198,14 +201,53 @@ public class UserRepository {
         }
     }
 
-    public void updatePremiumStatus(String userId, boolean isPremium, Timestamp premiumExpirationDate) {
+    public List<UserDto> findByDateBetween(String from, String to) {
+        CollectionReference usersCollection = firestore.collection("users");
+
+        LocalDate fromDate = LocalDate.parse(from);
+        LocalDate toDate = LocalDate.parse(to);
+
+
+        Timestamp fromTimestamp = Timestamp.ofTimeSecondsAndNanos(fromDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0);
+        Timestamp toTimestamp = Timestamp.ofTimeSecondsAndNanos(toDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0);
+
+        try {
+            // Apply the date range filter in the Firestore query
+            Query query = usersCollection
+                    .whereGreaterThanOrEqualTo("timestamp", fromTimestamp)
+                    .whereLessThanOrEqualTo("timestamp", toTimestamp);
+
+            System.out.println(fromTimestamp);
+            logger.info(String.valueOf(fromTimestamp));
+
+            ApiFuture<QuerySnapshot> querySnapshotFuture = query.get();
+            QuerySnapshot querySnapshot = querySnapshotFuture.get();
+
+            List<UserDto> userList = new ArrayList<>();
+            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                for (QueryDocumentSnapshot document : querySnapshot.getDocuments()) {
+                    UserDto userDto = document.toObject(UserDto.class);
+                    if (userDto != null) {
+                        userList.add(userDto);
+                    }
+                }
+            }
+            return userList;
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Error retrieving users from Firestore", e);
+            Thread.currentThread().interrupt();  // Restore the interrupted status
+            throw new RuntimeException("Error retrieving users from Firestore", e);
+        }
+    }
+
+    public void updatePremiumStatus(String userId, boolean isPremium) {
         DocumentReference userRef = firestore.collection("users").document(userId);
 
         ApiFuture<WriteResult> future = userRef.update(
-                "isPremium", isPremium,
-                "premiumExpirationDate", premiumExpirationDate,
-                "role", isPremium ? "Premium" : "Deaf"
+                "isPremium", isPremium
         );
+
+        System.out.println(userRef);
 
         try {
             future.get();
