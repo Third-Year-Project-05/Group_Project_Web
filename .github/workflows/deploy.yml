@@ -14,19 +14,29 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout Repo
         uses: actions/checkout@v3
-      # Step 2: Install dependencies
+      
+      # Step 2: Navigate to the frontend directory
+      - name: Change Directory to Frontend
+        working-directory: ./echolynk-frontend
+        run: echo "Changed directory to frontend"
+        
+      # Step 3: Install dependencies
       - name: Install Dependencies
+        working-directory: ./echolynk-frontend
         run: npm install
-      # Step 3: Build the project
+
+      # Step 4: Build the project
       - name: Build
+        working-directory: ./echolynk-frontend  
         env:
           CI: false
         run: npm run build
+
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v3
         with:
           name: build
-          path: build
+          path: echolynk-frontend/build
 
   deploy:
     name: Deploy
@@ -35,11 +45,13 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+        
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
           name: build
           path: build
+          
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
