@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaPaperPlane } from "react-icons/fa";
 
 const ChatFeature = ({ messages, sendMessage, socketId }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -22,10 +23,10 @@ const ChatFeature = ({ messages, sendMessage, socketId }) => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4">
+    <div className="fixed bottom-3 right-4">
       <button
         onClick={toggleChat}
-        className="flex items-center justify-center text-white bg-blue-600 rounded-full shadow-lg w-14 h-14 hover:bg-blue-700"
+        className="flex items-center justify-center text-white bg-blue-600 rounded-full shadow-lg w-14 h-14 hover:bg-blue-700 dark:bg-gray-800"
       >
         💬
       </button>
@@ -33,8 +34,8 @@ const ChatFeature = ({ messages, sendMessage, socketId }) => {
       {/* Chat Widget */}
       {isChatOpen && (
         <div className="absolute right-0 flex flex-col bg-white rounded-lg shadow-lg bottom-16 w-96 h-96">
-          <div className="p-4 text-white bg-blue-600 rounded-t-lg">
-            <h3 className="text-lg font-semibold">Chat</h3>
+          <div className="p-4 text-white bg-gray-800 rounded-t-lg">
+            <h3 className="text-lg font-semibold">Meeting Chat</h3>
           </div>
           <div className="flex-grow p-4 overflow-y-auto border-t border-gray-200">
             {uniqueMessages.map((msg, index) => (
@@ -44,7 +45,7 @@ const ChatFeature = ({ messages, sendMessage, socketId }) => {
               >
                 <span
                   className={`inline-block p-2 rounded ${
-                    msg.sender === socketId ? "bg-blue-200" : "bg-green-200"
+                    msg.sender === socketId ? "bg-blue-400" : "bg-green-400"
                   }`}
                 >
                   {msg.text}
@@ -59,14 +60,14 @@ const ChatFeature = ({ messages, sendMessage, socketId }) => {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-grow p-2 text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Type a message"
             />
             <button
               onClick={handleSendMessage}
               className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
             >
-              Send
+              <FaPaperPlane className="w-5 h-6"/>
             </button>
           </div>
         </div>
