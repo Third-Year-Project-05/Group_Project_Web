@@ -13,9 +13,9 @@ public class PayHereService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public String createPayment(Map<String, String> paymentDetails) {
-        String payment = paymentRepository.createPayment(paymentDetails);
-        return payment;
+    public void createPayment(Map<String, String> paymentDetails) {
+        paymentRepository.createPayment(paymentDetails);
+
     }
 }
 
