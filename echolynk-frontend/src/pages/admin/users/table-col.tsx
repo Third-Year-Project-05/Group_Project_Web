@@ -5,6 +5,7 @@ import { Checkbox } from "../../../components/ui/checkbox";
 import React, { useState } from "react";
 
 export type User = {
+    [x: string]: boolean;
     email: string;
     userName: string;
     phoneNumber: string;
