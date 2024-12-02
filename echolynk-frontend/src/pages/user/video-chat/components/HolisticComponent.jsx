@@ -8,13 +8,14 @@ const HolisticComponent = ({
   isToggleDisabled,
   setPredict,
   setIsLoading,
+  handleSendMessage,
 }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const keypointsSequenceRef = useRef([]);
   const holisticRef = useRef(null); // Store holistic instance
   const cameraRef = useRef(null); // Store camera instance
-
+  
   const backendURL = "http://127.0.0.1:9100/predict";
 
   const sendToBackend = useCallback(async (keypointsSequence) => {
@@ -30,6 +31,7 @@ const HolisticComponent = ({
       if (response.ok) {
         const data = await response.json();
         setPredict(data.prediction);
+        handleSendMessage(data.prediction);
         // console.log(`predictions: ${data.prediction}`);
       } else {
         console.error("Error in backend response", response.statusText);
@@ -121,7 +123,7 @@ const HolisticComponent = ({
             (!results.rightHandLandmarks ||
               results.rightHandLandmarks.length === 0)
           ) {
-            // console.log("No hand detections");
+            console.log("No hand detections");
             drawCameraFeed();
             return;
           }

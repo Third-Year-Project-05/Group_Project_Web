@@ -25,7 +25,17 @@ const SpeechRecognition =
 const recognition = new SpeechRecognition();
 
 const Room = () => {
-  const deafUser = JSON.parse(localStorage.getItem("user")).role === "Deaf";
+  let deafUser = false;
+  try {
+    if (JSON.parse(localStorage.getItem("user")).role === "Deaf") {
+      deafUser = true;
+    } else {
+      deafUser = false;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
   const { roomID } = useParams();
 
   const userVideo = useRef(null);
@@ -35,16 +45,11 @@ const Room = () => {
   const otherUser = useRef(null);
   const userStream = useRef(null);
 
-  const [myId, setMyId] = useState("");
-  const [otherUserId, setOtherUserId] = useState("");
-
   const [isMuted, setIsMuted] = useState(false);
-
   const [isVideoOff, setIsVideoOff] = useState(true);
   const [isPartnerVideoOff, setIsPartnerVideoOff] = useState(true);
 
   const [messages, setMessages] = useState([]);
-  const [transcript, setTranscript] = useState("");
   const [isListening, setIsListening] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -70,8 +75,13 @@ const Room = () => {
     Cookies.set("isNeedDetection", newDetectionState.toString(), {
       expires: 1,
     });
+    setIsLoading(true);
     setIsToggleDisabled(true);
-    setTimeout(() => setIsToggleDisabled(false), 2000);
+    setTimeout(() => {
+      setIsToggleDisabled(false);
+      setIsLoading(false);
+    }, 3500);
+
     if (!newDetectionState && holisticRef.current) {
       holisticRef.current.close();
       holisticRef.current = null;
@@ -81,23 +91,29 @@ const Room = () => {
   };
 
   const handleSendMessage = (message) => {
-    console.log("Sending message:", message);
-
+    if (
+      message === "" ||
+      (messages.length > 0 && messages[messages.length - 1] === message)
+    ) {
+      console.log("valid");
+      return;
+    }
+    // console.log("Sending message:", message);
     socketRef.current.emit("send message", { text: message, roomID });
     // setMessages((prev) => [
     //   ...prev,
     //   { sender: socketRef.current.id, text: message },
     // ]);
-    console.log(messages);
+    // console.log(messages);
   };
 
   function handleReceiveMessage(data) {
-    console.log("msg reciieved", data);
+    // console.log("msg reciieved", data);
     setMessages((prev) => [
       ...prev,
       { sender: data["sender"], text: data["text"], time: data["timestamp"] },
     ]);
-    console.log(messages);
+    // console.log(messages);
   }
 
   function callUser(userID) {
@@ -183,7 +199,6 @@ const Room = () => {
     } else {
       setIsPartnerVideoOff(false);
     }
-    partnerVideo.current.srcObject = partnerStream.current;
   }
 
   const toggleMute = () => {
@@ -199,7 +214,6 @@ const Room = () => {
   }, []);
 
   const endCall = () => {
-    handleSendMessage(`Other-left-${myId}`);
     socketRef.current.disconnect();
     if (peerRef.current) peerRef.current.close();
     navigate("/user-video-chat");
@@ -233,17 +247,12 @@ const Room = () => {
 
         socketRef.current.on("other user", (userID) => {
           console.log("Other user in the room:", userID);
-
-          setMyId(userID);
-          handleSendMessage(`Other-login-${userID}`);
           callUser(userID);
           otherUser.current = userID;
         });
 
         socketRef.current.on("user joined", (userID) => {
           console.log("User joined the room:", userID);
-
-          setOtherUserId(userID);
           otherUser.current = userID;
         });
 
@@ -264,7 +273,6 @@ const Room = () => {
       for (let i = event.resultIndex; i < event.results.length; i++) {
         latestTranscript += event.results[i][0].transcript;
       }
-      setTranscript(latestTranscript);
       handleSendMessage(latestTranscript);
     };
 
@@ -286,6 +294,10 @@ const Room = () => {
     };
   }, [roomID]);
 
+  const clearChat = () => {
+    setMessages([]);
+  };
+
   return (
     <>
       {isLoading && <LoadingPopup opacity="" />}
@@ -296,24 +308,12 @@ const Room = () => {
           isToggleDisabled={isToggleDisabled}
           setPredict={setPredict}
           setIsLoading={setIsLoading}
+          handleSendMessage={handleSendMessage}
         />
       )}
       <div className="flex flex-col items-center">
         {/* video stearm component */}
         <div className="flex flex-col items-center gap-4 px-5 pt-5 md:flex-row">
-          <video
-            ref={userVideo}
-            autoPlay
-            muted={!isMuted}
-            className={`w-full h-64 border-2 md:w-1/2 md:h-1/2 rounded-md ${
-              !isVideoOff ? "hidden" : ""
-            }`}
-          />
-          {!isVideoOff && (
-            <div className="w-full h-full border-2 border-blue-500 rounded-md md:w-1/2 md:h-1/2">
-              <img src={logo} alt="Logo" />
-            </div>
-          )}
           <video
             ref={partnerVideo}
             autoPlay
@@ -322,6 +322,22 @@ const Room = () => {
             }`}
           />
           {!isPartnerVideoOff && (
+            <div className="w-full h-full border-2 border-blue-500 rounded-md md:w-1/2 md:h-1/2">
+              <img src={logo} alt="Logo" />
+            </div>
+          )}
+          <video
+            ref={userVideo}
+            autoPlay
+            muted={!isMuted}
+            className={`w-full h-64 border-2 md:w-1/2 md:h-1/2 rounded-md ${
+              !isVideoOff ? "hidden" : ""
+            }`}
+          />
+          <p className="absolute p-3 text-black bg-white rounded-3xl right-10 top-10">
+            Me
+          </p>
+          {!isVideoOff && (
             <div className="w-full h-full border-2 border-blue-500 rounded-md md:w-1/2 md:h-1/2">
               <img src={logo} alt="Logo" />
             </div>
@@ -363,7 +379,7 @@ const Room = () => {
             <button
               onClick={checkNeedDetection}
               disabled={isToggleDisabled}
-              className="px-4 py-2 text-white bg-blue-500 rounded"
+              className="px-4 py-2 text-white bg-green-500 rounded disabled:bg-green-300"
             >
               {isNeedDetection ? (
                 <FaAngellist className="w-6 h-6" />
@@ -402,12 +418,15 @@ const Room = () => {
           isModalVisible={isModalVisible}
           toggleModal={toggleModal}
         />
-        <p>Suggestion : {predict}</p>
 
+        {predict && (
+          <p className="fixed p-3 text-black bg-white rounded-lg bottom-65 left-6 md:bottom-80">{` Message : ${predict}`}</p>
+        )}
         <ChatFeature
           messages={messages}
           sendMessage={handleSendMessage}
           socketId={socketRef.current ? socketRef.current.id : null}
+          clearChat={clearChat}
         />
       </div>
     </>
