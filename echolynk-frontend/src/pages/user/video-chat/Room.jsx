@@ -282,30 +282,6 @@ const Room = () => {
   const keypointsSequenceRef = useRef([]);
   const holisticRef = useRef(null); // Store holistic instance
   const cameraRef = useRef(null); // Store camera instance
-  
-  const checkNeedDetection = () => {
-    if (isToggleDisabled) {
-      return;
-    }
-    const newDetectionState = !isNeedDetection;
-    setIsNeedDetection(newDetectionState);
-    Cookies.set("isNeedDetection", newDetectionState.toString(), {
-      expires: 1,
-    });
-    setIsLoading(true);
-    setIsToggleDisabled(true);
-    setTimeout(() => {
-      setIsToggleDisabled(false);
-      setIsLoading(false);
-    }, 3500);
-
-    if (!newDetectionState && holisticRef.current) {
-      holisticRef.current.close();
-      holisticRef.current = null;
-    } else if (newDetectionState) {
-      initializeHolistic();
-    }
-  };
 
   const backendURL = "http://127.0.0.1:9100/predict";
 
@@ -476,6 +452,30 @@ const Room = () => {
       console.log(error);
     }
   }, [isNeedDetection, initializeHolistic]);
+
+  const checkNeedDetection = () => {
+    if (isToggleDisabled) {
+      return;
+    }
+    const newDetectionState = !isNeedDetection;
+    setIsNeedDetection(newDetectionState);
+    Cookies.set("isNeedDetection", newDetectionState.toString(), {
+      expires: 1,
+    });
+    setIsLoading(true);
+    setIsToggleDisabled(true);
+    setTimeout(() => {
+      setIsToggleDisabled(false);
+      setIsLoading(false);
+    }, 3500);
+
+    if (!newDetectionState && holisticRef.current) {
+      holisticRef.current.close();
+      holisticRef.current = null;
+    } else if (newDetectionState) {
+      initializeHolistic();
+    }
+  };
   
   return (
     <>
