@@ -26,10 +26,11 @@ import {
     SelectValue,
   } from "../../ui/select"
   import { Button } from "../../ui/button"
-  import { useMemo, useState } from "react"
+  import { useEffect, useMemo, useState } from "react"
   import { ChartPopup } from "./popup-charts"
 
 import { PieSectorDataItem } from "recharts/types/polar/Pie"
+import { getNewUserCountByMonth } from "../../../services/userService"
 
   const chartDataMain = [
     { month: "January", users: 20 },
@@ -92,6 +93,32 @@ import { PieSectorDataItem } from "recharts/types/polar/Pie"
 
   export function UsersMain(){
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [data, setData] = useState([]);
+
+    // Conversion function
+    const convertToChartData = (data: Record<string, number>) => {
+      const monthOrder = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+    
+      return Object.entries(data)
+        .map(([month, users]) => ({
+          month: month.split(' ')[0], // Extract only the month name
+          users,
+        }))
+        .sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
+    };
+
+    useEffect(() => {
+      const fetchData = async () => {
+        var data = await getNewUserCountByMonth();
+        data = convertToChartData(data);
+        console.log(data);
+        setData(data);
+      }
+      fetchData();
+    }, []);
 
     return(
       <Card className="shadow-lg">
@@ -108,7 +135,7 @@ import { PieSectorDataItem } from "recharts/types/polar/Pie"
         <ChartContainer config={chartConfigMain}>
           <BarChart
             accessibilityLayer
-            data={chartDataMain}
+            data={data}
             layout="vertical"
             margin={{
               right: 16,
@@ -155,10 +182,10 @@ import { PieSectorDataItem } from "recharts/types/polar/Pie"
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        Aug - December 2024
+          {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
         </div>
         <div className="leading-none text-muted-foreground">
-        January - June 2024
         </div>
       </CardFooter>
     </Card>

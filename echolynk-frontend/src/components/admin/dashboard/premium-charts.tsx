@@ -32,12 +32,12 @@ import {
   import { ChartPopup } from "./popup-charts"
 
   const chartDataMain = [
-    { month: "January", subscriptions: 20, removals: -5 },
-    { month: "February", subscriptions: 12, removals: -3 },
-    { month: "March", subscriptions: 25, removals: -7 },
-    { month: "April", subscriptions: 7, removals: -2 },
-    { month: "May", subscriptions: 22, removals: -5 },
-    { month: "June", subscriptions: 20, removals: -4 },
+    { month: "January", subscriptions: 20},
+    { month: "February", subscriptions: 12 },
+    { month: "March", subscriptions: 25 },
+    { month: "April", subscriptions: 7 },
+    { month: "May", subscriptions: 22 },
+    { month: "June", subscriptions: 20 },
   ];
 
   const chartData2 = [{ month: "january", desktop: 1260, mobile: 570 }]
@@ -46,11 +46,7 @@ const chartConfigMain = {
   subscriptions: {
     label: "Subscriptions",
     color: "hsl(var(--chart-1))",
-  },
-  removals: {
-    label: "Removals",
-    color: "hsl(var(--chart-2))",
-  },
+  }
 } satisfies ChartConfig
 
 const chartConfig2 = {
@@ -93,19 +89,6 @@ export function PremiumMain(){
                   key={item.month}
                   fill={
                     item.subscriptions > 0
-                      ? "hsl(var(--chart-2))"
-                      : "hsl(var(--chart-1))"
-                  }
-                />
-              ))}
-            </Bar>
-            <Bar dataKey="removals">
-              <LabelList position="top" dataKey="month" fillOpacity={1} />
-              {chartDataMain.map((item) => (
-                <Cell
-                  key={item.month}
-                  fill={
-                    item.removals > 0
                       ? "hsl(var(--chart-2))"
                       : "hsl(var(--chart-1))"
                   }

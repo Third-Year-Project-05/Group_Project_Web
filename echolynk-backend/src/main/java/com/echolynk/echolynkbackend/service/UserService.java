@@ -22,12 +22,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -257,5 +259,17 @@ public class UserService implements UserDetailsService {
     public Long getUserCount() {
         return userRepository.getUserCount();
     }
+
+    public Long getNewUsers() {
+        List<UserDto> users = userRepository.findByDateBetween("new", "today");
+        System.out.println(users);
+        return (long) users.size();
+    }
+
+    // get users count by month
+    public Map<String, Long> getUsersCountByMonth(){
+        return userRepository.getUsersCountByMonth();
+    }
+
 
 }
