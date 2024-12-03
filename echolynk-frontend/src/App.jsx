@@ -100,32 +100,33 @@ const AdminLayout = ({ children }) => {
     );
 };
 
-const LoginLayout = ({ children, needFooter=true }) => {
+const LoginLayout = ({ children, needFooter=true, isLogin=true }) => {
     const [isPremium, setIsPremium] = useState(false);
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user);
-        const premiumStatus = user.isPremium;
-        console.log(isPremium);
-        setIsPremium(premiumStatus);
-
-        const updatePremiumStatus = () => {
+        if(isLogin){
             const user = JSON.parse(localStorage.getItem('user'));
-            if(user){
-                setIsPremium(user.isPremium);
+            console.log(user);
+            const premiumStatus = user.isPremium;
+            console.log(isPremium);
+            setIsPremium(premiumStatus);
+
+            const updatePremiumStatus = () => {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if(user){
+                    setIsPremium(user.isPremium);
+                }
             }
-        }
 
-        const handleStorageChange = (event) => {
-            if (event.key === 'user') {
-                updatePremiumStatus();
+            const handleStorageChange = (event) => {
+                if (event.key === 'user') {
+                    updatePremiumStatus();
+                }
             }
+
+            window.addEventListener('storage', handleStorageChange);
+
         }
-
-        window.addEventListener('storage', handleStorageChange);
-
-        
 
     }, []);
 
@@ -188,7 +189,7 @@ function App() {
                         <Route path="/user-home" element={<PrivateUser element={<LoginLayout><UserHome /></LoginLayout>} />} />
                         <Route path="/user-blog" element={<PrivateUser element={<LoginLayout><UserBlog /></LoginLayout>} />} />
                         <Route path="/user-game" element={<PrivateUser element={<LoginLayout><Game /></LoginLayout>} />} />
-                        <Route path="/user-video-chat" element={<LoginLayout needFooter={false} ><VideoChat /></LoginLayout>} />
+                        <Route path="/user-video-chat" element={<LoginLayout needFooter={false} isLogin={false}><VideoChat /></LoginLayout>} />
                         <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
                         <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
                         <Route path='/game/level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
