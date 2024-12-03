@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 import CreateRoom from "./createRoom";
 import { getAllUsers } from "../../../services/userService";
+import axios from "axios";
+import { v4 as uuid } from "uuid";
+
 
 const VideoChat = () => {
   const [roomID, setRoomID] = useState("");
@@ -30,14 +33,32 @@ const VideoChat = () => {
     }
   };
 
-  const handleSendInvitation = () => {
+    const handleSendInvitation = async () => {
     if (selectedUser) {
-      alert(`Invitation sent to ${selectedUser} for room ID: ${roomID}`);
-      setIsModalOpen(false);
+      try {
+        console.log(selectedUser.email);
+        const roomId = uuid();
+        console.log(roomId);
+        const response = await axios.post('http://localhost:8080/email/send-invitation', 
+          { email: selectedUser.email, roomId: roomId }, 
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        console.log(response);
+        navigate(`room/${roomId}`);
+  
+      } catch (error) {
+        console.error('Error sending invitation:', error);
+        alert('An error occurred while sending the invitation.');
+      }
     } else {
-      // alert("Please select a user.");
+      alert("Please select a user to send the invitation.");
     }
   };
+  
 
   return (
     <div className="flex flex-col h-screen text-gray-900 bg-white md:flex-row dark:bg-gray-900 dark:text-white">
