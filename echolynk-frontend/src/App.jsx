@@ -106,9 +106,9 @@ const LoginLayout = ({ children, needFooter=true, isLogin=true }) => {
     useEffect(() => {
         if(isLogin){
             const user = JSON.parse(localStorage.getItem('user'));
-            console.log(user);
+            // console.log(user);
             const premiumStatus = user.isPremium;
-            console.log(isPremium);
+            // console.log(isPremium);
             setIsPremium(premiumStatus);
 
             const updatePremiumStatus = () => {
@@ -152,9 +152,9 @@ const VerbalLayout = ({ children }) => {
 const UserLayout = ({ children }) => {
     const { theme } = useTheme();
 
-    useEffect(() => {
-        console.log("sidebar theme", theme);
-    }, [theme]);
+    // useEffect(() => {
+    //     // console.log("sidebar theme", theme);
+    // }, [theme]);
 
     return (
         <div className="flex min-h-screen">
@@ -174,7 +174,6 @@ function App() {
                 <BrowserRouter>
                     <AuthProvider>
                     <Routes>
-
                         {/* Main content */}
                         <Route path="/" element={<Layout><Home /></Layout>} />
                         <Route path="/about" element={<Layout><About /></Layout>} />

@@ -12,6 +12,8 @@ import {
 } from "react-icons/fa";
 import io from "socket.io-client";
 import Cookies from "js-cookie";
+import { Holistic } from "@mediapipe/holistic";
+import { Camera } from "@mediapipe/camera_utils";
 
 import logo from "../../../assets/echolynk.png";
 import LoadingPopup from "../../../components/LoadingPopup";
@@ -65,30 +67,6 @@ const Room = () => {
   );
   const [isToggleDisabled, setIsToggleDisabled] = useState(false);
   const [predict, setPredict] = useState("");
-
-  const checkNeedDetection = () => {
-    if (isToggleDisabled) {
-      return;
-    }
-    const newDetectionState = !isNeedDetection;
-    setIsNeedDetection(newDetectionState);
-    Cookies.set("isNeedDetection", newDetectionState.toString(), {
-      expires: 1,
-    });
-    setIsLoading(true);
-    setIsToggleDisabled(true);
-    setTimeout(() => {
-      setIsToggleDisabled(false);
-      setIsLoading(false);
-    }, 3500);
-
-    if (!newDetectionState && holisticRef.current) {
-      holisticRef.current.close();
-      holisticRef.current = null;
-    } else if (newDetectionState) {
-      initializeHolistic();
-    }
-  };
 
   const handleSendMessage = (message) => {
     if (
@@ -298,17 +276,223 @@ const Room = () => {
     setMessages([]);
   };
 
+  // holistic all parts
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const keypointsSequenceRef = useRef([]);
+  const holisticRef = useRef(null); // Store holistic instance
+  const cameraRef = useRef(null); // Store camera instance
+
+  const backendURL = "http://127.0.0.1:9100/predict";
+
+  const sendToBackend = useCallback(async (keypointsSequence) => {
+    try {
+      const response = await fetch(backendURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ keypoint: keypointsSequence }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPredict(data.prediction);
+        handleSendMessage(data.prediction);
+        // console.log(`predictions: ${data.prediction}`);
+      } else {
+        console.error("Error in backend response", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error connecting to backend", error);
+    }
+  }, []);
+
+  const flattenLandmarks = useCallback((landmarks, expectedLength) => {
+    if (landmarks) {
+      const flattened = landmarks.flatMap((point) => [
+        point.x,
+        point.y,
+        point.z,
+      ]);
+
+      if (flattened.length > expectedLength) {
+        return flattened.slice(0, expectedLength);
+      }
+      return [
+        ...flattened,
+        ...Array(expectedLength - flattened.length).fill(0),
+      ];
+    }
+    return Array(expectedLength).fill(0);
+  }, []);
+
+  const extractKeypoints = useCallback(
+    (results) => {
+      const pose = results.poseLandmarks
+        ? results.poseLandmarks.flatMap((point) => [
+            point.x,
+            point.y,
+            point.z,
+            point.visibility,
+          ])
+        : Array(33 * 4).fill(0);
+
+      const face = flattenLandmarks(results.faceLandmarks, 468 * 3);
+      const leftHand = flattenLandmarks(results.leftHandLandmarks, 21 * 3);
+      const rightHand = flattenLandmarks(results.rightHandLandmarks, 21 * 3);
+
+      return [...pose, ...face, ...leftHand, ...rightHand];
+    },
+    [flattenLandmarks]
+  );
+
+  const drawCameraFeed = () => {
+    const canvasCtx = canvasRef.current.getContext("2d");
+    canvasCtx.clearRect(
+      0,
+      0,
+      canvasRef.current.width,
+      canvasRef.current.height
+    );
+
+    canvasCtx.drawImage(
+      videoRef.current,
+      0,
+      0,
+      canvasRef.current.width,
+      canvasRef.current.height
+    );
+  };
+
+  const initializeHolistic = useCallback(() => {
+    try {
+      setIsLoading(true);
+      const holisticInstance = new Holistic({
+        locateFile: (file) =>
+          `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
+      });
+
+      holisticInstance.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        refineFaceLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+
+      holisticInstance.onResults((results) => {
+        if (isNeedDetection) {
+          if (
+            (!results.leftHandLandmarks ||
+              results.leftHandLandmarks.length === 0) &&
+            (!results.rightHandLandmarks ||
+              results.rightHandLandmarks.length === 0)
+          ) {
+            console.log("No hand detections");
+            drawCameraFeed();
+            return;
+          }
+
+          const keypoints = extractKeypoints(results);
+          keypointsSequenceRef.current.push(keypoints);
+
+          if (keypointsSequenceRef.current.length > 30) {
+            keypointsSequenceRef.current =
+              keypointsSequenceRef.current.slice(-30);
+          }
+
+          if (keypointsSequenceRef.current.length === 30) {
+            setTimeout(() => sendToBackend(keypointsSequenceRef.current), 16.7);
+          }
+        }
+
+        drawCameraFeed();
+      });
+
+      holisticRef.current = holisticInstance;
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isNeedDetection, extractKeypoints, sendToBackend]);
+
+  useEffect(() => {
+    try {
+      initializeHolistic();
+
+      if (Camera) {
+        const camera = new Camera(videoRef.current, {
+          onFrame: async () => {
+            if (isNeedDetection && holisticRef.current) {
+              await holisticRef.current.send({ image: videoRef.current });
+            } else {
+              drawCameraFeed();
+            }
+          },
+          width: 1280,
+          height: 720,
+        });
+
+        camera.start();
+        cameraRef.current = camera;
+      } else {
+        console.error("Camera class is unavailable.");
+      }
+
+      return () => {
+        if (cameraRef.current) {
+          cameraRef.current.stop();
+          cameraRef.current = null;
+        }
+        if (holisticRef.current) {
+          holisticRef.current.close();
+          holisticRef.current = null;
+        }
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }, [isNeedDetection, initializeHolistic]);
+
+  const checkNeedDetection = () => {
+    if (isToggleDisabled) {
+      return;
+    }
+    const newDetectionState = !isNeedDetection;
+    setIsNeedDetection(newDetectionState);
+    Cookies.set("isNeedDetection", newDetectionState.toString(), {
+      expires: 1,
+    });
+    setIsLoading(true);
+    setIsToggleDisabled(true);
+    setTimeout(() => {
+      setIsToggleDisabled(false);
+      setIsLoading(false);
+    }, 3500);
+
+    if (!newDetectionState && holisticRef.current) {
+      holisticRef.current.close();
+      holisticRef.current = null;
+    } else if (newDetectionState) {
+      initializeHolistic();
+    }
+  };
+
   return (
     <>
       {isLoading && <LoadingPopup opacity="" />}
 
       {deafUser && (
         <HolisticComponent
-          isNeedDetection={isNeedDetection}
-          isToggleDisabled={isToggleDisabled}
-          setPredict={setPredict}
-          setIsLoading={setIsLoading}
-          handleSendMessage={handleSendMessage}
+          // isNeedDetection={isNeedDetection}
+          // isToggleDisabled={isToggleDisabled}
+          // setPredict={setPredict}
+          // setIsLoading={setIsLoading}
+          // handleSendMessage={handleSendMessage}
+          videoRef={videoRef}
+          canvasRef={canvasRef}
         />
       )}
       <div className="flex flex-col items-center">
