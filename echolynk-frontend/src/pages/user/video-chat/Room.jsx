@@ -413,8 +413,7 @@ const Room = () => {
 
       holisticRef.current = holisticInstance;
     } catch (error) {
-      
-    } finally{
+    } finally {
       setIsLoading(false);
     }
   }, [isNeedDetection, extractKeypoints, sendToBackend]);
@@ -423,20 +422,24 @@ const Room = () => {
     try {
       initializeHolistic();
 
-      const camera = new Camera(videoRef.current, {
-        onFrame: async () => {
-          if (isNeedDetection && holisticRef.current) {
-            await holisticRef.current.send({ image: videoRef.current });
-          } else {
-            drawCameraFeed();
-          }
-        },
-        width: 1280,
-        height: 720,
-      });
+      if (Camera) {
+        const camera = new Camera(videoRef.current, {
+          onFrame: async () => {
+            if (isNeedDetection && holisticRef.current) {
+              await holisticRef.current.send({ image: videoRef.current });
+            } else {
+              drawCameraFeed();
+            }
+          },
+          width: 1280,
+          height: 720,
+        });
 
-      camera.start();
-      cameraRef.current = camera;
+        camera.start();
+        cameraRef.current = camera;
+      } else {
+        console.error("Camera class is unavailable.");
+      }
 
       return () => {
         if (cameraRef.current) {
@@ -476,7 +479,7 @@ const Room = () => {
       initializeHolistic();
     }
   };
-  
+
   return (
     <>
       {isLoading && <LoadingPopup opacity="" />}
