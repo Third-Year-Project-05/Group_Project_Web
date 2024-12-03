@@ -14,6 +14,7 @@ import { Label } from "../../../components/ui/label"
 import { addBlog } from "../../../api"
 import { useEffect, useState } from "react"
 import { useToast } from "../../../components/ui/use-toast"
+import Form from "../../../components/blog/addBlog-form"
 
 const AddBlog = () => {
     const { toast } = useToast();
@@ -90,7 +91,7 @@ const AddBlog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Blog</Button>
+        <Button variant="outline" className="w-5/6 self-center">Add Blog</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
@@ -99,31 +100,7 @@ const AddBlog = () => {
             Add your blog post here. Click submit when you are done
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            {/* <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="image" className="text-right">
-                Image
-              </Label>
-              <Input type="file" id="image" name="image" className="col-span-3" onChange={handleFileChange}/>
-            </div> */}
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="title" className="text-right">
-                Title
-              </Label>
-              <Input id="title" name="title" className="col-span-3" required onChange={handleInputChange} />
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              <Label htmlFor="content" className="text-right">
-                Content
-              </Label>
-              <Textarea id="content" name="content" className="col-span-3" rows={10} required onChange={handleInputChange}/>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit">Submit</Button>
-          </DialogFooter>
-        </form>
+        <Form handleSubmit={handleSubmit} />
       </DialogContent>
     </Dialog>
   )
