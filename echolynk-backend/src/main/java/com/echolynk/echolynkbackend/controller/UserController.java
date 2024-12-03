@@ -3,13 +3,12 @@ package com.echolynk.echolynkbackend.controller;
 import com.echolynk.echolynkbackend.dto.UserDto;
 import com.echolynk.echolynkbackend.service.UserService;
 
-import com.google.cloud.Timestamp;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
+import java.sql.Array;
 import java.util.List;
 import java.util.Map;
 
@@ -85,5 +84,17 @@ public class UserController {
 	public ResponseEntity<Long> getUserCount() {
 		Long count = userService.getUserCount();
 		return ResponseEntity.ok(count);
+	}
+
+	@GetMapping("/newUsers")
+	public ResponseEntity<Long> getNewUsers() throws FirebaseAuthException {
+		Long usersCount = userService.getNewUsers();
+		return ResponseEntity.ok(usersCount);
+	}
+
+	@GetMapping("/newUserCountByMonth")
+	public ResponseEntity<Map<String, Long>> getNewUsersCountByMonth(){
+		Map<String, Long> userCount = userService.getUsersCountByMonth();
+		return ResponseEntity.ok(userCount);
 	}
 }

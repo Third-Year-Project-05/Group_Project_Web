@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Helmet} from "react-helmet";
 import { PremiumMain } from '../../../components/admin/dashboard/premium-charts';
 import { RevenueMain } from '../../../components/admin/dashboard/revenue-charts';
@@ -13,6 +13,7 @@ import {
   } from "../../../components/ui/card"
   import { AccessibilityIcon, UserCheck } from 'lucide-react';
 import { FaAccessibleIcon, FaMoneyCheck, FaRev, FaUserClock, FaUserPlus } from 'react-icons/fa';
+import { getUserCount, getNewUserCount, getRevenue } from '../../../services/userService';
 
   const data = [
     {name: 'Jan', orders: 240},
@@ -24,7 +25,22 @@ import { FaAccessibleIcon, FaMoneyCheck, FaRev, FaUserClock, FaUserPlus } from '
 
 
 const AdminDashboard = () => {
-
+    const [userCount, setUserCount] = useState(0);
+    const [newUsers, setNewUsers] = useState(0);
+    const [revenue, setRevenue] = useState(0);
+    
+    useEffect(() => {
+        // Fetch data
+        const fetchData = async () => {
+            const count = await getUserCount();
+            setUserCount(count);
+            const countNew = await getNewUserCount();
+            setNewUsers(countNew);
+            const revenue = await getRevenue();
+            setRevenue(revenue);
+        };
+        fetchData();
+    }, []);
 
 
     return (
@@ -40,7 +56,7 @@ const AdminDashboard = () => {
                     <div className='flex flex-row justify-between items-start w-full'>
                         <CardHeader className='gap-5'>
                             <CardDescription style={{fontSize: '18px'}}>NO. OF USERS</CardDescription>
-                            <CardTitle>1000</CardTitle>
+                            <CardTitle>{userCount}</CardTitle>
                         </CardHeader>
 
                         <FaUserClock className="text-4xl text-blue-500 mt-7 mr-4" />
@@ -56,7 +72,7 @@ const AdminDashboard = () => {
                             
                         <CardHeader className='gap-5'>
                             <CardDescription style={{fontSize: '18px'}}>NEW USERS</CardDescription>
-                            <CardTitle>100</CardTitle>
+                            <CardTitle>{newUsers}</CardTitle>
                         </CardHeader>
 
                         <FaUserPlus className="text-4xl text-yellow-500 mt-7 mr-4" />
@@ -69,7 +85,7 @@ const AdminDashboard = () => {
 
                         <CardHeader className='gap-5'>
                             <CardDescription style={{fontSize: '18px'}}>REVENUE</CardDescription>
-                            <CardTitle>$5000</CardTitle>
+                            <CardTitle>Rs. {revenue}</CardTitle>
                         </CardHeader>
 
                         <FaMoneyCheck className="text-4xl text-green-500 mt-7 mr-4" />

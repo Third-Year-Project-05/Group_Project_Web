@@ -15,12 +15,9 @@ type TableAllProps = {
 export function TableAll({ filter, onRowClick, onFilterChange }: TableAllProps) {
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState<User[]>([]);
+    const [unfilteredUsers, setUnfilteredUsers] = useState<User[]>([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    const handleFilterChange = (type: string) => {
-        setDropdownOpen(false);
-        onFilterChange(type);
-    };
 
     useEffect(() => {
       const fetchData = async () => {
@@ -37,12 +34,13 @@ export function TableAll({ filter, onRowClick, onFilterChange }: TableAllProps) 
                     ...user,
                     created_on: new Date(milliseconds).toLocaleDateString()
                 };
-
+            });
             console.log(formattedResponse);
 
-            });
+
               
               setUsers(formattedResponse);
+                setUnfilteredUsers(formattedResponse);
               // console.log('Users:', formattedResponse);
           } catch (error) {
               console.error('Error fetching data:', error);
@@ -57,11 +55,33 @@ export function TableAll({ filter, onRowClick, onFilterChange }: TableAllProps) 
     }
 
 
+    const filterAll = (role: string) => () => {
+        if (role === "all") {
+          setUsers(unfilteredUsers);
+        //   console.log('All:', unfilteredUsers);
+          
+        } else if(role === "free") {
+          setUsers(unfilteredUsers.filter(user => user.isPremium === false));
+          
+        } else{
+            setUsers(unfilteredUsers.filter(user => user.isPremium === true));
+        }
+      };
     
 
     return (
         <div className="container mx-auto py-5">
-
+            <div className="w-full flex flex-row gap-3">
+                <div onClick={filterAll("all")} className="p-3 flex-1 bg-slate-200 shadow-sm hover:bg-slate-400 transition-all text-center rounded-lg">
+                    <p>All</p>
+                </div>
+                <div onClick={filterAll("free")} className="p-3 flex-1 bg-slate-200 shadow-sm hover:bg-slate-400 transition-all text-center rounded-lg">
+                    <p>Free</p>
+                </div>
+                <div onClick={filterAll("premium")} className="p-3 flex-1 bg-slate-200 shadow-sm hover:bg-slate-400 transition-all text-center rounded-lg">
+                    <p>Premium</p>
+                </div>
+            </div>
 
             <DataTable columns={columnsAll} data={users} onRowClick={onRowClick} />
 

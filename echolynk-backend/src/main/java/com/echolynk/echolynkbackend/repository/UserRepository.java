@@ -11,10 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -204,12 +204,25 @@ public class UserRepository {
     public List<UserDto> findByDateBetween(String from, String to) {
         CollectionReference usersCollection = firestore.collection("users");
 
-        LocalDate fromDate = LocalDate.parse(from);
-        LocalDate toDate = LocalDate.parse(to);
+        LocalDate fromDate;
+        LocalDate toDate;
 
+        if(from.equals("new")){
+            fromDate = LocalDate.now().withDayOfMonth(1);
+        }else{
+            fromDate = LocalDate.parse(from);
+        }
+
+        if( to.equals("today")){
+            toDate = LocalDate.now();
+        }else{
+            toDate = LocalDate.parse(to);
+        }
+        System.out.println(toDate);
+        System.out.println(fromDate);
 
         Timestamp fromTimestamp = Timestamp.ofTimeSecondsAndNanos(fromDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0);
-        Timestamp toTimestamp = Timestamp.ofTimeSecondsAndNanos(toDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), 0);
+        Timestamp toTimestamp = Timestamp.ofTimeSecondsAndNanos(toDate.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toEpochSecond(), 0);
 
         try {
             // Apply the date range filter in the Firestore query
@@ -256,4 +269,46 @@ public class UserRepository {
         }
     }
 
+    // get new user count monthly
+    public Map<String, Long> getUsersCountByMonth() {
+        CollectionReference usersCollection = firestore.collection("users");
+
+        try {
+            // Fetch all user documents from Firestore
+            ApiFuture<QuerySnapshot> query = usersCollection.get();
+            QuerySnapshot querySnapshot = query.get();
+
+            // Map to store the count of users for each month
+            Map<String, Long> usersCountByMonth = new HashMap<>();
+
+            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                // Iterate through each user document
+                for (QueryDocumentSnapshot document : querySnapshot.getDocuments()) {
+                    Timestamp timestamp = document.getTimestamp("timestamp");
+                    if (timestamp != null) {
+                        // Convert Firestore Timestamp to LocalDate
+                        LocalDate registrationDate = timestamp.toDate()
+                                .toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate();
+
+                        // Get the month as a string (e.g., "January 2024")
+                        String month = registrationDate.format(DateTimeFormatter.ofPattern("MMMM yyyy"));
+
+                        // Increment the count for the corresponding month
+                        usersCountByMonth.put(month, usersCountByMonth.getOrDefault(month, 0L) + 1);
+                    }
+                }
+            }
+
+            return usersCountByMonth;
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Error retrieving users from Firestore", e);
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Error retrieving users from Firestore", e);
+        }
+    }
+
+
 }
+

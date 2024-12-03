@@ -25,17 +25,18 @@ import {
     SelectValue,
   } from "../../ui/select"
   import { Button } from "../../ui/button"
-  import { useState } from "react"
+  import { useEffect, useState } from "react"
   import { ChartPopup } from "./popup-charts"
+import { getMonthlyRevenue } from "../../../services/paymentService"
 
-const chartDataMain = [
-    { month: "January", revenue: 266 },
-    { month: "February", revenue: 505 },
-    { month: "March", revenue: 357 },
-    { month: "April", revenue: 263 },
-    { month: "May", revenue: 339 },
-    { month: "June", revenue: 354 },
-  ]
+// const chartDataMain = [
+//     { month: "January", revenue: 266 },
+//     { month: "February", revenue: 505 },
+//     { month: "March", revenue: 357 },
+//     { month: "April", revenue: 263 },
+//     { month: "May", revenue: 339 },
+//     { month: "June", revenue: 354 },
+//   ]
   
   const chartData2 = [
     { date: "2024-04-01", revenue: 222 },
@@ -152,8 +153,29 @@ const chartDataMain = [
     }
   } satisfies ChartConfig
 
+  
   export function RevenueMain() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [data, setData] = useState([]);
+
+        // Conversion function
+    const convertToChartData = (data: { [key: string]: number }) => {
+      return Object.entries(data).map(([month, revenue]) => ({
+        month: month.split('-')[1], // Extract only the month name
+        revenue,
+      }));
+    };
+
+    useEffect(() => {
+      const fetchData = async () => {
+        var data = await getMonthlyRevenue();
+        data = convertToChartData(data);
+        console.log(data);
+        setData(data);
+      }
+      fetchData();
+    }, []);
+
     return (
       <Card className='shadow-lg'>
         {/* <ChartPopup  isOpen={true} closePopup={{}} component={<Revenue2 />}/> */}
@@ -175,7 +197,7 @@ const chartDataMain = [
           <ChartContainer config={chartConfigMain}>
             <AreaChart
               accessibilityLayer
-              data={chartDataMain}
+              data={data}
               margin={{
                 left: 12,
                 right: 12,
@@ -209,10 +231,10 @@ const chartDataMain = [
           <div className="flex w-full items-start gap-2 text-sm">
             <div className="grid gap-2">
               <div className="flex items-center gap-2 font-medium leading-none">
-                Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                January - June 2024
+                {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
               </div>
               <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                January - June 2024
               </div>
             </div>
           </div>

@@ -16,6 +16,17 @@ export const getAllUsers = async () => {
     }
 };
 
+export const getRevenue = async () => {
+    try {
+        const users = await getAllUsers();
+        const count = users.filter(user => user.isPremium == true).length;
+        return count * 500;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
+}
+
 export const getUser = async (id) => {
     try {
         const response = await api.get(`/user/${id}`);
@@ -74,12 +85,31 @@ export const deleteUserBlog = async (id, blogId) => {
 
 export const getUserCount = async () => {
     try {
-        const response = await axios.get(`/userCount`);
+        const response = await api.get('/userCount');
         return response.data;
     } catch (error) {
         throw new Error(`Error getting user count: ${error.message}`);
     }
 };
+
+export const getNewUserCount = async () => {
+    try {
+        const response = await api.get('/newUsers');
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error getting new users: ${error.message}`);
+    }
+}
+
+export const getNewUserCountByMonth = async () => {
+    try {
+        const response = await api.get('/newUserCountByMonth');
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error getting new users by month: ${error.message}`);
+    }
+}
 
 export const upgradeToPremium = async ( userId ) => {
     try {
