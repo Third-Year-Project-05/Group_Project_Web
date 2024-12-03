@@ -4,17 +4,9 @@ import image from '../../../assets/home.png';
 
 
 import React, { useState, useEffect } from 'react';
+import { getAllPayments } from "../../../services/paymentService";
 
 
-
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-    return [
-        { id: "1", amount: 100, status: "pending", email: "ex1@gmail.com" },
-        { id: "2", amount: 200, status: "processing", email: "ex2@gmail.com" },
-        { id: "3", amount: 300, status: "success", email: "ex3@gmail.com" },
-    ];
-}
 
 export function TableNew() {
   const [dataNew, setDataNew] = useState<Payment[]>([]);
@@ -33,8 +25,24 @@ export function TableNew() {
 
   useEffect(() => {
     async function fetchData() {
-      const result = await getData();
-      setDataNew(result);
+      const response = await getAllPayments();
+      console.log(response);
+      var formattedResponse = response
+      .filter((payment: { userId: string; }) => payment.userId != 'IOpGU53IqDRRqsX3zs6qLJLJYt02' )
+      .map((payment: { paymentDate: { seconds: any; nanos: any; }; userId: String; }, index: number) => {
+        const { seconds, nanos } = payment.paymentDate;
+        const milliseconds = seconds * 1000 + nanos / 1000000;
+        const { userId, ...rest } = payment;
+        return {
+            id: index + 1,
+            userId: 'USR-' + userId.slice(-4),
+            ...rest,
+            created_on: new Date(milliseconds).toLocaleDateString()
+        };
+      });
+     
+      console.log('Blogs:', formattedResponse);
+      setDataNew(formattedResponse);
       setLoading(false);
     }
     fetchData();

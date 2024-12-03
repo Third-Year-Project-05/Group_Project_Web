@@ -32,12 +32,12 @@ import {
   import { ChartPopup } from "./popup-charts"
 
   const chartDataMain = [
-    { month: "January", subscriptions: 20},
-    { month: "February", subscriptions: 12 },
-    { month: "March", subscriptions: 25 },
-    { month: "April", subscriptions: 7 },
-    { month: "May", subscriptions: 22 },
-    { month: "June", subscriptions: 20 },
+    { month: "July", subscriptions: 2},
+    { month: "August", subscriptions: 1 },
+    { month: "September", subscriptions: 0 },
+    { month: "October", subscriptions: 0 },
+    { month: "November", subscriptions: 2 },
+    { month: "December", subscriptions: 6 },
   ];
 
   const chartData2 = [{ month: "january", desktop: 1260, mobile: 570 }]
@@ -100,10 +100,10 @@ export function PremiumMain(){
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        Aug - December 2024
+          {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
         </div>
         <div className="leading-none text-muted-foreground">
-        January - June 2024
         </div>
       </CardFooter>
     </Card>
