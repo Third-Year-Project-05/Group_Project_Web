@@ -3,18 +3,19 @@ import { Holistic } from "@mediapipe/holistic";
 import { Camera } from "@mediapipe/camera_utils";
 import Cookies from "js-cookie";
 
-const HolisticComponent = () => {
+const HolisticComponent = ({
+  isNeedDetection,
+  isToggleDisabled,
+  setPredict,
+  setIsLoading,
+  handleSendMessage,
+}) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const keypointsSequenceRef = useRef([]);
   const holisticRef = useRef(null); // Store holistic instance
   const cameraRef = useRef(null); // Store camera instance
-  const [isNeedDetection, setIsNeedDetection] = useState(
-    Cookies.get("isNeedDetection") === "true"
-  );
-  const [isToggleDisabled, setIsToggleDisabled] = useState(false);
-
-  const [predict, setPredict] = useState("");
+  
   const backendURL = "http://127.0.0.1:9100/predict";
 
   const sendToBackend = useCallback(async (keypointsSequence) => {
@@ -30,7 +31,8 @@ const HolisticComponent = () => {
       if (response.ok) {
         const data = await response.json();
         setPredict(data.prediction);
-        console.log("sddsfdfs");
+        handleSendMessage(data.prediction);
+        // console.log(`predictions: ${data.prediction}`);
       } else {
         console.error("Error in backend response", response.statusText);
       }
@@ -97,50 +99,57 @@ const HolisticComponent = () => {
   };
 
   const initializeHolistic = useCallback(() => {
-    const holisticInstance = new Holistic({
-      locateFile: (file) =>
-        `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
-    });
+    try {
+      setIsLoading(true);
+      const holisticInstance = new Holistic({
+        locateFile: (file) =>
+          `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
+      });
 
-    holisticInstance.setOptions({
-      modelComplexity: 1,
-      smoothLandmarks: true,
-      enableSegmentation: false,
-      refineFaceLandmarks: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-    });
+      holisticInstance.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        refineFaceLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
 
-    holisticInstance.onResults((results) => {
-      if (isNeedDetection) {
-        if (
-          (!results.leftHandLandmarks ||
-            results.leftHandLandmarks.length === 0) &&
-          (!results.rightHandLandmarks ||
-            results.rightHandLandmarks.length === 0)
-        ) {
-          console.log("dsfdsfdsfsdf");
-          drawCameraFeed();
-          return;
+      holisticInstance.onResults((results) => {
+        if (isNeedDetection) {
+          if (
+            (!results.leftHandLandmarks ||
+              results.leftHandLandmarks.length === 0) &&
+            (!results.rightHandLandmarks ||
+              results.rightHandLandmarks.length === 0)
+          ) {
+            console.log("No hand detections");
+            drawCameraFeed();
+            return;
+          }
+
+          const keypoints = extractKeypoints(results);
+          keypointsSequenceRef.current.push(keypoints);
+
+          if (keypointsSequenceRef.current.length > 30) {
+            keypointsSequenceRef.current =
+              keypointsSequenceRef.current.slice(-30);
+          }
+
+          if (keypointsSequenceRef.current.length === 30) {
+            setTimeout(() => sendToBackend(keypointsSequenceRef.current), 16.7);
+          }
         }
 
-        const keypoints = extractKeypoints(results);
-        keypointsSequenceRef.current.push(keypoints);
+        drawCameraFeed();
+      });
 
-        if (keypointsSequenceRef.current.length > 30) {
-          keypointsSequenceRef.current =
-            keypointsSequenceRef.current.slice(-30);
-        }
-
-        if (keypointsSequenceRef.current.length === 30) {
-          setTimeout(() => sendToBackend(keypointsSequenceRef.current), 16.7);
-        }
-      }
-
-      drawCameraFeed();
-    });
-
-    holisticRef.current = holisticInstance;
+      holisticRef.current = holisticInstance;
+    } catch (error) {
+      
+    } finally{
+      setIsLoading(false);
+    }
   }, [isNeedDetection, extractKeypoints, sendToBackend]);
 
   useEffect(() => {
@@ -218,16 +227,6 @@ const HolisticComponent = () => {
           display: "none",
         }}
       ></canvas>
-      <div style={{ marginTop: "10px", textAlign: "center" }}>
-        <button
-          onClick={checkNeedDetection}
-          disabled={isToggleDisabled}
-          className="px-4 py-2 text-white bg-blue-500 rounded"
-        >
-          {isNeedDetection ? "Disable Detection" : "Enable Detection"}
-        </button>
-        <p>{predict}</p>
-      </div>
     </div>
   );
 };

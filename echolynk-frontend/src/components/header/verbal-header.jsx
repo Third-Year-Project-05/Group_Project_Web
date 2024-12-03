@@ -15,10 +15,10 @@ const Navbar = () => {
     const { logout } = useContext(AuthContext);
 
     return (
-        <nav className="bg-echolynk px-9 py-0">
-            <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6">
+        <nav className="py-0 bg-echolynk px-9">
+            <div className="container flex flex-col items-center justify-between px-6 mx-auto md:flex-row">
 
-                <div className="flex justify-between items-center w-full md:w-auto">
+                <div className="flex items-center justify-between w-full md:w-auto">
                     <div>
                         <img src={logo} alt="Logo" className="h-12 md:h-20" />
                     </div>
@@ -28,7 +28,7 @@ const Navbar = () => {
                             className="block text-gray-800 hover:text-gray-600 focus:text-gray-600 focus:outline-none"
                             onClick={() => setIsOpen(!isOpen)}
                         >
-                            <MenuIcon className="h-6 w-6 fill-current" />
+                            <MenuIcon className="w-6 h-6 fill-current" />
                         </button>
                     </div>
                 </div>
@@ -44,28 +44,28 @@ const Navbar = () => {
                 <div className="flex items-center space-x-4">
 
                     <Link to="/verbal-notifications" className="relative bg-blue-900 p-1.5 rounded-full">
-                        <BellIcon className="h-5 w-5 text-white" />
+                        <BellIcon className="w-5 h-5 text-white" />
                     </Link>
 
                     <Link to="/verbal-messages" className="relative bg-blue-900 p-1.5 rounded-full">
-                        <ChatIcon className="h-5 w-5 text-white" />
+                        <ChatIcon className="w-5 h-5 text-white" />
                     </Link>
 
                     <Popover>
                         <PopoverTrigger asChild>
                             <button className="relative flex items-center space-x-2 focus:outline-none">
-                                <img src={userPhoto} alt="User" className="h-10 w-10 rounded-full" />
-                                <ChevronDownIcon className="h-4 w-4 text-black" />
+                                <img src={userPhoto} alt="User" className="w-10 h-10 rounded-full" />
+                                <ChevronDownIcon className="w-4 h-4 text-black" />
                             </button>
                         </PopoverTrigger>
-                        <PopoverContent className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                            <Link to="/education-plan" className="block px-4 py-2 text-blue-800 hover:bg-blue-100 flex items-center space-x-2">
+                        <PopoverContent className="absolute right-0 z-10 w-48 mt-2 bg-white border border-gray-200 rounded-md shadow-lg">
+                            <Link to="/education-plan" className="items-center block px-4 py-2 space-x-2 text-blue-800 hover:bg-blue-100">
                                 <span>Education Plan</span>
-                                <AcademicCapIcon className="h-5 w-5 text-blue-500" />
+                                <AcademicCapIcon className="w-5 h-5 text-blue-500" />
                             </Link>
                             <Link to="/edit-profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Edit Profile</Link>
                             <Link to="/change-password" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Change Password</Link>
-                            <button onClick={logout} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</button>
+                            <button onClick={logout} className="block w-full px-4 py-2 text-left text-gray-800 hover:bg-gray-100">Logout</button>
                         </PopoverContent>
                     </Popover>
 
