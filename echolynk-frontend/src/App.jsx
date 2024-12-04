@@ -37,6 +37,8 @@ import UserSidebar from './components/sidebar/user-sidebar';
 
 import Game from './pages/game/game.jsx';
 import EasyLevel from "./pages/game/easy-level.jsx";
+import MediumLevel from "./pages/game/medium-level.jsx";
+import HardLevel from "./pages/game/hard-level.jsx";
 import QuizPage from "./pages/game/quiz.jsx";
 
 import UserBlog from './pages/user/blog/blog';
@@ -191,8 +193,10 @@ function App() {
                         <Route path="/user-video-chat" element={<LoginLayout needFooter={false} isLogin={false}><VideoChat /></LoginLayout>} />
                         <Route path='/user-change-pw' element={<LoginLayout><ChangePassword/></LoginLayout>} />
                         <Route path='/user-profile' element={<LoginLayout><UserProfile /></LoginLayout>} />
-                        <Route path='/game/level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
-                        <Route path='/quiz/:level' element={<LoginLayout><QuizPage /></LoginLayout>} />
+                        <Route path='/game/easy-level' element={<LoginLayout><EasyLevel /></LoginLayout>} />
+                        <Route path="/game/medium-level" element={<LoginLayout><MediumLevel /></LoginLayout>} />
+                        <Route path="/game/hard-level" element={<LoginLayout><HardLevel /></LoginLayout>} />
+                        <Route path='/quiz/:gameId' element={<LoginLayout><QuizPage /></LoginLayout>} />
                         <Route path="/premium-upgrade" element={<PremiumUpgrade />} />
                         <Route path="/payment-success" element={<PaymentSuccess />} />
                         <Route path="/stripe-payment" element={<StripePayment />} />

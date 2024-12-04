@@ -27,6 +27,26 @@ export const getAllGames = async () => {
     }
 }
 
+export const getGameById = async (gameId) => {
+    try {
+        const response = await fetch(`/api/games/getGame/${gameId}`);
+        
+        // Check if the response is okay, else log the response text
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error('Error fetching game: ' + errorText);
+        }
+        
+        // Parse the JSON response if successful
+        const gameData = await response.json();
+        return gameData;
+    } catch (error) {
+        console.error('Error fetching game:', error);
+        throw error;
+    }
+};
+
+
 export const gameCount = async () => {
     try {
         const response = await api.get(`/getGameCount`);
@@ -37,3 +57,15 @@ export const gameCount = async () => {
         throw error;
     }
 }
+
+
+export const getQuestionsForGame = async (gameId) => {
+    try {
+        const response = await api.get(`/getquestions/${gameId}`);
+        console.log('Questions fetched:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching questions:', error);
+        throw error;
+    }
+};

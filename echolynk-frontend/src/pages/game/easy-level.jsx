@@ -1,70 +1,72 @@
-// src/pages/EasyLevelPage.js
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import levelImage from '../../assets/level-1.jpg'; // Use your own level image
+import { getAllGames } from '../../services/gameService'; // Adjust the path as needed
 
 const EasyLevelPage = () => {
     const navigate = useNavigate();
-    const [completedLevels, setCompletedLevels] = useState(3); // Example: levels 1, 2, 3 are completed
-    const [currentLevel, setCurrentLevel] = useState(4); // Example: current level is 4
+    const [games, setGames] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchGames = async () => {
+            try {
+                const allGames = await getAllGames();
+                const easyGames = allGames.filter(game => game.gameLevel === 'easy'); // Filter for easy level
+                setGames(easyGames);
+            } catch (err) {
+                console.error('Error fetching games:', err);
+                setError('Failed to load games. Please try again later.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchGames();
+    }, []);
 
     const handleBack = () => {
         navigate('/user-game');
     };
 
-    const handleLevelClick = (level) => {
-        if (level <= completedLevels + 1) {
-            // Simulate level completion
-            setTimeout(() => {
-                setCurrentLevel(level);
-                navigate(`/quiz/${level}`); // Navigate to QuizPage with the level parameter
-            }, 500);
-        }
+    const handlePlay = (gameId) => {
+        navigate(`/quiz/${gameId}`); // Correctly navigating to the quiz page with gameId
     };
 
     return (
-        <div className="min-h-screen bg-blue-900 relative overflow-hidden text-white px-4 py-8">
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-700 opacity-70"></div>
-
-            {/* Content Wrapper */}
-            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-8">
-                <h2 className="text-4xl font-bold mb-8 text-center">Easy Level</h2>
-                <p className="mb-8 text-lg text-center max-w-md">
-                    Welcome to the Easy Level! This level is designed to help you get started with basic questions.
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-8">
-                    {Array.from({ length: 10 }, (_, i) => i + 1).map(level => (
-                        <div key={level} className="relative">
-                            <button
-                                onClick={() => handleLevelClick(level)}
-                                disabled={level > completedLevels + 1}
-                                className={`relative rounded-lg shadow-lg overflow-hidden transition-transform w-56 h-56 md:w-64 md:h-64 ${
-                                    level < completedLevels
-                                        ? 'bg-green-600'
-                                        : level === currentLevel
-                                            ? 'bg-blue-600 hover:scale-105'
-                                            : 'bg-gray-400'
-                                }`}
+        <div className="min-h-screen bg-blue-900 text-white flex items-center justify-center px-4 py-8">
+            <div className="text-center">
+                <h2 className="text-5xl font-extrabold mb-8 text-yellow-400 neon-shadow">
+                    Easy Level Games
+                </h2>
+                {loading && <p className="text-lg text-gray-300">Loading games...</p>}
+                {error && <p className="text-red-500">{error}</p>}
+                {!loading && !error && games.length === 0 && (
+                    <p className="text-gray-300">No easy-level games available.</p>
+                )}
+                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+                    {games.map((game, index) => (
+                        <li
+                            key={index}
+                            className="p-6 bg-gradient-to-br from-blue-700 to-blue-500 text-white rounded-xl shadow-lg transform hover:scale-105 transition duration-300"
+                        >
+                            <h3 className="text-2xl font-bold mb-2 text-yellow-300 neon-shadow">
+                                {game.gameName}
+                            </h3>
+                            <p className="text-gray-200">{game.gameDescription}</p>
+                            <div
+                                onClick={() => handlePlay(game.id)} // Assuming game.id is the correct property name
+                                className="mt-4 bg-yellow-500 px-4 py-2 rounded-lg shadow-md text-sm font-bold uppercase tracking-wide text-center cursor-pointer"
                             >
-                                {/* Level Image */}
-                                <div className="w-full h-3/4 bg-cover bg-center" style={{ backgroundImage: `url(${levelImage})` }}></div>
-                                {/* Level Label */}
-                                <div className={`h-1/4 flex items-center justify-center text-white font-semibold text-lg ${
-                                    level < completedLevels
-                                        ? 'bg-green-700'
-                                        : level === currentLevel
-                                            ? 'bg-blue-700'
-                                            : 'bg-gray-600'
-                                }`}>
-                                    <span>Level {level}</span>
-                                </div>
-                            </button>
-                        </div>
+                                Play
+                            </div>
+                        </li>
                     ))}
-                </div>
-                <button onClick={handleBack} className="bg-red-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-red-600 transition">
+                </ul>
+                <button
+                    onClick={handleBack}
+                    className="mt-8 px-8 py-3 bg-red-600 text-lg font-bold uppercase tracking-wider rounded-full shadow-lg hover:bg-red-500 hover:shadow-xl transition transform hover:scale-105"
+                >
                     Back to Level Selection
                 </button>
             </div>

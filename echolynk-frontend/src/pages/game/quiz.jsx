@@ -1,113 +1,160 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import level1Image from '../../assets/level-1.jpg'; // Correctly import the image
-
-// Sample quiz data
-const quizData = {
-    1: [
-        {
-            question: "What is the American Sign Language (ASL) sign for 'thank you'?",
-            image: level1Image, // Use the imported image
-            options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-            correctAnswer: "Option 2"
-        },
-        // Add more quizzes for level 1 here
-    ],
-    // Add more levels and quizzes as needed
-};
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import { getQuestionsForGame } from "../../services/gameService";
+import { storage } from "../../config/firebaseConfig";
+import { ref, getDownloadURL } from "firebase/storage";
 
 const QuizPage = () => {
-    const { level } = useParams();
-    const quizzes = quizData[level] || [];
-    const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [timeRemaining, setTimeRemaining] = useState(750); // 12:30 minutes in seconds
+  const { gameId } = useParams();
+  const navigate = useNavigate(); // Initialize navigate
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [totalMarks, setTotalMarks] = useState(0);
+  const [feedback, setFeedback] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
-    const quiz = quizzes[currentQuizIndex] || {};
+  const fetchQuestionsWithImages = async () => {
+    try {
+      const fetchedQuestions = await getQuestionsForGame(gameId);
+      const questionsWithImageUrls = await Promise.all(
+        fetchedQuestions.map(async (question) => {
+          if (question.questionImage) {
+            const imageRef = ref(storage, `quiz_images/${question.questionImage}`);
+            const imageUrl = await getDownloadURL(imageRef);
+            return { ...question, questionImage: imageUrl };
+          }
+          return question;
+        })
+      );
+      setQuestions(questionsWithImageUrls);
+    } catch (err) {
+      setError("Failed to load questions. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleAnswerClick = (option) => {
-        setSelectedOption(option);
-    };
+  useEffect(() => {
+    if (gameId) {
+      fetchQuestionsWithImages();
+    } else {
+      setError("Game ID is missing. Unable to load quiz.");
+      setLoading(false);
+    }
+  }, [gameId]);
 
-    const handleSubmit = () => {
-        if (selectedOption === quiz.correctAnswer) {
-            alert("Correct!");
-        } else {
-            alert("Incorrect, try again!");
-        }
-    };
+  const handleOptionChange = (option) => setSelectedOption(option);
 
-    const handleNextClick = () => {
-        if (currentQuizIndex < quizzes.length - 1) {
-            setCurrentQuizIndex(currentQuizIndex + 1);
-            setSelectedOption(null);
-        } else {
-            alert("You've completed all quizzes!");
-        }
-    };
+  const handleSubmit = () => {
+    if (!selectedOption) {
+      alert("Please select an answer!");
+      return;
+    }
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeRemaining((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
-        }, 1000);
+    const currentQuestion = questions[currentQuestionIndex];
+    const isCorrect = selectedOption === currentQuestion.correctAnswer;
 
-        return () => clearInterval(timer);
-    }, []);
+    setFeedback(isCorrect ? "Correct!" : "Incorrect");
+    if (isCorrect) setTotalMarks((prevMarks) => prevMarks + currentQuestion.mark);
+  };
 
-    const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-    };
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      setSelectedOption(null);
+      setFeedback(null);
+    } else {
+      setShowPopup(true);
+    }
+  };
 
-    return (
-        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
-            <h2 className="text-3xl font-semibold mb-6">Quiz | Sign Language</h2>
-            <p className="text-lg mb-2">Topic: American Sign Language (ASL)</p>
-            <div className="w-full max-w-3xl bg-gray-800 rounded-lg shadow-lg p-6">
-                {quiz.image && (
-                    <img
-                        src={quiz.image}
-                        alt="Quiz"
-                        className="w-full h-64 object-cover mb-4 rounded-lg"
-                    />
-                )}
-                <p className="text-lg mb-4">{quiz.question}</p>
-                <div className="space-y-3">
-                    {quiz.options.map((option, index) => (
-                        <label key={index} className="flex items-center">
-                            <input
-                                type="radio"
-                                name="option"
-                                value={option}
-                                checked={selectedOption === option}
-                                onChange={() => handleAnswerClick(option)}
-                                className="form-radio text-orange-500 h-5 w-5"
-                            />
-                            <span className="ml-2">{option}</span>
-                        </label>
-                    ))}
-                </div>
-                <div className="flex justify-between items-center mt-6">
-                    <button
-                        onClick={handleNextClick}
-                        className="bg-gray-700 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition transform hover:scale-105"
-                    >
-                        Next
-                    </button>
-                    <div className="text-lg">
-                        <span>{formatTime(timeRemaining)} Remaining</span>
-                    </div>
-                    <button
-                        onClick={handleSubmit}
-                        className="bg-orange-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-orange-600 transition transform hover:scale-105"
-                    >
-                        Submit
-                    </button>
-                </div>
-            </div>
+  const handleFinishQuiz = () => {
+    setShowPopup(false);
+    navigate("/user-game"); // Navigate back to /game after showing marks
+  };
+
+  if (loading) return <div className="text-center text-white">Loading...</div>;
+  if (error) return <div className="text-center text-red-500">{error}</div>;
+
+  const currentQuestion = questions[currentQuestionIndex];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-blue-800 text-white flex flex-col items-center justify-center px-4">
+      <div className="max-w-2xl w-full bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-4">
+          Question {currentQuestionIndex + 1} of {questions.length}
+        </h2>
+        {currentQuestion.questionImage && (
+          <img
+            className="w-full h-64 object-cover rounded-lg mb-4"
+            src={currentQuestion.questionImage}
+            alt="Question"
+          />
+        )}
+        <p className="text-lg mb-2">{currentQuestion.text}</p>
+        <p className="text-sm text-gray-400 mb-4">Marks: {currentQuestion.mark}</p>
+        <div className="space-y-3">
+          {currentQuestion.answers.map((answer, index) => (
+            <label
+              className="block p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition"
+              key={index}
+            >
+              <input
+                type="radio"
+                name="answer"
+                value={answer}
+                checked={selectedOption === answer}
+                onChange={() => handleOptionChange(answer)}
+                className="mr-3"
+              />
+              {answer}
+            </label>
+          ))}
         </div>
-    );
+        {feedback && (
+          <p
+            className={`mt-4 text-lg ${
+              feedback === "Correct!" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {feedback}
+          </p>
+        )}
+        <button
+          className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-lg disabled:opacity-50 transition"
+          onClick={handleSubmit}
+          disabled={feedback !== null}
+        >
+          Submit
+        </button>
+        {feedback && (
+          <button
+            className="mt-4 px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-lg transition"
+            onClick={handleNextQuestion}
+          >
+            {currentQuestionIndex === questions.length - 1 ? "Finish" : "Next"}
+          </button>
+        )}
+      </div>
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white text-black p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-xl font-bold mb-4">Quiz Completed!</h3>
+            <p className="mb-4">Your Total Marks: {totalMarks}</p>
+            <button
+              className="px-4 py-2 bg-red-500 hover:bg-red-400 text-white rounded-lg transition"
+              onClick={handleFinishQuiz} // Redirect to /game on finish
+            >
+              Go Back to Games
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default QuizPage;

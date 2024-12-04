@@ -9,10 +9,16 @@ const LevelSelectionModal = ({ isOpen, onClose }) => {
 
     const handleSelectLevel = (level) => {
         if (level === 'Easy') {
-            navigate('/game/level');
+            navigate('/game/easy-level'); 
         }
-        // Add similar navigation for Medium and Hard levels if needed
+        if (level === 'Medium') {
+            navigate('/game/medium-level'); 
+        }
+        if (level === 'Hard') {
+            navigate('/game/hard-level'); 
+        }
     };
+    
 
     return (
         <Modal

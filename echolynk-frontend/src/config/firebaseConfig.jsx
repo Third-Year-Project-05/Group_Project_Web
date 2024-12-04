@@ -1,6 +1,6 @@
-// firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { getStorage } from "firebase/storage"; // Import Firebase Storage module
 
 const firebaseConfig = {
     apiKey: "AIzaSyDEdwe8Wqep4SDmTDe2Ld3t75X8Y_rpnP0",
@@ -14,9 +14,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
+// Firebase Authentication
+const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
-export { auth, googleProvider, facebookProvider };
+// Firebase Storage
+const storage = getStorage(app); // Initialize Storage service
+
+export { auth, googleProvider, facebookProvider, storage }; // Export storage for use in other files

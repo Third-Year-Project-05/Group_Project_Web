@@ -69,6 +69,17 @@ public class GameController {
         }
     }
 
+    @GetMapping("getquestions/{gameId}")
+    public ResponseEntity<?> getQuestionsForGame(@PathVariable String gameId) {
+        try {
+            List<QuestionDto> questions = gameService.getQuestionsForGame(gameId); // Use gameId, not id
+            return ResponseEntity.ok(questions);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error getting questions for game: " + e.getMessage());
+        }
+    }
+
+
     @GetMapping("/getGameCount")
     public ResponseEntity<?> getGameCount() {
         try {
