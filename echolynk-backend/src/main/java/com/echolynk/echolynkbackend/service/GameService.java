@@ -37,6 +37,11 @@ public class GameService {
         return gameRepository.getGame(id);
     }
 
+    public List<QuestionDto> getQuestionsForGame(String id) {
+        return gameRepository.getQuestionsForGame(id);
+    }
+
+
     public void updateGame(String id, GameDto gameDto) {
         gameRepository.updateGame(id, gameDto);
     }
