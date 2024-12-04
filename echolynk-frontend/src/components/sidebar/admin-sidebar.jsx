@@ -44,11 +44,11 @@ const AdminSidebar = ({ theme, isOpen, toggleSidebar }) => {
                         <DocumentReportIcon className="h-6 w-6" />
                         {isOpen && <span className="ml-4">Reports</span>}
                     </Link>
-
+{/* 
                     <Link to="/admin-messages" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-messages') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
                         <MailIcon className="h-6 w-6" />
                         {isOpen && <span className="ml-4">Messages</span>}
-                    </Link>
+                    </Link> */}
 
                     <Link to="/admin-financial-management" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-financial-management') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
                         <CurrencyDollarIcon className="h-6 w-6" />
@@ -59,10 +59,10 @@ const AdminSidebar = ({ theme, isOpen, toggleSidebar }) => {
 
                 <div className="mt-auto p-4 border-t border-gray-300">
 
-                    <Link to="/admin-settings" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-settings') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
+                    {/* <Link to="/admin-settings" className={`flex items-center p-2 rounded-md ${isCurrentPage('/admin-settings') ? 'bg-blue-900 text-white' : 'hover:bg-blue-900 hover:text-white'}`}>
                         <CogIcon className="h-6 w-6" />
                         {isOpen && <span className="ml-4">Settings</span>}
-                    </Link>
+                    </Link> */}
 
                     <Link
                         to="#"

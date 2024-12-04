@@ -126,3 +126,22 @@ export const upgradeToPremium = async ( userId ) => {
         throw new Error(`Error updating user: ${error.message}`);
     }
 }
+
+export const addBlog = async (formData) => {
+    try {
+        const response = await api.post('/blogs', formData);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error adding blog: ${error.message}`);
+    }
+};
+
+export const getAllBlogs = async () => {
+    try {
+        const response = await api.get('/getBlog');
+        console.log('Blogs:', response.data);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error fetching blogs: ${error.message}`);
+    }
+};

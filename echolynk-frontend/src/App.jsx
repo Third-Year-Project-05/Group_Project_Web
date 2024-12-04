@@ -62,6 +62,7 @@ import { Toaster } from './components/ui/toaster';
 import Blogview2 from './components/blog/blog-view';
 import JoinRoom from './pages/user/video-chat/joinRoom';
 import StripePayment from './pages/user/payment';
+import PremiumUserUsage from './pages/user/dashboard/premiumUsage';
 
 const Layout = ({ children }) => {
     return (
@@ -231,6 +232,8 @@ function App() {
 
                         {/* Test */}
                         <Route path="/blogview" element={<Layout><Blogview2 /></Layout>} />
+                        <Route path="/premiumUsage" element={<LoginLayout><PremiumUserUsage /></LoginLayout>} />
+
                                             
                     </Routes>
 

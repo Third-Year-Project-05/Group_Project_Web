@@ -5,12 +5,12 @@ import subBlogImage2 from '../../assets/subblog2.jpg';
 
 const BlogView = () => {
   return (
-    <div className="flex justify-center items-center h-full bg-gray-100">
+    <div className="flex justify-center items-center h-full">
       <div className="w-5/6 h-screen p-6">
         {/* Main Blog and Sub Blogs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Main Blog Section */}
-          <div className="rounded-lg overflow-hidden shadow-lg bg-white">
+          <div className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-900">
             <img
               src={mainBlogImage}
               alt="Main Blog"
@@ -18,7 +18,7 @@ const BlogView = () => {
             />
             <div className="p-6">
               <h2 className="text-2xl font-bold">Top Deaf Awareness Tips!</h2>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600 dark:text-white dark:text-opacity-40">
                 Hi Guys!<br /><br />
                 HAPPY DEAF AWARENESS WEEK!<br /><br />
                 We have an exciting video lined up for you all to enjoy!<br /><br />
@@ -29,7 +29,7 @@ const BlogView = () => {
 
           {/* Sub Blogs Section */}
           <div className="flex flex-col gap-6">
-            <div className="h-48 flex-grow rounded-lg overflow-hidden shadow-lg bg-white">
+            <div className="h-48 flex-grow rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-900">
               <img
                 src={subBlogImage1}
                 alt="Sub Blog 1"
@@ -45,7 +45,7 @@ const BlogView = () => {
               </div>
             </div>
 
-            <div className="h-48 flex-grow rounded-lg overflow-hidden shadow-lg bg-white">
+            <div className="h-48 flex-grow rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-900">
               <img
                 src={subBlogImage2}
                 alt="Sub Blog 2"

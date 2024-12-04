@@ -13,11 +13,11 @@ import {
 import io from "socket.io-client";
 import Cookies from "js-cookie";
 import { Holistic } from "@mediapipe/holistic";
-import { Camera } from "@mediapipe/camera_utils";
+// import { Camera } from "@mediapipe/camera_utils";
 
 import logo from "../../../assets/echolynk.png";
 import LoadingPopup from "../../../components/LoadingPopup";
-import HolisticComponent from "./components/HolisticComponent";
+// import HolisticComponent from "./components/HolisticComponent";
 import ChatFeature from "./components/ChatFeature";
 import { useNavigate, useParams } from "react-router-dom";
 import CopyLinkModal from "./components/CopyLinkModal";
@@ -484,7 +484,7 @@ const Room = () => {
     <>
       {isLoading && <LoadingPopup opacity="" />}
 
-      {deafUser && (
+      {/* {deafUser && (
         <HolisticComponent
           // isNeedDetection={isNeedDetection}
           // isToggleDisabled={isToggleDisabled}
@@ -494,7 +494,7 @@ const Room = () => {
           videoRef={videoRef}
           canvasRef={canvasRef}
         />
-      )}
+      )} */}
       <div className="flex flex-col items-center">
         {/* video stearm component */}
         <div className="flex flex-col items-center gap-4 px-5 pt-5 md:flex-row">

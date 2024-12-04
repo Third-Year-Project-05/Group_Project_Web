@@ -62,8 +62,6 @@ const AdminReports = () => {
                                 <SelectContent>
                                     <SelectItem value="revenue">Revenue</SelectItem>
                                     <SelectItem value="user">Users</SelectItem>
-                                    <SelectItem value="activity">Activity</SelectItem>
-                                    <SelectItem value="all">All</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

@@ -9,6 +9,8 @@ import { DropdownMenu,   DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger, } from '../../../components/ui/dropdown-menu';
 import { Button } from "../../../components/ui/button";
+import BlogView from "../../../components/blog/blog-view";
+import { getAllBlogs } from "../../../services/userService";
 
 const UserBlog = () => {
     const initialBlogs = [
@@ -35,6 +37,16 @@ const UserBlog = () => {
             document.body.style.overflow = 'auto';
         };
     }, [showBlog]);
+
+   useEffect(() => {
+        const fetchBlogs = async () => {
+            var blogs = await getAllBlogs();
+            console.log(blogs);
+            setBlogs(blogs);
+        };
+        fetchBlogs();
+    }, []);
+
 
     const handleFilterChange = (type) => {
         setFilter(type);
@@ -75,9 +87,15 @@ const UserBlog = () => {
                 <Helmet>
                     <title>Echolynk - Blog </title>
                 </Helmet>
+
+                <div className="flex flex-col">
+                    <AddBlog />
+                    <BlogView />
+
+                </div>
     
                 {/* Hero Section */}
-                <div className="w-full overflow-x-hidden">
+                {/* <div className="w-full overflow-x-hidden">
                     <div className="max-w-8xl mx-auto relative">
                         <img src={blogImage} alt="Background" className="w-full h-60 object-cover"/>
                         <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -99,8 +117,6 @@ const UserBlog = () => {
                             <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="icon" style={{ width: 'auto', height: '2.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <FaFilter className="h-4 w-4 text-black dark:text-white" />
-                                {/* Uncommenting the Moon component as it seems to be part of the toggle functionality */}
-                                {/* <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" /> */}
                                 <span className="sr-only">Filter</span>
                             </Button>
                             </DropdownMenuTrigger>
@@ -152,7 +168,7 @@ const UserBlog = () => {
                         </div>
                     </div>
     
-                </div>
+                </div> */}
     
     
     
